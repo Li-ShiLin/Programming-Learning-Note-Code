@@ -355,6 +355,7 @@ public class MailSender {
      * @param files
      */
     public void sendEmail(String from,
+                          String nickname,
                           String[] mailTo,
                           String mailSubject,
                           String mailContent,
@@ -404,8 +405,8 @@ public class MailSender {
         message.setContent(multipart);
 
         // 设置邮件发�?�方
-        message.setFrom(new InternetAddress(from));
-
+        /*message.setFrom(new InternetAddress(from));*/
+          message.setFrom(new InternetAddress(from,nickname));
         // 设置邮件接收�?
         InternetAddress[] recipients = new InternetAddress[mailTo.length];
         for (int i = 0; i < recipients.length; i++) {
@@ -446,6 +447,7 @@ public class MailSender {
         return flag;
     }
 }
+
 ```
 
 **测试：调用MailSender发�?�邮�?**
@@ -469,6 +471,7 @@ class MailSenderTest {
     void MailSenderTest() {
 
         String from = "myemail_lsl@163.com";
+        String nickname = "JavaMail邮件发�?�系�?";
         String[] mailTo = new String[]{"2241876453@qq.com"};
         String mailSubject = "邮件发�?�类MailSender�?单封装测�?";
         String mailContent = "<a href='https://blog.csdn.net/IAMLSL'>欢迎查看我的CSDN博客</a>";
@@ -476,7 +479,7 @@ class MailSenderTest {
         System.out.println("路径�?" + path);
         String[] files = new String[]{"README.md","邮件附件.txt"};
         try {
-            new MailSender().sendEmail(from,mailTo,mailSubject,mailContent,files);
+            new MailSender().sendEmail(from,nickname,mailTo,mailSubject,mailContent,files);
         } catch (MessagingException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
@@ -485,4 +488,5 @@ class MailSenderTest {
     }
 
 }
+
 ```

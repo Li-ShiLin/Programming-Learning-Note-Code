@@ -2432,11 +2432,69 @@ public class RedisIdWorker {
 
         // 3.拼接并返回
         return timestamp << COUNT_BITS | count;
+        // 生成开始时间戳
+    /*    public static void main(String[] args) {
+            LocalDateTime time = LocalDateTime.of(2022, 1, 1, 0, 0, 0);
+            long second = time.toEpochSecond(ZoneOffset.UTC);
+            System.out.println(second);  // 输出1640995200L
+
+        }*/
     }
 }
 ```
 
-测试类
+**测试全局唯一Id**
+
+```java
+package com.hmdp;
+
+import com.hmdp.utils.RedisIdWorker;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import javax.annotation.Resource;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+/**
+ * @author 22418
+ * @version 1.0
+ * @description: TODO
+ * @date 2023/1/12 23:21
+ */
+@SpringBootTest
+public class TestRedisIdWorker {
+
+    @Resource
+    private RedisIdWorker redisIdWorker;
+
+    private ExecutorService es = Executors.newFixedThreadPool(500);
+
+
+    @Test
+    void testIdWorker() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(300);
+
+        Runnable task = () -> {
+            for (int i = 0; i < 100; i++) {
+                long id = redisIdWorker.nextId("order");
+                System.out.println("id = " + id);
+            }
+            latch.countDown();
+        };
+        long begin = System.currentTimeMillis();
+        for (int i = 0; i < 300; i++) {
+            es.submit(task);
+        }
+        latch.await();
+        long end = System.currentTimeMillis();
+        System.out.println("time = " + (end - begin));
+    }
+
+}
+
+```
 
 知识小贴士：关于countdownlatch
 
@@ -2450,29 +2508,21 @@ CountDownLatch 中有两个最重要的方法
 
 2、await
 
-await 方法 是阻塞方法，我们担心分线程没有执行完时，main线程就先执行，所以使用await可以让main线程阻塞，那么什么时候main线程不再阻塞呢？当CountDownLatch  内部维护的 变量变为0时，就不再阻塞，直接放行，那么什么时候CountDownLatch   维护的变量变为0 呢，我们只需要调用一次countDown ，内部变量就减少1，我们让分线程和变量绑定， 执行完一个分线程就减少一个变量，当分线程全部走完，CountDownLatch 维护的变量就是0，此时await就不再阻塞，统计出来的时间也就是所有分线程执行完后的时间。
+await 方法 是阻塞方法，我们担心分线程没有执行完时，main线程就先执行，所以使用await可以让main线程阻塞，那么什么时候main线程不再阻塞呢？当CountDownLatch  内部维护的 变量变为0时，就不再阻塞，直接放行，那么什么时候CountDownLatch   维护的变量变为0 呢，我们只需要调用一次countDown ，内部变量就减少1，我们让分线程和变量绑定， 执行完一个分线程就减少一个变量，当分线程全部走完，CountDownLatch 维护的变量就是0，此时await就不再阻塞，统计出来的时间也就是所有分线程执行完后的时间
 
-```java
-@Test
-void testIdWorker() throws InterruptedException {
-    CountDownLatch latch = new CountDownLatch(300);
+**全局唯一Id总结：**
 
-    Runnable task = () -> {
-        for (int i = 0; i < 100; i++) {
-            long id = redisIdWorker.nextId("order");
-            System.out.println("id = " + id);
-        }
-        latch.countDown();
-    };
-    long begin = System.currentTimeMillis();
-    for (int i = 0; i < 300; i++) {
-        es.submit(task);
-    }
-    latch.await();
-    long end = System.currentTimeMillis();
-    System.out.println("time = " + (end - begin));
-}
-```
+全局唯一ID生成策略:
+
+- UUID
+- Redis自增
+- snowflake算法
+- 数据库自增
+
+Redis自增ID策略:
+
+- 每天—个key ,方便统计订单量
+- ID构造是时间戳＋计数器
 
 ### 3.3 添加优惠卷
 
@@ -2533,7 +2583,7 @@ public void addSeckillVoucher(Voucher voucher) {
 
 下单核心思路：当我们点击抢购时，会触发右侧的请求，我们只需要编写对应的controller即可
 
-![1653365839526](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages1653365839526.png)
+![1653365839526](https://img-blog.csdnimg.cn/45fe038172984aa0ae73cedff9316349.png)
 
 秒杀下单应该思考的内容：
 

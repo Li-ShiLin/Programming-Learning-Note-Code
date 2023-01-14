@@ -9,6 +9,7 @@ import com.hmdp.service.ISeckillVoucherService;
 import com.hmdp.service.IVoucherOrderService;
 import com.hmdp.utils.RedisIdWorker;
 import com.hmdp.utils.UserHolder;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +31,6 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     private RedisIdWorker redisIdWorker;
 
     @Override
-    @Transactional
     public Result seckillVoucher(Long voucherId) {
         // 1.查询优惠券
         SeckillVoucher voucher = iSeckillVoucherService.getById(voucherId);
@@ -51,11 +51,33 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
             return Result.fail("库存不足");
         }
 
-        // 5.一人一单
+/*        Long userId = UserHolder.getUser().getId();
+        synchronized (userId.toString().intern()) {
+            // 8.返回订单id
+            return this.createVoucherOrder(voucherId);
+        }*/
+
+        // 8.返回订单id
         Long userId = UserHolder.getUser().getId();
+        synchronized (userId.toString().intern()) {
+            // 获取当前对象的代理对象（事务相关的代理对象）
+            IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();
+            // 利用代理对象去调用createVoucherOrder()函数 （需要在IVoucherOrderService中添加createVoucherOrder()方法）
+            return proxy.createVoucherOrder(voucherId);
+            // 注意：还需要在pom.xml中aspectj依赖
+        }
+    }
+
+
+    @Transactional
+    @Override
+    public Result createVoucherOrder(Long voucherId) {
+
+        // 5.一人一单
         // 5.1 查询订单
+        Long userId = UserHolder.getUser().getId();
         Integer count = query().eq("user_id", userId).eq("voucher_id", voucherId).count();
-        if(count > 0){
+        if (count > 0) {
             // 用户已经购买过了
             return Result.fail("已经抢购成功，不可重复抢购！");
         }
@@ -98,8 +120,9 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         // 代金券id
         voucherOrder.setVoucherId(voucherId);
         save(voucherOrder);
-
-        // 8.返回订单id
+        // 7.返回订单id
         return Result.ok(orderId);
+
     }
+
 }

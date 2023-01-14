@@ -8,8 +8,10 @@ import com.hmdp.mapper.VoucherOrderMapper;
 import com.hmdp.service.ISeckillVoucherService;
 import com.hmdp.service.IVoucherOrderService;
 import com.hmdp.utils.RedisIdWorker;
+import com.hmdp.utils.SimpleRedisLock;
 import com.hmdp.utils.UserHolder;
 import org.springframework.aop.framework.AopContext;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,9 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
 
     @Resource
     private RedisIdWorker redisIdWorker;
+
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
 
 
     // 加锁解决并发问题
@@ -53,12 +58,15 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
             return Result.fail("库存不足");
         }
 
-/*        Long userId = UserHolder.getUser().getId();
+/*      // 版本一、简单处理：加锁，处在事务缺陷
+        Long userId = UserHolder.getUser().getId();
         synchronized (userId.toString().intern()) {
             // 8.返回订单id
             return this.createVoucherOrder(voucherId);
         }*/
 
+/*
+        // 版本二：获取代理：解决事务缺陷
         // 8.返回订单id
         Long userId = UserHolder.getUser().getId();
         synchronized (userId.toString().intern()) {
@@ -67,7 +75,29 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
             // 利用代理对象去调用createVoucherOrder()函数 （需要在IVoucherOrderService中添加createVoucherOrder()方法）
             return proxy.createVoucherOrder(voucherId);
             // 注意：还需要在pom.xml中aspectj依赖
+        }*/
+
+
+        // 版本三：实现Redis分布式锁，解决集群环境下的并发问题
+        Long userId = UserHolder.getUser().getId();
+        //创建锁对象(新增代码)
+        SimpleRedisLock lock = new SimpleRedisLock("order:" + userId, stringRedisTemplate);
+        //获取锁对象
+        boolean isLock = lock.tryLock(1200);
+        //加锁失败
+        if (!isLock) {
+            return Result.fail("不允许重复下单");
         }
+        try {
+            //获取代理对象(事务)
+            IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();
+            return proxy.createVoucherOrder(voucherId);
+        } finally {
+            //释放锁
+            lock.unlock();
+        }
+
+
     }
 
 

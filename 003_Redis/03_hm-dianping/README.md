@@ -70,69 +70,69 @@
 
 ```json
 {
-success: true,
-data: [
-{
-id: 1,
-name: "美食",
-icon: "/types/ms.png",
-sort: 1
-},
-{
-id: 2,
-name: "KTV",
-icon: "/types/KTV.png",
-sort: 2
-},
-{
-id: 3,
-name: "丽人·美发",
-icon: "/types/lrmf.png",
-sort: 3
-},
-{
-id: 10,
-name: "美睫·美甲",
-icon: "/types/mjmj.png",
-sort: 4
-},
-{
-id: 5,
-name: "按摩·足疗",
-icon: "/types/amzl.png",
-sort: 5
-},
-{
-id: 6,
-name: "美容SPA",
-icon: "/types/spa.png",
-sort: 6
-},
-{
-id: 7,
-name: "亲子游乐",
-icon: "/types/qzyl.png",
-sort: 7
-},
-{
-id: 8,
-name: "酒吧",
-icon: "/types/jiuba.png",
-sort: 8
-},
-{
-id: 9,
-name: "轰趴馆",
-icon: "/types/hpg.png",
-sort: 9
-},
-{
-id: 4,
-name: "健身运动",
-icon: "/types/jsyd.png",
-sort: 10
-}
-]
+            success: true,
+            data: [
+        {
+            id: 1,
+            name: "美食",
+            icon: "/types/ms.png",
+            sort: 1
+        },
+        {
+            id: 2,
+            name: "KTV",
+            icon: "/types/KTV.png",
+            sort: 2
+        },
+        {
+            id: 3,
+            name: "丽人·美发",
+            icon: "/types/lrmf.png",
+            sort: 3
+        },
+        {
+            id: 10,
+            name: "美睫·美甲",
+            icon: "/types/mjmj.png",
+            sort: 4
+        },
+        {
+            id: 5,
+            name: "按摩·足疗",
+            icon: "/types/amzl.png",
+            sort: 5
+        },
+        {
+            id: 6,
+            name: "美容SPA",
+            icon: "/types/spa.png",
+            sort: 6
+        },
+        {
+            id: 7,
+            name: "亲子游乐",
+            icon: "/types/qzyl.png",
+            sort: 7
+        },
+        {
+            id: 8,
+            name: "酒吧",
+            icon: "/types/jiuba.png",
+            sort: 8
+        },
+        {
+            id: 9,
+            name: "轰趴馆",
+            icon: "/types/hpg.png",
+            sort: 9
+        },
+        {
+            id: 4,
+            name: "健身运动",
+            icon: "/types/jsyd.png",
+            sort: 10
+        }
+    ]
 }
 ```
 
@@ -3055,9 +3055,9 @@ public Result seckillVoucher(Long voucherId) {
 }
 ```
 
-**存在问题**：   现在的问题还是和之前一样，并发过来，查询数据库，都不存在订单，所以我们还是需要加锁，但是乐观锁比较适合更新数据，而现在是插入数据，所以我们需要使用悲观锁操作
+**存在问题**：    现在的问题还是和之前一样，并发过来，查询数据库，都不存在订单，所以我们还是需要加锁，但是乐观锁比较适合更新数据，而现在是插入数据，所以我们需要使用悲观锁操作
 
-**注意**：在这里提到了非常多的问题，我们需要慢慢的来思考，首先我们的初始方案是封装了一个createVoucherOrder方法，同时为了确保他线程安全，在方法上添加了一把synchronized 锁
+**注意**：  在这里提到了非常多的问题，我们需要慢慢的来思考，首先我们的初始方案是封装了一个createVoucherOrder方法，同时为了确保他线程安全，在方法上添加了一把synchronized 锁
 
 ```java
 @Transactional
@@ -3325,15 +3325,123 @@ public class HmDianPingApplication {
 
 通过加锁可以解决在单机情况下的一人一单安全问题，但是在集群模式下就不行了。
 
-1、我们将服务启动两份，端口分别为8081和8082：
+1、我们将服务启动两份，端口分别为8081和8082（修改端口：  VM options:   -Dserver.port=8082）
 
 ![1653373887844](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141348506.png)
 
-2、然后修改nginx的conf目录下的nginx.conf文件，配置反向代理和负载均衡：
+2、将资料中的`nginx-1.18.0.zip`解压到`D:\developer_tools\`目录，然后修改nginx的conf目录下的nginx.conf文件，配置反向代理和负载均衡：
 
 ![1653373908620](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141349279.png)
 
-**具体操作(略)**
+nginx具体配置：
+
+```nginx
+
+worker_processes  1;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    include       mime.types;
+    default_type  application/json;
+
+    sendfile        on;
+    
+    keepalive_timeout  65;
+
+    server {
+        listen       8080;
+        server_name  localhost;
+        # 指定前端项目所在的位置
+        location / {
+            root   html/hmdp;
+            index  index.html index.htm;
+        }
+
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+        
+        location /api {  
+            default_type  application/json;
+            #internal;  
+            keepalive_timeout   30s;  
+            keepalive_requests  1000;  
+            #支持keep-alive  
+            proxy_http_version 1.1;  
+            rewrite /api(/.*) $1 break;  
+            proxy_pass_request_headers on;
+            #more_clear_input_headers Accept-Encoding;  
+            proxy_next_upstream error timeout;  
+            proxy_pass http://127.0.0.1:8081;
+            #proxy_pass http://backend;
+        }
+    }
+    upstream backend {
+        server 127.0.0.1:8081 max_fails=5 fail_timeout=10s weight=1;
+        server 127.0.0.1:8082 max_fails=5 fail_timeout=10s weight=1;
+    }  
+}
+```
+
+配置好后重新启动：
+
+![image-20230114151817667](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141518015.png)
+
+访问`http://localhost:8080/api/voucher/list/1`，请求会被负载均衡到上述两个服务并返回如下数据：
+
+```json
+{
+    "success": true,
+    "data": [
+        {
+            "id": 1,
+            "shopId": 1,
+            "title": "50元代金券",
+            "subTitle": "周一至周日均可使用",
+            "rules": "全场通用\\n无需预约\\n可无限叠加\\不兑现、不找零\\n仅限堂食",
+            "payValue": 4750,
+            "actualValue": 5000,
+            "type": 0
+        },
+        {
+            "id": 11,
+            "shopId": 1,
+            "title": "100元代金券",
+            "subTitle": "周一至周五均可用",
+            "rules": "全场通用\\n无需预约\\n可无限叠加\\不兑现、不找零\\n仅限堂食",
+            "payValue": 8000,
+            "actualValue": 10000,
+            "type": 1,
+            "stock": 100,
+            "beginTime": "2022-01-25T10:09:17",
+            "endTime": "2022-01-26T12:09:04"
+        },
+        {
+            "id": 12,
+            "shopId": 1,
+            "title": "100元代金券",
+            "subTitle": "周一至周五均可用",
+            "rules": "全场通用\\n无需预约\\n可无限叠加\\不兑现、不找零\\n仅限堂食",
+            "payValue": 8000,
+            "actualValue": 10000,
+            "type": 1,
+            "stock": 92,
+            "beginTime": "2023-01-13T10:09:17",
+            "endTime": "2023-01-26T12:09:04"
+        }
+    ]
+}
+```
+
+![image-20230114160246371](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141603227.png)
+
+利用postman访问`http://localhost:8080/api/voucher-order/seckill/7`，另`Authorization`为同一个，发现一个人抢到了两张券，及锁在分布式场景下失效
+
+
 
 **有关锁失效原因分析**
 
@@ -3342,6 +3450,8 @@ public class HmDianPingApplication {
 ![1653374044740](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141348658.png)
 
 ## 4、分布式锁
+
+**解决3.7集群环境下的并发问题**
 
 ### 4.1 、基本原理和实现方式对比
 
@@ -3386,12 +3496,35 @@ Zookeeper：zookeeper也是企业级开发中较好的一个实现分布式锁�
   * 互斥：确保只能有一个线程获取锁
   * 非阻塞：尝试一次，成功返回true，失败返回false
 
+![image-20230114163537787](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141635459.png)
+
+![image-20230114164912425](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141649935.png)
+
+![image-20230114164440003](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141644879.png)
+
+![image-20230114164325320](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141643179.png)
+
+
+
 * 释放锁：
 
-  * 手动释放
+  * 手动释放（删除即可）
+
+  ![image-20230114163716545](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141637249.png)
+
+  
+
   * 超时释放：获取锁时添加一个超时时间
 
-  ![1653382669900](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141345876.png)
+![image-20230114163949994](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141640069.png)
+
+
+
+**Redis分布式锁：**
+
+![image-20230114165015905](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141650842.png)
+
+
 
 核心思路：
 
@@ -3478,6 +3611,216 @@ public void unlock() {
         }
     }
 ```
+
+**详细代码：**
+
+ ILock 接口：
+
+```java
+package com.hmdp.utils;
+public interface ILock {
+    /**
+     * 尝试获取锁
+     * @param timeoutSec 锁持有的超时时间，过期后自动释放
+     * @return  true代表获取锁成功，false代表获取锁失败
+     */
+    boolean tryLock(long timeoutSec);
+
+    /**
+     * 释放锁
+     */
+    void unlock();
+}
+```
+
+SimpleRedisLock实现类：
+
+```java
+package com.hmdp.utils;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import java.util.concurrent.TimeUnit;
+public class SimpleRedisLock implements ILock {
+    private String name;
+    private StringRedisTemplate stringRedisTemplate;
+    public SimpleRedisLock(String name, StringRedisTemplate stringRedisTemplate) {
+        this.name = name;
+        this.stringRedisTemplate = stringRedisTemplate;
+    }
+    private static final String KEY_PREFIX = "lock:";
+
+    @Override
+    public boolean tryLock(long timeoutSec) {
+        // 获取线程标识
+        long threadId = Thread.currentThread().getId();
+
+        // 获取锁
+        Boolean success = stringRedisTemplate.opsForValue()
+                .setIfAbsent(KEY_PREFIX + name, threadId + "", timeoutSec, TimeUnit.SECONDS);
+        return Boolean.TRUE.equals(success);
+    }
+
+    @Override
+    public void unlock() {
+        stringRedisTemplate.delete(KEY_PREFIX + name);
+    }
+}
+```
+
+业务实现类VoucherOrderServiceImpl：
+
+```java
+package com.hmdp.service.impl;
+
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hmdp.dto.Result;
+import com.hmdp.entity.SeckillVoucher;
+import com.hmdp.entity.VoucherOrder;
+import com.hmdp.mapper.VoucherOrderMapper;
+import com.hmdp.service.ISeckillVoucherService;
+import com.hmdp.service.IVoucherOrderService;
+import com.hmdp.utils.RedisIdWorker;
+import com.hmdp.utils.SimpleRedisLock;
+import com.hmdp.utils.UserHolder;
+import org.springframework.aop.framework.AopContext;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import javax.annotation.Resource;
+import java.time.LocalDateTime;
+
+@Service
+public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, VoucherOrder> implements IVoucherOrderService {
+
+    @Resource
+    private ISeckillVoucherService iSeckillVoucherService;
+
+    @Resource
+    private RedisIdWorker redisIdWorker;
+
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
+
+    // 加锁解决并发问题
+    @Override
+    public Result seckillVoucher(Long voucherId) {
+        // 1.查询优惠券
+        SeckillVoucher voucher = iSeckillVoucherService.getById(voucherId);
+        // 2.判断秒杀是否开始
+        if (voucher.getBeginTime().isAfter(LocalDateTime.now())) {
+            // 尚未开始
+            return Result.fail("秒杀尚未开始！");
+        }
+        // 3.判断秒杀是否已经结束
+        if (voucher.getEndTime().isBefore(LocalDateTime.now())) {
+            // 尚未开始
+            return Result.fail("秒杀已经结束！");
+        }
+
+        // 4.判断库存是否充足
+        if (voucher.getStock() < 1) {
+            //库存不足
+            return Result.fail("库存不足");
+        }
+
+/*      // 版本一、简单处理：加锁，处在事务缺陷
+        Long userId = UserHolder.getUser().getId();
+        synchronized (userId.toString().intern()) {
+            // 8.返回订单id
+            return this.createVoucherOrder(voucherId);
+        }*/
+
+/*
+        // 版本二：获取代理：解决事务缺陷
+        // 8.返回订单id
+        Long userId = UserHolder.getUser().getId();
+        synchronized (userId.toString().intern()) {
+            // 获取当前对象的代理对象（事务相关的代理对象）
+            IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();
+            // 利用代理对象去调用createVoucherOrder()函数 （需要在IVoucherOrderService中添加createVoucherOrder()方法）
+            return proxy.createVoucherOrder(voucherId);
+            // 注意：还需要在pom.xml中aspectj依赖
+        }*/
+
+
+        // 版本三：实现Redis分布式锁，解决集群环境下的并发问题
+        Long userId = UserHolder.getUser().getId();
+        //创建锁对象(新增代码)
+        SimpleRedisLock lock = new SimpleRedisLock("order:" + userId, stringRedisTemplate);
+        //获取锁对象
+        boolean isLock = lock.tryLock(1200);
+        //加锁失败
+        if (!isLock) {
+            return Result.fail("不允许重复下单");
+        }
+        try {
+            //获取代理对象(事务)
+            IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();
+            return proxy.createVoucherOrder(voucherId);
+        } finally {
+            //释放锁
+            lock.unlock();
+        }
+    }
+
+    @Transactional
+    @Override
+    public Result createVoucherOrder(Long voucherId) {
+
+        // 5.一人一单
+        // 5.1 查询订单
+        Long userId = UserHolder.getUser().getId();
+        Integer count = query().eq("user_id", userId).eq("voucher_id", voucherId).count();
+        if (count > 0) {
+            // 用户已经购买过了
+            return Result.fail("已经抢购成功，不可重复抢购！");
+        }
+
+/*
+        // 6.扣减库存
+        boolean isSuccess = iSeckillVoucherService.update()
+                .setSql("stock = stock -1")
+                .eq("voucher_id", voucherId).update();*/
+
+/*        // 6.扣减库存(解决超卖问题)
+        boolean isSuccess = iSeckillVoucherService.update()
+                .setSql("stock = stock -1")  // set stock = stock -1
+                .eq("voucher_id", voucherId)
+                .eq("stock",voucher.getStock())  // where id = ? and stock = ?
+                .update();*/
+
+        // 6.扣减库存(解决超卖问题) 进一步优化——>提高抢购成功率
+        boolean isSuccess = iSeckillVoucherService.update()
+                .setSql("stock = stock -1")  // set stock = stock -1
+                .eq("voucher_id", voucherId)
+                .gt("stock", 0)  // where id = ? and stock > 0
+                .update();
+
+        if (!isSuccess) {
+            // 扣减失败
+            return Result.fail("库存扣减失败！");
+        }
+
+        // 7.创建订单(订单信息：订单id、用户id、代金券id)
+        VoucherOrder voucherOrder = new VoucherOrder();
+
+        // 订单id
+        long orderId = redisIdWorker.nextId("order");
+        voucherOrder.setId(orderId);
+
+        // 用户id
+        voucherOrder.setUserId(userId);
+
+        // 代金券id
+        voucherOrder.setVoucherId(voucherId);
+        save(voucherOrder);
+        // 7.返回订单id
+        return Result.ok(orderId);
+    }
+}
+```
+
+
 
 ### 4.4 Redis分布式锁误删情况说明
 

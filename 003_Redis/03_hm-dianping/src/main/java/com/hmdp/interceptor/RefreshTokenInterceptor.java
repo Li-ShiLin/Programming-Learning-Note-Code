@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.hmdp.dto.UserDTO;
 import com.hmdp.utils.RedisConstants;
 import com.hmdp.utils.UserHolder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.lang.Nullable;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -18,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 拦截器
  */
+@Slf4j
 public class RefreshTokenInterceptor implements HandlerInterceptor {
 
 /*在拦截器中注入StringRedisTemplate：
@@ -54,6 +56,7 @@ public class RefreshTokenInterceptor implements HandlerInterceptor {
 //利用redis代替sessions实现登录验证：
         // 1.获取请求头中的token
         String token = request.getHeader("authorization");
+//        log.info("token:{}",token);
         if (StrUtil.isBlank(token)) {
             return true;
         }

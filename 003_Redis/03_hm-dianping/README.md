@@ -3881,7 +3881,83 @@ public void unlock() {
 
 **有关代码实操说明：**
 
-在我们修改完此处代码后，我们重启工程，然后启动两个线程，第一个线程持有锁后，手动释放锁，第二个线程 此时进入到锁内部，再放行第一个线程，此时第一个线程由于锁的value值并非是自己，所以不能释放锁，也就无法删除别人的锁，此时第二个线程能够正确释放锁，通过这个案例初步说明我们解决了锁误删的问题。
+在我们修改完此处代码后，我们重启工程，然后启动两个线程，第一个线程持有锁后，手动释放锁，第二个线程 此时进入到锁内部，再放行第一个线程，此时第一个线程由于锁的value值并非是自己，所以不能释放锁，也就无法删除别人的锁，此时第二个线程能够正确释放锁，通过这个案例初步说明我们解决了锁误删的问题
+
+
+
+**完整实操代码：**
+
+```java
+package com.hmdp.utils;
+import cn.hutool.core.lang.UUID;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import java.util.concurrent.TimeUnit;
+public class SimpleRedisLock implements ILock {
+
+
+    private String name;
+
+    private StringRedisTemplate stringRedisTemplate;
+
+    public SimpleRedisLock(String name, StringRedisTemplate stringRedisTemplate) {
+        this.name = name;
+        this.stringRedisTemplate = stringRedisTemplate;
+    }
+
+    //    private static final String KEY_PREFIX = "lock:";
+    private static final String KEY_PREFIX = "lock:";
+    private static final String ID_PREFIX = UUID.randomUUID().toString(true) + "-";
+
+/*
+
+    // 版本一
+    @Override
+    public boolean tryLock(long timeoutSec) {
+        // 获取线程标识
+        long threadId = Thread.currentThread().getId();
+
+        // 获取锁
+        Boolean success = stringRedisTemplate.opsForValue()
+                .setIfAbsent(KEY_PREFIX + name, threadId + "", timeoutSec, TimeUnit.SECONDS);
+        return Boolean.TRUE.equals(success);
+    }
+
+    @Override
+    public void unlock() {
+        stringRedisTemplate.delete(KEY_PREFIX + name);
+    }
+*/
+
+
+    // 版本二: 改造 tryLock() 和  unlock() ，解决 版本一 中存在的Redis分布式锁误删问题
+    @Override
+    public boolean tryLock(long timeoutSec) {
+        // 获取线程标示
+        String threadId = ID_PREFIX + Thread.currentThread().getId();
+        // 获取锁
+        Boolean success = stringRedisTemplate.opsForValue()
+                .setIfAbsent(KEY_PREFIX + name, threadId, timeoutSec, TimeUnit.SECONDS);
+        return Boolean.TRUE.equals(success);
+    }
+
+    @Override
+    public void unlock() {
+        // 获取线程标示
+        String threadId = ID_PREFIX + Thread.currentThread().getId();
+        // 获取锁中的标示
+        String id = stringRedisTemplate.opsForValue().get(KEY_PREFIX + name);
+        // 判断标示是否一致
+        if(threadId.equals(id)) {
+            // 释放锁
+            stringRedisTemplate.delete(KEY_PREFIX + name);
+        }
+    }
+
+}
+
+```
+
+
 
 ### 4.6 分布式锁的原子性问题
 
@@ -3895,7 +3971,11 @@ public void unlock() {
 
 ### 4.7 Lua脚本解决多条命令原子性问题
 
-Redis提供了Lua脚本功能，在一个脚本中编写多条Redis命令，确保多条命令执行时的原子性。Lua是一种编程语言，它的基本语法大家可以参考网站：https://www.runoob.com/lua/lua-tutorial.html，这里重点介绍Redis提供的调用函数，我们可以使用lua去操作redis，又能保证他的原子性，这样就可以实现拿锁比锁删锁是一个原子性动作了，作为Java程序员这一块并不作一个简单要求，并不需要大家过于精通，只需要知道他有什么作用即可。
+Redis提供了Lua脚本功能，在一个脚本中编写多条Redis命令，确保多条命令执行时的原子性。Lua是一种编程语言，它的基本语法大家可以参考网站：https://www.runoob.com/lua/lua-tutorial.html       
+
+这里重点介绍Redis提供的调用函数，我们可以使用lua去操作redis，又能保证他的原子性，这样就可以实现拿锁比锁删锁是一个原子性动作了，作为Java程序员这一块并不作一个简单要求，并不需要大家过于精通，只需要知道他有什么作用即可
+
+
 
 这里重点介绍Redis提供的调用函数，语法如下：
 

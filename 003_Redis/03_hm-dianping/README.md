@@ -2579,11 +2579,38 @@ public void addSeckillVoucher(Voucher voucher) {
 }
 ```
 
+用postman实现优惠券的添加：
+
+![image-20230113074754912](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141052131.png)
+
+请求`http://localhost:8081/voucher/seckill`，JSON数据：
+
+```json
+{
+    "shopId":1,
+    "title":"100元代金券",
+    "subTitle":"周一至周五均可用",
+    "rules":"全场通用\\n无需预约\\n可无限叠加\\不兑现、不找零\\n仅限堂食",
+    "payValue":8000,
+    "actualValue":10000,
+    "type":1,
+    "stock":100,
+    "beginTime":"2022-01-25T10:09:17",
+    "endTime":"2022-01-26T12:09:04"
+}
+```
+
+优惠券添加成功：
+
+![image-20230113075052542](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141052176.png)
+
 ### 3.4 实现秒杀下单
 
 下单核心思路：当我们点击抢购时，会触发右侧的请求，我们只需要编写对应的controller即可
 
-![1653365839526](https://img-blog.csdnimg.cn/45fe038172984aa0ae73cedff9316349.png)
+![1653365839526](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141052029.png)
+
+
 
 秒杀下单应该思考的内容：
 
@@ -2598,7 +2625,7 @@ public void addSeckillVoucher(Voucher voucher) {
 
 比如时间是否充足，如果时间充足，则进一步判断库存是否足够，如果两者都满足，则扣减库存，创建订单，然后返回订单id，如果有一个条件不满足则直接结束。
 
-![1653366238564](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages1653366238564.png)
+![1653366238564](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:\github\images1653366238564.png)
 
 VoucherOrderServiceImpl
 
@@ -2646,6 +2673,111 @@ public Result seckillVoucher(Long voucherId) {
 
 }
 ```
+
+**点击抢购，生成订单，并将信息写入数据库**
+
+![image-20230114092709074](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141051790.png)
+
+```sql
+ SELECT * FROM `tb_voucher_order`;
+
+ +--------------------+---------+------------+----------+--------+---------------------+----------+----------+-------------+---------------------+
+| id                 | user_id | voucher_id | pay_type | status | create_time         | pay_time | use_time | refund_time | update_time         |
++--------------------+---------+------------+----------+--------+---------------------+----------+----------+-------------+---------------------+
+| 140422104611815429 |    1012 |         12 |        1 |      1 | 2023-01-14 09:49:29 | NULL     | NULL     | NULL        | 2023-01-14 09:49:29 |
+| 140423345857363974 |    1012 |         12 |        1 |      1 | 2023-01-14 09:54:18 | NULL     | NULL     | NULL        | 2023-01-14 09:54:18 |
++--------------------+---------+------------+----------+--------+---------------------+----------+----------+-------------+---------------------+
+```
+
+
+
+**VoucherOrderServiceImpl完整代码：**
+
+```java
+package com.hmdp.service.impl;
+
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hmdp.dto.Result;
+import com.hmdp.entity.SeckillVoucher;
+import com.hmdp.entity.VoucherOrder;
+import com.hmdp.mapper.VoucherOrderMapper;
+import com.hmdp.service.ISeckillVoucherService;
+import com.hmdp.service.IVoucherOrderService;
+import com.hmdp.utils.RedisIdWorker;
+import com.hmdp.utils.UserHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.time.LocalDateTime;
+
+/**
+ * <p>
+ * 服务实现类
+ * </p>
+ */
+@Service
+public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, VoucherOrder> implements IVoucherOrderService {
+
+    @Resource
+    private ISeckillVoucherService iSeckillVoucherService;
+
+    @Resource
+    private RedisIdWorker redisIdWorker;
+
+    @Override
+    @Transactional
+    public Result seckillVoucher(Long voucherId) {
+        // 1.查询优惠券
+        SeckillVoucher voucher = iSeckillVoucherService.getById(voucherId);
+        // 2.判断秒杀是否开始
+        if (voucher.getBeginTime().isAfter(LocalDateTime.now())) {
+            // 尚未开始
+            return Result.fail("秒杀尚未开始！");
+        }
+        // 3.判断秒杀是否已经结束
+        if (voucher.getEndTime().isBefore(LocalDateTime.now())) {
+            // 尚未开始
+            return Result.fail("秒杀已经结束！");
+        }
+
+        // 4.判断库存是否充足
+        if (voucher.getStock() < 1) {
+            //库存不足
+            return Result.fail("库存不足");
+        }
+
+        // 5.扣减库存
+        boolean isSuccess = iSeckillVoucherService.update()
+                .setSql("stock = stock -1")
+                .eq("voucher_id", voucherId).update();
+
+        if(!isSuccess){
+            // 扣减失败
+            return Result.fail("库存扣减失败！");
+        }
+        // 6.创建订单(订单信息：订单id、用户id、代金券id)
+        VoucherOrder voucherOrder = new VoucherOrder();
+
+        // 订单id
+        long orderId = redisIdWorker.nextId("order");
+        voucherOrder.setId(orderId);
+
+        // 用户id
+        Long userId = UserHolder.getUser().getId();
+        voucherOrder.setUserId(userId);
+
+        // 代金券id
+        voucherOrder.setVoucherId(voucherId);
+        save(voucherOrder);
+
+        // 7.返回订单id
+        return Result.ok(orderId);
+    }
+}
+```
+
+
 
 ### 3.5 库存超卖问题分析
 
@@ -2739,6 +2871,119 @@ Java8 提供的一个对AtomicLong改进后的一个类，LongAdder
 
 ![1653370271627](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages1653370271627.png)
 
+
+
+**完整代码：**
+
+```java
+package com.hmdp.service.impl;
+
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hmdp.dto.Result;
+import com.hmdp.entity.SeckillVoucher;
+import com.hmdp.entity.VoucherOrder;
+import com.hmdp.mapper.VoucherOrderMapper;
+import com.hmdp.service.ISeckillVoucherService;
+import com.hmdp.service.IVoucherOrderService;
+import com.hmdp.utils.RedisIdWorker;
+import com.hmdp.utils.UserHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.time.LocalDateTime;
+
+/**
+ * <p>
+ * 服务实现类
+ * </p>
+ */
+@Service
+public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, VoucherOrder> implements IVoucherOrderService {
+
+    @Resource
+    private ISeckillVoucherService iSeckillVoucherService;
+
+    @Resource
+    private RedisIdWorker redisIdWorker;
+
+    @Override
+    @Transactional
+    public Result seckillVoucher(Long voucherId) {
+        // 1.查询优惠券
+        SeckillVoucher voucher = iSeckillVoucherService.getById(voucherId);
+        // 2.判断秒杀是否开始
+        if (voucher.getBeginTime().isAfter(LocalDateTime.now())) {
+            // 尚未开始
+            return Result.fail("秒杀尚未开始！");
+        }
+        // 3.判断秒杀是否已经结束
+        if (voucher.getEndTime().isBefore(LocalDateTime.now())) {
+            // 尚未开始
+            return Result.fail("秒杀已经结束！");
+        }
+
+        // 4.判断库存是否充足
+        if (voucher.getStock() < 1) {
+            //库存不足
+            return Result.fail("库存不足");
+        }
+/*
+        // 5.扣减库存
+        boolean isSuccess = iSeckillVoucherService.update()
+                .setSql("stock = stock -1")
+                .eq("voucher_id", voucherId).update();*/
+
+/*        // 5.扣减库存(解决超卖问题)
+        boolean isSuccess = iSeckillVoucherService.update()
+                .setSql("stock = stock -1")  // set stock = stock -1
+                .eq("voucher_id", voucherId)
+                .eq("stock",voucher.getStock())  // where id = ? and stock = ?
+                .update();*/
+
+        // 5.扣减库存(解决超卖问题) 进一步优化——>提高抢购成功率
+        boolean isSuccess = iSeckillVoucherService.update()
+                .setSql("stock = stock -1")  // set stock = stock -1
+                .eq("voucher_id", voucherId)
+                .gt("stock", 0)  // where id = ? and stock > 0
+                .update();
+
+        if (!isSuccess) {
+            // 扣减失败
+            return Result.fail("库存扣减失败！");
+        }
+        // 6.创建订单(订单信息：订单id、用户id、代金券id)
+        VoucherOrder voucherOrder = new VoucherOrder();
+
+        // 订单id
+        long orderId = redisIdWorker.nextId("order");
+        voucherOrder.setId(orderId);
+
+        // 用户id
+        Long userId = UserHolder.getUser().getId();
+        voucherOrder.setUserId(userId);
+
+        // 代金券id
+        voucherOrder.setVoucherId(voucherId);
+        save(voucherOrder);
+
+        // 7.返回订单id
+        return Result.ok(orderId);
+    }
+}
+```
+
+**总结：**
+
+超卖这样的线程安全问题，解决方案有哪些?
+
+- 悲观锁:添加同步锁，让线程串行执行
+  - 优点:简单粗暴
+  - 缺点:性能一般
+- 乐观锁:不加锁,在更新时判断是否有其它线程在修改
+  - 优点:性能好
+  - 缺点:存在成功率低的问题
+
 ### 3.6 优惠券秒杀-一人一单
 
 需求：修改秒杀业务，要求同一个优惠券，一个用户只能下一单
@@ -2810,9 +3055,9 @@ public Result seckillVoucher(Long voucherId) {
 }
 ```
 
-**存在问题：**现在的问题还是和之前一样，并发过来，查询数据库，都不存在订单，所以我们还是需要加锁，但是乐观锁比较适合更新数据，而现在是插入数据，所以我们需要使用悲观锁操作
+**存在问题**：   现在的问题还是和之前一样，并发过来，查询数据库，都不存在订单，所以我们还是需要加锁，但是乐观锁比较适合更新数据，而现在是插入数据，所以我们需要使用悲观锁操作
 
-**注意：**在这里提到了非常多的问题，我们需要慢慢的来思考，首先我们的初始方案是封装了一个createVoucherOrder方法，同时为了确保他线程安全，在方法上添加了一把synchronized 锁
+**注意**：在这里提到了非常多的问题，我们需要慢慢的来思考，首先我们的初始方案是封装了一个createVoucherOrder方法，同时为了确保他线程安全，在方法上添加了一把synchronized 锁
 
 ```java
 @Transactional

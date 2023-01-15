@@ -4007,17 +4007,17 @@ return name
 
 例如，我们要执行 redis.call('set', 'name', 'jack') 这个脚本，语法如下：
 
-![1653392218531](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141340975.png)
-
-
+![1653392218531](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301151423594.png)
 
 如果脚本中的key、value不想写死，可以作为参数传递。key类型参数会放入KEYS数组，其它参数会放入ARGV数组，在脚本中可以从KEYS和ARGV数组获取这些参数：
+
+![image-20230115142812211](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301151428449.png)
 
 ![1653392438917](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141339302.png)
 
 
 
-接下来我们来回一下我们释放锁的逻辑：
+接下来我们来梳理一下释放锁的逻辑：
 
 释放锁的业务流程是这样的
 
@@ -4031,11 +4031,11 @@ return name
 
 如果用Lua脚本来表示则是这样的：
 
-最终我们操作redis的拿锁比锁删锁的lua脚本就会变成这样
+最终操作redis的拿锁比锁删锁的lua脚本就会变成这样
 
 ```lua
--- 这里的 KEYS[1] 就是锁的key，这里的ARGV[1] 就是当前线程标示
--- 获取锁中的标示，判断是否与当前线程标示一致
+-- 这里的 KEYS[1] 就是锁的key，这里的ARGV[1] 就是当前线程标识
+-- 获取锁中的标识，判断是否与当前线程标示一致
 if (redis.call('GET', KEYS[1]) == ARGV[1]) then
   -- 一致，则删除锁
   return redis.call('DEL', KEYS[1])
@@ -4076,16 +4076,86 @@ public void unlock() {
 经过以上代码改造后，我们就能够实现 拿锁比锁删锁的原子性动作了~
 ```
 
+**完整实现细节及代码：**
+
+在`src/main/resources/unlock.lua`文件中添加脚本：
+
+```lua
+-- 这里的 KEYS[1] 就是锁的key，这里的ARGV[1] 就是当前线程标示
+-- 获取锁中的标示，判断是否与当前线程标示一致
+if (redis.call('GET', KEYS[1]) == ARGV[1]) then
+  -- 一致，则删除锁
+  return redis.call('DEL', KEYS[1])
+end
+-- 不一致，则直接返回
+return 0
+```
+
+SimpleRedisLock类：
+
+```java
+package com.hmdp.utils;
+
+import cn.hutool.core.lang.UUID;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
+public class SimpleRedisLock implements ILock {
+
+    private String name;
+
+    private StringRedisTemplate stringRedisTemplate;
+
+    public SimpleRedisLock(String name, StringRedisTemplate stringRedisTemplate) {
+        this.name = name;
+        this.stringRedisTemplate = stringRedisTemplate;
+    }
+
+    //    private static final String KEY_PREFIX = "lock:";
+    private static final String KEY_PREFIX = "lock:";
+    private static final String ID_PREFIX = UUID.randomUUID().toString(true) + "-";
+
+    private static final DefaultRedisScript<Long> UNLOCK_SCRIPT;
+    static {
+        UNLOCK_SCRIPT = new DefaultRedisScript<>();
+        UNLOCK_SCRIPT.setLocation(new ClassPathResource("unlock.lua"));
+        UNLOCK_SCRIPT.setResultType(Long.class);
+    }
+
+    // 版本三: 改造unlock() -> 调用Lua脚本改造分布式锁
+    @Override
+    public boolean tryLock(long timeoutSec) {
+        // 获取线程标示
+        String threadId = ID_PREFIX + Thread.currentThread().getId();
+        // 获取锁
+        Boolean success = stringRedisTemplate.opsForValue()
+                .setIfAbsent(KEY_PREFIX + name, threadId, timeoutSec, TimeUnit.SECONDS);
+        return Boolean.TRUE.equals(success);
+    }
+
+    @Override
+    public void unlock() {
+        // 调用lua脚本
+        stringRedisTemplate.execute(
+                UNLOCK_SCRIPT,
+                Collections.singletonList(KEY_PREFIX + name),
+                ID_PREFIX + Thread.currentThread().getId());
+    }
+}
+```
+
 小总结：
 
 基于Redis的分布式锁实现思路：
 
 * 利用set nx ex获取锁，并设置过期时间，保存线程标示
 * 释放锁时先判断线程标示是否与自己一致，一致则删除锁
-  * 特性：
-    * 利用set nx满足互斥性
-    * 利用set ex保证故障时锁依然能释放，避免死锁，提高安全性
-    * 利用Redis集群保证高可用和高并发特性
+* 特性：
+  * 利用set nx满足互斥性
+  * 利用set ex保证故障时锁依然能释放，避免死锁，提高安全性
+  * 利用Redis集群保证高可用和高并发特性
 
 笔者总结：我们一路走来，利用添加过期时间，防止死锁问题的发生，但是有了过期时间之后，可能出现误删别人锁的问题，这个问题我们开始是利用删之前 通过拿锁，比锁，删锁这个逻辑来解决的，也就是删之前判断一下当前这把锁是否是属于自己的，但是现在还有原子性问题，也就是我们没法保证拿锁比锁删锁是一个原子性的动作，最后通过lua表达式来解决这个问题
 
@@ -4093,7 +4163,7 @@ public void unlock() {
 
 **测试逻辑：**
 
-第一个线程进来，得到了锁，手动删除锁，模拟锁超时了，其他线程会执行lua来抢锁，当第一天线程利用lua删除锁时，lua能保证他不能删除他的锁，第二个线程删除锁时，利用lua同样可以保证不会删除别人的锁，同时还能保证原子性。
+第一个线程进来，得到了锁，手动删除锁，模拟锁超时了，其他线程会执行lua来抢锁，当第一天线程利用lua删除锁时，lua能保证他不能删除他的锁，第二个线程删除锁时，利用lua同样可以保证不会删除别人的锁，同时还能保证原子性
 
 ## 5、分布式锁-redission
 
@@ -4101,11 +4171,11 @@ public void unlock() {
 
 基于setnx实现的分布式锁存在下面的问题：
 
-**重入问题**：重入问题是指 获得锁的线程可以再次进入到相同的锁的代码块中，可重入锁的意义在于防止死锁，比如HashTable这样的代码中，他的方法都是使用synchronized修饰的，假如他在一个方法内，调用另一个方法，那么此时如果是不可重入的，不就死锁了吗？所以可重入锁他的主要意义是防止死锁，我们的synchronized和Lock锁都是可重入的。
+**重入问题**：重入问题是指 获得锁的线程可以再次进入到相同的锁的代码块中，可重入锁的意义在于防止死锁，比如HashTable这样的代码中，他的方法都是使用synchronized修饰的，假如他在一个方法内，调用另一个方法，那么此时如果是不可重入的，不就死锁了吗？所以可重入锁他的主要意义是防止死锁，我们的synchronized和Lock锁都是可重入的
 
-**不可重试**：是指目前的分布式只能尝试一次，我们认为合理的情况是：当线程在获得锁失败后，他应该能再次尝试获得锁。
+**不可重试**：是指目前的分布式只能尝试一次，我们认为合理的情况是：当线程在获得锁失败后，他应该能再次尝试获得锁
 
-**超时释放：**我们在加锁时增加了过期时间，这样的我们可以防止死锁，但是如果卡顿的时间超长，虽然我们采用了lua表达式防止删锁的时候，误删别人的锁，但是毕竟没有锁住，有安全隐患
+**超时释放**： 我们在加锁时增加了过期时间，这样的我们可以防止死锁，但是如果卡顿的时间超长，虽然我们采用了lua表达式防止删锁的时候，误删别人的锁，但是毕竟没有锁住，有安全隐患
 
 **主从一致性：** 如果Redis提供了主从集群，当我们向集群写数据时，主机需要异步的将数据同步给从机，而万一在同步过去之前，主机宕机了，就会出现死锁问题
 

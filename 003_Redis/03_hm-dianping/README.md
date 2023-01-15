@@ -4167,6 +4167,10 @@ public class SimpleRedisLock implements ILock {
 
 ## 5、分布式锁-redission
 
+官网地址: https://redisson.org
+
+GitHub地址: https://github.com/redisson/redisson
+
 ### 5.1 分布式锁-redission功能介绍
 
 基于setnx实现的分布式锁存在下面的问题：

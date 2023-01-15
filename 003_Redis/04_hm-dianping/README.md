@@ -44,9 +44,16 @@ Redission提供了分布式锁的多种多样的功能
 </dependency>
 ```
 
-配置Redisson客户端：
+配置Redisson客户端(建议通过下方配置来配置Redisson，而不是在yaml中配置，yaml中配置会和spring配置混淆)：
 
 ```java
+package com.hmdp.config;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 @Configuration
 public class RedissonConfig {
 
@@ -54,48 +61,54 @@ public class RedissonConfig {
     public RedissonClient redissonClient(){
         // 配置
         Config config = new Config();
-        config.useSingleServer().setAddress("redis://192.168.150.101:6379")
-            .setPassword("123321");
+        config.useSingleServer().setAddress("redis://192.168.54.134:6379")
+                .setPassword("123456");
         // 创建RedissonClient对象
         return Redisson.create(config);
     }
 }
-
 ```
 
-如何使用Redission的分布式锁
+如何使用Redission的分布式锁——直接注入 RedissonClient即可
 
 ```java
-@Resource
-private RedissionClient redissonClient;
+package com.hmdp;
+import org.junit.jupiter.api.Test;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
+import org.springframework.boot.test.context.SpringBootTest;
+import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
+@SpringBootTest
+public class TestRedissionClient {
 
-@Test
-void testRedisson() throws Exception{
-    //获取锁(可重入)，指定锁的名称
-    RLock lock = redissonClient.getLock("anyLock");
-    //尝试获取锁，参数分别是：获取锁的最大等待时间(期间会重试)，锁自动释放时间，时间单位
-    boolean isLock = lock.tryLock(1,10,TimeUnit.SECONDS);
-    //判断获取锁成功
-    if(isLock){
-        try{
-            System.out.println("执行业务");          
-        }finally{
-            //释放锁
-            lock.unlock();
+    @Resource
+    private RedissonClient redissonClient;
+
+    @Test
+    void testRedisson() throws Exception {
+        // 获取锁(可重入)，指定锁的名称
+        RLock lock = redissonClient.getLock("anyLock");
+        // 尝试获取锁，参数分别是：获取锁的最大等待时间(期间会重试)，锁自动释放时间，时间单位
+        boolean isLock = lock.tryLock(1, 10, TimeUnit.SECONDS);
+        // 判断获取锁成功
+        if (isLock) {
+            try {
+                System.out.println("执行业务");
+            } finally {
+                //释放锁
+                lock.unlock();
+            }
+
         }
-        
     }
-    
-    
-    
 }
 ```
 
-在 VoucherOrderServiceImpl
-
-注入RedissonClient
+在 VoucherOrderServiceImpl中使用RedissonClient替换原来的锁：
 
 ```java
+// 注入RedissonClient
 @Resource
 private RedissonClient redissonClient;
 
@@ -121,6 +134,7 @@ public Result seckillVoucher(Long voucherId) {
         Long userId = UserHolder.getUser().getId();
         //创建锁对象 这个代码不用了，因为我们现在要使用分布式锁
         //SimpleRedisLock lock = new SimpleRedisLock("order:" + userId, stringRedisTemplate);
+        // 使用redissonClient
         RLock lock = redissonClient.getLock("lock:order:" + userId);
         //获取锁对象
         boolean isLock = lock.tryLock();
@@ -142,29 +156,39 @@ public Result seckillVoucher(Long voucherId) {
 
 ### 5.3 分布式锁-redission可重入锁原理
 
-在Lock锁中，他是借助于底层的一个voaltile的一个state变量来记录重入的状态的，比如当前没有人持有这把锁，那么state=0，假如有人持有这把锁，那么state=1，如果持有这把锁的人再次持有这把锁，那么state就会+1 ，如果是对于synchronized而言，他在c语言代码中会有一个count，原理和state类似，也是重入一次就加一，释放一次就-1 ，直到减少成0 时，表示当前这把锁没有被人持有。  
+在Lock锁中，他是借助于底层的一个voaltile的一个state变量来记录重入的状态的，比如当前没有人持有这把锁，那么state=0，假如有人持有这把锁，那么state=1，如果持有这把锁的人再次持有这把锁，那么state就会+1 ，如果是对于synchronized而言，他在c语言代码中会有一个count，原理和state类似，也是重入一次就加一，释放一次就-1 ，直到减少成0 时，表示当前这把锁没有被人持有。 
 
 在redission中，我们的也支持支持可重入锁
 
-在分布式锁中，他采用hash结构用来存储锁，其中大key表示表示这把锁是否存在，用小key表示当前这把锁被哪个线程持有，所以接下来我们一起分析一下当前的这个lua表达式
+**Redisson可重入锁原理图：**
+
+![1653548087334](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141336252.png)
+
+采用hash结构用来存储锁，其中大key表示表示这把锁是否存在，用小key表示当前这把锁被哪个线程持有,value用来表示重入的次数
+
+在分布式锁中，他**采用hash结构用来存储锁，其中大key表示表示这把锁是否存在，用小key表示当前这把锁被哪个线程持有**，所以接下来我们一起分析一下当前的这个lua表达式
 
 这个地方一共有3个参数
 
-**KEYS[1] ： 锁名称**
+```
+KEYS[1] ： 锁名称
 
-**ARGV[1]：  锁失效时间**
+ARGV[1]： 锁失效时间
 
-**ARGV[2]：  id + ":" + threadId; 锁的小key**
+ARGV[2]： id + ":" + threadId; 锁的小key
+```
 
 exists: 判断数据是否存在  name：是lock是否存在,如果==0，就表示当前这把锁不存在
 
 redis.call('hset', KEYS[1], ARGV[2], 1);此时他就开始往redis里边去写数据 ，写成一个hash结构
 
+```
 Lock{
 
-​    id + **":"** + threadId :  1
+  id + ":" + threadId : 1
 
 }
+```
 
 如果当前这把锁存在，则第一个条件不满足，再判断
 
@@ -176,7 +200,9 @@ redis.call('hincrby', KEYS[1], ARGV[2], 1)
 
 将当前这个锁的value进行+1 ，redis.call('pexpire', KEYS[1], ARGV[1]); 然后再对其设置过期时间，如果以上两个条件都不满足，则表示当前这把锁抢锁失败，最后返回pttl，即为当前这把锁的失效时间
 
-如果小伙帮们看了前边的源码， 你会发现他会去判断当前这个方法的返回值是否为null，如果是null，则对应则前两个if对应的条件，退出抢锁逻辑，如果返回的不是null，即走了第三个分支，在源码处会进行while(true)的自旋抢锁。
+如果看了前边的源码， 你会发现他会去判断当前这个方法的返回值是否为null，如果是null，则对应则前两个if对应的条件，退出抢锁逻辑，如果返回的不是null，即走了第三个分支，在源码处会进行while(true)的自旋抢锁
+
+![image-20230115211616120](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301152116470.png)
 
 ```lua
 "if (redis.call('exists', KEYS[1]) == 0) then " +
@@ -191,10 +217,6 @@ redis.call('hincrby', KEYS[1], ARGV[2], 1)
               "end; " +
               "return redis.call('pttl', KEYS[1]);"
 ```
-
-![1653548087334](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141336252.png)
-
-
 
 ### 5.4 分布式锁-redission锁重试和WatchDog机制
 

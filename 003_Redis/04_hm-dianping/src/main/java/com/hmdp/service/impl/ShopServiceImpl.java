@@ -61,6 +61,12 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
 
         if (shop == null) {
             return Result.fail("店铺不存在！");
+
+/*  原代码的不足之处：
+            如果报“店铺不存在”，但是数据库中有数据，可以在单元测试中通过saveShop2Redis方法进行缓存预热
+            也可以在queryWithLogicalExpire改进缓存重建部分代码，返回数据库中的店铺信息
+            也可以直接在此处查询数据库
+               */
         }
 
         // 7.返回成功信息
@@ -180,6 +186,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
     }
 
 
+    // 缓存预热：活动前将店铺添加到redis -> 添加操作在单元测试中
     public void saveShop2Redis(Long id, long expireSeconds) {
         // 1.查询店铺数据
         Shop shop = getById(id);

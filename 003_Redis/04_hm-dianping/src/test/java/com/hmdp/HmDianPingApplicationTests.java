@@ -30,6 +30,8 @@ class HmDianPingApplicationTests {
 
     private ExecutorService es = Executors.newFixedThreadPool(500);
 
+
+    // 缓存预热
     @Test
     void testShopService(){
          shopService.saveShop2Redis(1L,10L);
@@ -40,7 +42,6 @@ class HmDianPingApplicationTests {
         Shop shop = shopService.getById(2L);
 
         cacheClient.setWithLogicalExpire(CACHE_SHOP_KEY + 2L,shop,10L, TimeUnit.SECONDS);
-
     }
 
 

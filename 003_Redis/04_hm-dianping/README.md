@@ -202,7 +202,7 @@ redis.call('hincrby', KEYS[1], ARGV[2], 1)
 
 如果看了前边的源码， 你会发现他会去判断当前这个方法的返回值是否为null，如果是null，则对应则前两个if对应的条件，退出抢锁逻辑，如果返回的不是null，即走了第三个分支，在源码处会进行while(true)的自旋抢锁
 
-![image-20230115211616120](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301152116470.png)
+![image-20230115212353760](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301152123663.png)
 
 ```lua
 "if (redis.call('exists', KEYS[1]) == 0) then " +

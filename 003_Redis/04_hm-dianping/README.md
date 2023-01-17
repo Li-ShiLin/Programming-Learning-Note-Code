@@ -200,22 +200,6 @@ redis.call('hincrby', KEYS[1], ARGV[2], 1)
 
 将当前这个锁的value进行+1 ，redis.call('pexpire', KEYS[1], ARGV[1]); 然后再对其设置过期时间，如果以上两个条件都不满足，则表示当前这把锁抢锁失败，最后返回pttl，即为当前这把锁的失效时间
 
-如果看了前边的源码， 你会发现他会去判断当前这个方法的返回值是否为null，如果是null，则对应则前两个if对应的条件，退出抢锁逻辑，如果返回的不是null，即走了第三个分支，在源码处会进行while(true)的自旋抢锁
-
-```lua
-"if (redis.call('exists', KEYS[1]) == 0) then " +
-                  "redis.call('hset', KEYS[1], ARGV[2], 1); " +
-                  "redis.call('pexpire', KEYS[1], ARGV[1]); " +
-                  "return nil; " +
-              "end; " +
-              "if (redis.call('hexists', KEYS[1], ARGV[2]) == 1) then " +
-                  "redis.call('hincrby', KEYS[1], ARGV[2], 1); " +
-                  "redis.call('pexpire', KEYS[1], ARGV[1]); " +
-                  "return nil; " +
-              "end; " +
-              "return redis.call('pttl', KEYS[1]);"
-```
-
 **获取锁的lua脚本：**
 
 ![image-20230115212353760](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301152123663.png)
@@ -261,7 +245,7 @@ class RedissonTest {
 
     @Test
     void method1() throws InterruptedException {
-        // 尝试获取锁 （可以点进去查看实现源码）
+        // 尝试获取锁
         boolean isLock = lock.tryLock(1L, TimeUnit.SECONDS);
         if (!isLock) {
             log.error("获取锁失败 .... 1");
@@ -292,10 +276,49 @@ class RedissonTest {
             lock.unlock();
         }
     }
+    
+                        /*    日志打印：
+
+                                    获取锁成功 .... 1
+                                    获取锁成功 .... 2
+                                    开始执行业务 ... 2
+                                    准备释放锁 .... 2
+                                    开始执行业务 ... 1
+                                    准备释放锁 .... 1
+                            */
 }
+
+```
+
+在上面的测试中点进去查看lock.tryLock()的源码， 会发现他去判断当前这个方法的返回值是否为null，如果是null，则对应则前两个if对应的条件，退出抢锁逻辑，如果返回的不是null，即走了第三个分支，在源码处会进行while(true)的自旋抢锁。且源码中含有如下一段lua脚本：
+
+```lua
+"if (redis.call('exists', KEYS[1]) == 0) then " +
+                  "redis.call('hset', KEYS[1], ARGV[2], 1); " +
+                  "redis.call('pexpire', KEYS[1], ARGV[1]); " +
+                  "return nil; " +
+              "end; " +
+              "if (redis.call('hexists', KEYS[1], ARGV[2]) == 1) then " +
+                  "redis.call('hincrby', KEYS[1], ARGV[2], 1); " +
+                  "redis.call('pexpire', KEYS[1], ARGV[1]); " +
+                  "return nil; " +
+              "end; " +
+              "return redis.call('pttl', KEYS[1]);"
 ```
 
 ### 5.4 分布式锁-redission锁重试和WatchDog机制
+
+![image-20230117215232165](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301172152355.png)
+
+
+
+**Redisson分布式锁原理:**
+
+- 可重入:利用hash结构记录线程id和重入次数
+- 可重试:利用信号量和PubSub功能实现等待、唤醒，获取锁失败的重试机制
+- 超时续约:利用watchDog，每隔一段时间( releaseTime/ 3)，重置超时时间
+
+
 
 **说明**：由于课程中已经说明了有关tryLock的源码解析以及其看门狗原理，所以笔者在这里给大家分析lock()方法的源码解析，希望大家在学习过程中，能够掌握更多的知识
 
@@ -397,7 +420,20 @@ private void renewExpiration() {
 
 为了提高redis的可用性，我们会搭建集群或者主从，现在以主从为例
 
-此时我们去写命令，写在主机上， 主机会将数据同步给从机，但是假设在主机还没有来得及把数据写入到从机去的时候，此时主机宕机，哨兵会发现主机宕机，并且选举一个slave变成master，而此时新的master中实际上并没有锁信息，此时锁信息就已经丢掉了。
+此时我们去写命令，写在主机上， 主机会将数据同步给从机，但是假设在主机还没有来得及把数据写入到从机去的时候，此时主机宕机，哨兵会发现主机宕机，并且选举一个slave变成master，而此时新的master中实际上并没有锁信息，此时锁信息就已经丢掉了
+
+ <table align="center">
+    <tr>
+        <td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301172200894.png" > <b>正常</b></td>
+        <td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141335401.png" > <b>master宕机</b></td>
+    </tr>
+    </table>
+
+
+
+![image-20230117220026108](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301172200894.png)
+
+
 
 ![1653553998403](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141335401.png)
 

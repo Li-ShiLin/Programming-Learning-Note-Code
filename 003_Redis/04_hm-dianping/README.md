@@ -424,18 +424,10 @@ private void renewExpiration() {
 
  <table align="center">
     <tr>
-        <td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301172200894.png" > <b>正常</b></td>
+        <td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301172200894.png" >  <b>正常</b> </td>
         <td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141335401.png" > <b>master宕机</b></td>
     </tr>
     </table>
-
-
-
-![image-20230117220026108](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301172200894.png)
-
-
-
-![1653553998403](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141335401.png)
 
 
 

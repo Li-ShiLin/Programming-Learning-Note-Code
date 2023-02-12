@@ -1117,7 +1117,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
 
         // 5.�?人一�?
         // 5.1 查询订单
-        Long userId = voucherOrder.getVoucherId();
+        Long userId = voucherOrder.getUserId();
         Integer count = query().eq("user_id", userId).eq("voucher_id", voucherOrder.getVoucherId()).count();
         if (count > 0) {
             // 用户已经购买过了
@@ -1141,7 +1141,56 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
 
         // 7.创建订单(订单信息：订单id、用户id、代金券id)
         save(voucherOrder);
+
     }
+
+
+    // 方式�?：用Java代码判断秒杀资格�?
+    // 加锁解决并发问题
+//    @Override
+//    public Result seckillVoucher(Long voucherId) {
+//        // 1.查询优惠�?
+//        SeckillVoucher voucher = iSeckillVoucherService.getById(voucherId);
+//        // 2.判断秒杀是否�?�?
+//        if (voucher.getBeginTime().isAfter(LocalDateTime.now())) {
+//            // 尚未�?�?
+//            return Result.fail("秒杀尚未�?始！");
+//        }
+//        // 3.判断秒杀是否已经结束
+//        if (voucher.getEndTime().isBefore(LocalDateTime.now())) {
+//            // 尚未�?�?
+//            return Result.fail("秒杀已经结束�?");
+//        }
+//
+//        // 4.判断库存是否充足
+//        if (voucher.getStock() < 1) {
+//            //库存不足
+//            return Result.fail("库存不足");
+//        }
+//
+//
+//        // 版本四：分布式锁redission，解决集群环境下的并发问�?
+//        Long userId = UserHolder.getUser().getId();
+//        //创建锁对�?(新增代码)
+//        //SimpleRedisLock lock = new SimpleRedisLock("order:" + userId, stringRedisTemplate);
+//        RLock lock = redissonClient.getLock("lock:order:" + userId);
+//
+//        //获取锁对�?
+//        boolean isLock = lock.tryLock();
+//        //加锁失败
+//        if (!isLock) {
+//            return Result.fail("不允许重复下�?");
+//        }
+//        try {
+//            //获取代理对象(事务)
+//            IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();
+//            return proxy.createVoucherOrder(voucherId);
+//        } finally {
+//            //释放�?
+//            lock.unlock();
+//        }
+//
+//    }
 
 }
 ```

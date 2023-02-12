@@ -24,4 +24,24 @@ public class RedissonConfig {
         // 创建RedissonClient对象
         return Redisson.create(config);
     }
+
+   /* @Bean
+    public RedissonClient redissonClient2(){
+        // 配置
+        Config config = new Config();
+        config.useSingleServer().setAddress("redis://192.168.54.134:6381")
+                .setPassword("123456");
+        // 创建RedissonClient对象
+        return Redisson.create(config);
+    }
+
+    @Bean
+    public RedissonClient redissonClient3(){
+        // 配置
+        Config config = new Config();
+        config.useSingleServer().setAddress("redis://192.168.54.134:6382")
+                .setPassword("123456");
+        // 创建RedissonClient对象
+        return Redisson.create(config);
+    }*/
 }

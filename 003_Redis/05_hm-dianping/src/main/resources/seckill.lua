@@ -27,4 +27,5 @@ end
 redis.call('incrby', stockKey, -1)
 -- 3.5.下单（保存用户）sadd orderKey userId
 redis.call('sadd', orderKey, userId)
+-- 3.6 发送消息到队列中，
 return 0

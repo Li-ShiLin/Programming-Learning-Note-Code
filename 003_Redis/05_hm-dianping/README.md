@@ -1,4 +1,4 @@
-## 7、Redis消息队列
+7、Redis消息队列
 
 ### 7.1 Redis消息队列-认识消息队列
 
@@ -10,15 +10,23 @@
 
 
 
+Redis提供了三种不同的方式来实现消息队列:
+
+- list结构:基于List结构模拟消息队列
+- PubSub:基本的点对点消息模型
+- Stream:比较完善的消息队列模型
+
+
+
 ![1653574849336](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141327413.png)
 
 
 
-使用队列的好处在于 **解耦：**所谓解耦，举一个生活中的例子就是：快递员(生产者)把快递放到快递柜里边(Message Queue)去，我们(消费者)从快递柜里边去拿东西，这就是一个异步，如果耦合，那么这个快递员相当于直接把快递交给你，这事固然好，但是万一你不在家，那么快递员就会一直等你，这就浪费了快递员的时间，所以这种思想在我们日常开发中，是非常有必要的。
+使用队列的好处在于 **解耦**：    所谓解耦，举一个生活中的例子就是：快递员(生产者)把快递放到快递柜里边(Message Queue)去，我们(消费者)从快递柜里边去拿东西，这就是一个异步，如果耦合，那么这个快递员相当于直接把快递交给你，这事固然好，但是万一你不在家，那么快递员就会一直等你，这就浪费了快递员的时间，所以这种思想在我们日常开发中，是非常有必要的
 
-这种场景在我们秒杀中就变成了：我们下单之后，利用redis去进行校验下单条件，再通过队列把消息发送出去，然后再启动一个线程去消费这个消息，完成解耦，同时也加快我们的响应速度。
+这种场景在我们秒杀中就变成了：我们下单之后，利用redis去进行校验下单条件，再通过队列把消息发送出去，然后再启动一个线程去消费这个消息，完成解耦，同时也加快我们的响应速度
 
-这里我们可以使用一些现成的mq，比如kafka，rabbitmq等等，但是呢，如果没有安装mq，我们也可以直接使用redis提供的mq方案，降低我们的部署和学习成本。
+这里我们可以使用一些现成的mq，比如kafka，rabbitmq等等，但是呢，如果没有安装mq，我们也可以直接使用redis提供的mq方案，降低我们的部署和学习成本
 
 
 
@@ -32,6 +40,10 @@
 不过要注意的是，当队列中没有消息时RPOP或LPOP操作会返回null，并不像JVM的阻塞队列那样会阻塞并等待消息。因此这里应该使用BRPOP或者BLPOP来实现阻塞效果。
 
 ![1653575176451](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141326917.png)
+
+使用BRPOP或者BLPOP来实现阻塞效果
+
+![image-20230212103215160](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202302121033008.png)
 
 
 
@@ -53,11 +65,31 @@
 
 PubSub（发布订阅）是Redis2.0版本引入的消息传递模型。顾名思义，消费者可以订阅一个或多个channel，生产者向对应channel发送消息后，所有订阅者都能收到相关消息。
 
- SUBSCRIBE channel [channel] ：订阅一个或多个频道
- PUBLISH channel msg ：向一个频道发送消息
- PSUBSCRIBE pattern[pattern] ：订阅与pattern格式匹配的所有频道
+-  SUBSCRIBE channel [channel] ：订阅一个或多个频道
+-  PUBLISH channel msg ：向一个频道发送消息
+- PSUBSCRIBE pattern[pattern] ：订阅与pattern格式匹配的所有频道
 
 ![1653575506373](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141325000.png)
+
+
+
+**基于PubSub的消息队列演示：**
+
+1.使用SUBSCRIBE订阅order.q1 ,使用PSUBSCRIBE订阅order.*
+
+![image-20230212104904685](C:\Users\22418\AppData\Roaming\Typora\typora-user-images\image-20230212104904685.png)
+
+
+
+2. 使用PUBLISH向order.q1发布消息hello
+
+![image-20230212105317415](C:\Users\22418\AppData\Roaming\Typora\typora-user-images\image-20230212105317415.png)
+
+
+
+3.使用PUBLISH向order.q2发布消息hello2
+
+![image-20230212105604890](C:\Users\22418\AppData\Roaming\Typora\typora-user-images\image-20230212105604890.png)
 
 
 
@@ -110,7 +142,7 @@ XREAD阻塞方式，读取最新的消息：
 
 在业务开发中，我们可以循环的调用XREAD阻塞方式来查询最新消息，从而实现持续监听队列的效果，伪代码如下
 
-![1653577689129](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141316853.png)
+![image-20230212114635167](C:\Users\22418\AppData\Roaming\Typora\typora-user-images\image-20230212114635167.png)
 
 注意：当我们指定起始ID为$时，代表读取最新的消息，如果我们处理一条消息的过程中，又有超过1条以上的消息到达队列，则下次获取时也只能获取到最新的一条，会出现漏读消息的问题
 
@@ -139,7 +171,12 @@ key：队列名称
 groupName：消费者组名称
 ID：起始ID标示，$代表队列中最后一个消息，0则代表队列中第一个消息
 MKSTREAM：队列不存在时自动创建队列
+
 其它常见命令：
+
+
+
+![image-20230212115414966](C:\Users\22418\AppData\Roaming\Typora\typora-user-images\image-20230212115414966.png)
 
  **删除指定的消费者组**
 
@@ -159,9 +196,9 @@ XGROUP CREATECONSUMER key groupname consumername
 XGROUP DELCONSUMER key groupname consumername
 ```
 
-从消费者组读取消息：
+**从消费者组读取消息：**
 
-```java
+```sh
 XREADGROUP GROUP group consumer [COUNT count] [BLOCK milliseconds] [NOACK] STREAMS key [key ...] ID [ID ...]
 ```
 
@@ -172,9 +209,9 @@ XREADGROUP GROUP group consumer [COUNT count] [BLOCK milliseconds] [NOACK] STREA
 * NOACK：无需手动ACK，获取到消息后自动确认
 * STREAMS key：指定队列名称
 * ID：获取消息的起始ID：
+  * ">"：从下一个未消费的消息开始
+  * 其它：根据指定id从pending-list中获取已消费但未确认的消息，例如0，是从pending-list中的第一个消息开始
 
-">"：从下一个未消费的消息开始
-其它：根据指定id从pending-list中获取已消费但未确认的消息，例如0，是从pending-list中的第一个消息开始
 
 消费者监听消息的基本思路：
 
@@ -202,7 +239,11 @@ STREAM类型消息队列的XREADGROUP命令特点：
 * 修改之前的秒杀下单Lua脚本，在认定有抢购资格后，直接向stream.orders中添加消息，内容包含voucherId、userId、orderId
 * 项目启动时，开启一个线程任务，尝试获取stream.orders中的消息，完成下单\
 
-修改lua表达式,新增3.6 
+1.通过redis命令 `XGROUP CREATE stream.orders g1 0 MKSTREAM` 创建消息队列
+
+![image-20230212143119087](C:\Users\22418\AppData\Roaming\Typora\typora-user-images\image-20230212143119087.png)
+
+2.修改lua表达式,新增3.6 
 
 ![1656082824939](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141311439.png)
 

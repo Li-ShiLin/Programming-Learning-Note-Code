@@ -691,7 +691,7 @@ public void addSeckillVoucher(Voucher voucher) {
 }
 ```
 
-seckill_01.lua完整lua表达�?
+seckill.lua完整lua表达�?
 
 ```lua
 -- 1.参数列表
@@ -699,8 +699,6 @@ seckill_01.lua完整lua表达�?
 local voucherId = ARGV[1]
 -- 1.2.用户id
 local userId = ARGV[2]
--- 1.3.订单id
-local orderId = ARGV[3]
 
 -- 2.数据key
 -- 2.1.库存key   �?..拼接字符�?

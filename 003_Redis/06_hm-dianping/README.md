@@ -856,6 +856,8 @@ SELECT id,phone,password,nick_name,icon,create_time,update_time
 对应的java代码：
 
 ```java
+        // 2.解析出其中的用户id
+        List<Long> ids = top5.stream().map(Long::valueOf).collect(Collectors.toList());
         // 实现方法二：可以保证查到的点赞为top5的顺序
        /*  SELECT id,phone,password,nick_name,icon,create_time,update_time
                     FROM tb_user

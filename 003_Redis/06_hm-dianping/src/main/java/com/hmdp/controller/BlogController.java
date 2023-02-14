@@ -65,4 +65,10 @@ public class BlogController {
         return blogService.queryBlogById(id);
     }
 
+    // 添加redis sortedSet查询逻辑，实现点赞排行榜
+    @GetMapping("likes/{id}")
+    public Result queryBlogLikes(@PathVariable("id") Long id) {
+        return blogService.queryBlogLikes(id);
+    }
+
 }

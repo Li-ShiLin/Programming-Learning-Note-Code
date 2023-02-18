@@ -23,7 +23,22 @@
 
 
 
-注意: 这里需要把主键修改为自增长，简化开发。
+注意: 这里需要把主键修改为自增长，简化开发
+
+```sql
+
+-- ----------------------------
+-- Table structure for tb_follow
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_follow`;
+CREATE TABLE `tb_follow`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
+  `follow_user_id` bigint(20) UNSIGNED NOT NULL COMMENT '关联的用户id',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+```
 
 FollowController
 
@@ -78,6 +93,60 @@ public Result isFollow(Long followUserId) {
     }
 ```
 
+**实操代码：**
+
+ FollowServiceImpl
+
+```java
+package com.hmdp.service.impl;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hmdp.dto.Result;
+import com.hmdp.entity.Follow;
+import com.hmdp.mapper.FollowMapper;
+import com.hmdp.service.IFollowService;
+import com.hmdp.utils.UserHolder;
+import org.springframework.stereotype.Service;
+@Service
+public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> implements IFollowService {
+
+    @Override
+    public Result follow(Long followUserId, Boolean isFollow) {
+        // 1.获取登录用户
+        Long userId = UserHolder.getUser().getId();
+
+        // 2.判断是关注还是取关
+        if (isFollow) {
+            // 3.关注，新增数据
+            Follow follow = new Follow();
+            follow.setUserId(userId);
+            follow.setFollowUserId(followUserId);
+            save(follow);
+        } else {
+            // 4.取关，删除数据 delete from tb_follow where userId = ? and follow_user_id = ?
+            remove(new QueryWrapper<Follow>()
+                    .eq("user_id", userId)
+                    .eq("follow_user_id", followUserId));
+        }
+        return Result.ok();
+    }
+
+    @Override
+    public Result isFollow(Long followUserId) {
+        // 1.获取登录用户
+        Long userId = UserHolder.getUser().getId();
+        // 2.查询是否关注 select count(*) from tb_follow where user_id = ? and follow_user_id = ?
+        Integer count = query()
+                .eq("user_id", userId)
+                .eq("follow_user_id", followUserId).count();
+        // 3.判断
+        return Result.ok(count > 0);
+    }
+}
+```
+
+
+
 ### 9.2 好友关注-共同关注
 
 想要去看共同关注的好友，需要首先进入到这个页面，这个页面会发起两个请求
@@ -86,7 +155,7 @@ public Result isFollow(Long followUserId) {
 
 2、去查询用户的笔记
 
-以上两个功能和共同关注没有什么关系，大家可以自行将笔记中的代码拷贝到idea中就可以实现这两个功能了，我们的重点在于共同关注功能。
+以上两个功能和共同关注没有什么关系，大家可以自行将笔记中的代码拷贝到idea中就可以实现这两个功能了，我们的重点在于共同关注功能。点击用户头像可以查看用户笔记和共同关注
 
 ![1653806706296](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141303447.png)
 
@@ -125,6 +194,12 @@ public Result queryBlogByUserId(
 需求：利用Redis中恰当的数据结构，实现共同关注功能。在博主个人页面展示出当前用户与博主的共同关注呢。
 
 当然是使用我们之前学习过的set集合咯，在set集合中，有交集并集补集的api，我们可以把两人的关注的人分别放入到一个set集合中，然后再通过api去查看这两个set集合中的交集数据。
+
+
+
+redis命令实现set集合求交集：
+
+![image-20230218105627335](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202302181057528.png)
 
 ![1653806973212](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202301141302820.png)
 
@@ -191,6 +266,107 @@ public Result followCommons(Long id) {
             .map(user -> BeanUtil.copyProperties(user, UserDTO.class))
             .collect(Collectors.toList());
     return Result.ok(users);
+}
+```
+
+**完整代码：**
+
+ FollowServiceImpl实现类：
+
+```java
+package com.hmdp.service.impl;
+
+import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hmdp.dto.Result;
+import com.hmdp.dto.UserDTO;
+import com.hmdp.entity.Follow;
+import com.hmdp.mapper.FollowMapper;
+import com.hmdp.service.IFollowService;
+import com.hmdp.service.IUserService;
+import com.hmdp.utils.UserHolder;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+@Service
+public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> implements IFollowService {
+
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Resource
+    private IUserService userService;
+
+    @Override
+    public Result follow(Long followUserId, Boolean isFollow) {
+        // 1.获取登录用户
+        Long userId = UserHolder.getUser().getId();
+
+        String key = "follows:" + userId;
+        // 2.判断是关注还是取关
+        if (isFollow) {
+            // 3.关注，新增数据
+            Follow follow = new Follow();
+            follow.setUserId(userId);
+            follow.setFollowUserId(followUserId);
+            boolean isSuccess = save(follow);
+            if (isSuccess) {
+                // 把关注用户的id,放入redis的set集合 sadd userId
+                stringRedisTemplate.opsForSet().add(key, followUserId.toString());
+            }
+        } else {
+            // 4.取关，删除数据 delete from tb_follow where userId = ? and follow_user_id = ?
+            boolean isSuccess = remove(new QueryWrapper<Follow>()
+                    .eq("user_id", userId)
+                    .eq("follow_user_id", followUserId));
+            if (isSuccess) {
+                // 把关注用户的id从redis集合中移除
+                stringRedisTemplate.opsForSet().remove(key, followUserId.toString());
+            }
+        }
+        return Result.ok();
+    }
+
+    @Override
+    public Result isFollow(Long followUserId) {
+        // 1.获取登录用户
+        Long userId = UserHolder.getUser().getId();
+        // 2.查询是否关注 select count(*) from tb_follow where user_id = ? and follow_user_id = ?
+        Integer count = query()
+                .eq("user_id", userId)
+                .eq("follow_user_id", followUserId).count();
+        // 3.判断
+        return Result.ok(count > 0);
+    }
+
+    @Override
+    public Result followCommons(Long id) {
+        // 1.获取当前用户
+        Long userId = UserHolder.getUser().getId();
+        String key = "follows:" + userId;
+        // 2.求交集
+        String key2 = "follows:" + id;
+        Set<String> intersect = stringRedisTemplate.opsForSet().intersect(key, key2);
+        if (intersect == null || intersect.isEmpty()) {
+            // 无交集
+            return Result.ok(Collections.emptyList());
+        }
+        // 3.解析id集合
+        List<Long> ids = intersect.stream().map(Long::valueOf).collect(Collectors.toList());
+        // 4.查询用户
+        List<UserDTO> users = userService.listByIds(ids)
+                .stream()
+                .map(user -> BeanUtil.copyProperties(user, UserDTO.class))
+                .collect(Collectors.toList());
+
+        return Result.ok(users);
+    }
 }
 ```
 

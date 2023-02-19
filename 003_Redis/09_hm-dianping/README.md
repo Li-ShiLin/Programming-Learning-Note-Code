@@ -14,7 +14,9 @@
 
 我们如何能够简化一点呢？其实可以考虑小时候一个挺常见的方案，就是小时候，咱们准备一张小小的卡片，你只要签到就打上一个勾，我最后判断你是否签到，其实只需要到小卡片上看一看就知道了
 
-我们可以采用类似这样的方案来实现我们的签到需求。
+我们可以采用类似这样的方案来实现我们的签到需求
+
+![image-20230220022254480](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202302200222650.png)
 
 我们按月来统计用户签到信息，签到记录为1，未签到则记录为0.
 
@@ -34,9 +36,25 @@ BitMap的操作命令有：
 * BITOP ：将多个BitMap的结果做位运算（与 、或、异或）
 * BITPOS ：查找bit数组中指定范围内第一个0或1出现的位置
 
+BitMap操作命令演示：
+
+SETBIT：
+
+![image-20230220020855267](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202302200217183.png)
+
+GETBIT：
+
+![image-20230220021024750](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202302200217434.png)
+
+BITFIELD：
+
+![image-20230220021629993](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202302200218302.png)
+
 #### 11.2 、用户签到-实现签到功能
 
 需求：实现签到接口，将当前用户当天签到信息保存到Redis中
+
+![image-20230220022006818](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202302200220685.png)
 
 思路：我们可以把年和月作为bitMap的key，然后保存到一个bitMap中，每次签到就到对应的位上把数字从0变成1，只要对应是1，就表明说明这一天已经签到了，反之则没有签到。
 
@@ -75,16 +93,20 @@ public Result sign() {
 }
 ```
 
+测试：携带token访问`http://localhost:8080/api/user/sign`，完成签到：
+
+![image-20230220024013563](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202302200240174.png)
+
 #### 11.3 用户签到-签到统计
 
-**问题1：**什么叫做连续签到天数？
+**问题1**：什么叫做连续签到天数？
 从最后一次签到开始向前统计，直到遇到第一次未签到为止，计算总的签到次数，就是连续签到天数。
 
-
+![image-20230220024543942](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202302200245456.png)
 
 Java逻辑代码：获得当前这个月的最后一次签到数据，定义一个计数器，然后不停的向前统计，直到获得第一个非0的数字即可，每得到一个非0的数字计数器+1，直到遍历完所有的数据，就可以获得当前月的签到总天数了
 
-**问题2：**如何得到本月到今天为止的所有签到数据？
+**问题2**：如何得到本月到今天为止的所有签到数据？
 
   BITFIELD key GET u[dayOfMonth] 0
 
@@ -158,6 +180,17 @@ public Result signCount() {
     return Result.ok(count);
 }
 ```
+
+测试·：访问`http://localhost:8080/api/user/sign/count`，返回
+
+```json
+{
+    "success": true,
+    "data": 1
+}
+```
+
+
 
 #### 11.4 额外加餐-关于使用bitmap来解决缓存穿透的方案
 

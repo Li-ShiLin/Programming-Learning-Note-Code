@@ -3360,3 +3360,5 @@
 2023/02/21 02:13:26 [error] 8440#12784: *2429 CreateFile() "D:\github\Study-Code-Note\003_Redis\Front-end-project\nginx-1.18.0/html/hmdp/js/axios.min.map" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /js/axios.min.map HTTP/1.1", host: "localhost:8080"
 2023/02/21 02:13:29 [error] 8440#12784: *2428 CreateFile() "D:\github\Study-Code-Note\003_Redis\Front-end-project\nginx-1.18.0/html/hmdp/js/axios.min.map" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /js/axios.min.map HTTP/1.1", host: "localhost:8080"
 2023/02/21 02:18:22 [notice] 7372#15152: signal process started
+2023/02/21 02:23:26 [notice] 9664#6212: signal process started
+2023/02/21 02:23:26 [error] 9664#6212: CreateFile() "D:\github\Study-Code-Note\003_Redis\Front-end-project\nginx-1.18.0/logs/nginx.pid" failed (2: The system cannot find the file specified)

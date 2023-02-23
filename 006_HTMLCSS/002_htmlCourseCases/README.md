@@ -6,7 +6,7 @@
 - 特点:按照行的方式，整齐显示内容
 - 种类:无序列表、有序列表、自定义列表
 
-![image-20230222232241561](C:\Users\22418\AppData\Roaming\Typora\typora-user-images\image-20230222232241561.png)
+![image-20230222232241561](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202302232135398.png)
 
 #### 1.2无序列表
 
@@ -103,7 +103,7 @@
   - caption标签书写在table标签内部
   - th标签书写在tr标签内部(用于替换td标签)
 
-![image-20230223003921378](C:\Users\22418\AppData\Roaming\Typora\typora-user-images\image-20230223003921378.png)
+![image-20230223003921378](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202302232136009.png)
 
 
 
@@ -126,7 +126,7 @@
 
 - 场景:将水平或垂直多个单元格合并成一个单元格
 
-![image-20230223004904407](C:\Users\22418\AppData\Roaming\Typora\typora-user-images\image-20230223004904407.png)
+![image-20230223004904407](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202302232136676.png)
 
 - 合并单元格步骤:
 
@@ -270,3 +270,56 @@
   - 直接使用label标签把内容(如:文本)和表单标签一起包裹起来
   - 需要把label标签的for属性删除即可
   - `<label><input type="radio" name="sex"> 女</label>`
+
+## 4. 语义化标签
+
+#### 4.1 没有语义的布局标签
+
+- 场景:实际开发网页时会大量频繁的使用到div和span这两个没语义的布局标签
+- div标签:一行只显示一个(独占一行)
+- span标签:一行可以显示多个
+
+#### 4.2 有语义的布局标签（了解)
+
+- 场景:在HTML5新版本中，推出了一些有语义的布局标签供开发者使用
+- 标签:
+
+| 标签名  | 语义       |
+| ------- | ---------- |
+| header  | 网页头部   |
+| nav     | 网页导航   |
+| footer  | 网页底部   |
+| aside   | 网页侧边栏 |
+| section | 网页区块   |
+| article | 网页文章   |
+
+- 注意点:
+  - 以上标签显示特点和div一致，但是比div多了不同的语义
+
+![image-20230223213511941](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202302232136386.png)
+
+## 5.字符实体
+
+#### 5.1常见字符实体
+
+- 场景:在网页中展示特殊符号效果时，需要使用字符实体替
+- 结构: &英文
+- 常见字符实体
+
+| 显示结果 | 描述            | 实体名称           |
+| -------- | --------------- | ------------------ |
+|          | 空格            | `&nbsp;`           |
+| <        | 小于号          | `&lt;`             |
+| >        | 大于号          | `&gt;`             |
+| &        | 和号            | `&amp;`            |
+| "        | 引号            | `&quot;`           |
+| '        | 撇号            | `&apos;`(IE不支持) |
+| &cent;   | 分(cent)        | `&cent;`           |
+| &pound;  | 镑(pound)       | `&pound;`          |
+| ￥       | 元(yen)         | `&yen;`            |
+| &euro;   | 欧元(euro)      | `&euro;`           |
+| &sect;   | 小节            | `&sect;`           |
+| &copy;   | 版权(copyright) | `&copy;`           |
+
+
+

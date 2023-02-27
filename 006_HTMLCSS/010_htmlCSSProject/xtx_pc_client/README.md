@@ -32,3 +32,13 @@
 #### 1.3 index页面骨架
 
 ![image-20230228010155675](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202302280101056.png)
+
+
+
+## 2.项目开发
+
+- Header部分开发
+- Footer 部分开发
+- 网站入口xtx-entry部分开发
+- 新鲜好物面板xtx-new-goods部分开发
+- 生鲜商品面板xtx-fresh-goods部分开发

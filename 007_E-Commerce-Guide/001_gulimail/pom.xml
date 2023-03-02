@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.atguigu.gulimail</groupId>
+    <artifactId>001_gulimail</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>001_gulimail</name>
+    <description>聚合服务</description>
+    <packaging>pom</packaging>
+
+
+    <!--  聚合其他模块 -->
+    <modules>
+        <module>gulimail-coupon</module>
+        <module>gulimail-member</module>
+        <module>gulimail-order</module>
+        <module>gulimail-product</module>
+        <module>gulimail-ware</module>
+    </modules>
+</project>

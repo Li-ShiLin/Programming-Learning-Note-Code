@@ -258,7 +258,23 @@ sudo docker run -p 3306:3306 --name mysql \
 
 ![image-20230302233855299](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303022338979.png)
 
-3.查看运行中的容器:
+3.修改mysql配置文件（因为有目录映射，所以可以直接在镜像外执行）`vi /mydata/mysql/conf/my.conf`
+
+```
+[client]
+default-character-set=utf8
+[mysql]
+default-character-set=utf8
+[mysqld]
+init_connect='SET collation_connection = utf8_unicode_ci'
+init_connect='SET NAMES utf8'
+character-set-server=utf8
+collation-server=utf8_unicode_ci
+skip-character-set-client-handshake
+skip-name-resolve
+```
+
+4.查看运行中的容器:
 
 ```dockerfile
 sudo docker ps
@@ -267,3 +283,128 @@ sudo docker ps
 **docker容器文件挂载与端口映射**:
 
 ![image-20230302234409649](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303022345722.png)
+
+
+
+利用命令`docker exec -it 容器名称 /bin/bash`进入容器内部，可以看到容器具有linux的目录结构，即这个容器可以视为一个隔离的linux系统环境：
+
+![image-20230303000119389](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303030001471.png)
+
+
+
+#### 3.4 docker安装redis
+
+1.下载镜像文件
+
+```sh
+sudo docker pull redis
+```
+
+2.创建实例并启动
+
+先在虚拟机上创建用于挂载的目录：
+
+```sh
+sudo mkdir -p /mydata/redis/conf
+sudo cd /mydata/redis/conf
+sudo touch redis.conf
+```
+
+创建并启动实例：
+
+```sh
+sudo docker run -p 6379:6379 --name redis -v /mydata/redis/data:/data \
+-v /mydata/redis/conf/redis.conf:/etc/redis/redis.conf \
+-d redis redis-server /etc/redis/redis.conf
+```
+
+3.使用redis镜像执行redis-cli命令
+
+```
+sudo docker exec -it redis redis-cli
+```
+
+![image-20230303003227666](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303030033651.png)
+
+4.默认是不持久化的,每次执行`docker restart redis`重启redis之后，redis中的数据都会丢失。解决：在配置文件中输入appendonly yes，就可以aof持久化了，修改完docker restart redis重启redis
+
+```
+sudo vi /mydata/redis/conf/redis.conf
+# 插入下面内容
+appendonly yes
+#保存后重启redis
+docker restart redis
+#连接redis
+docker -it redis redis-cli
+```
+
+#### 3.5 开发环境统一
+
+##### 1.JDK & maven
+
+```
+JDK ： 1.8
+maven: 3.6.1
+```
+
+配置maven镜像：
+
+```xml
+	<mirror>
+    <id>alimaven</id>
+    <name>aliyun maven</name>
+    <url>
+        http://maven.aliyun.com/nexus/content/groups/public/
+    </url>
+    <mirrorOf>central</mirrorOf>        
+    </mirror>
+```
+
+maven配置jdk编译项目：
+
+```xml
+	<!-- java1.8版本 --> 
+		<profile>
+			  <id>jdk-1.8</id>
+			  <activation>
+				<activeByDefault>true</activeByDefault>
+				<jdk>1.8</jdk>
+			  </activation>
+
+			  <properties>
+				<maven.compiler.source>1.8</maven.compiler.source>
+				<maven.compiler.target>1.8</maven.compiler.target>
+				<maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
+			  </properties>
+		</profile>
+```
+
+##### 2. idea & vscode
+
+```sh
+idea安装插件lombok  、  MyBatisX (出一个mapper快速定位到xml文件)
+vscode安装插件 auto close 、 auto Rename 、 ESLint (前端ES语法检查) 、HTML Snippets 、 JavaScript (ES6) code snippets 、 Live Server 、 Vetur
+```
+
+##### 3.安装配置git
+
+
+
+##### 4.逆向工程使用
+
+- 1、导入项目逆向工程
+- 2、下载人人开源后台管理系统脚手架工程
+  - 导入工程，创建数据库
+  - 修改工程shiro依赖为SpringSecurity
+  - 删除部分暂时不需要的业务
+- 3、下载人人开源后台管理系统vue端脚手架工程
+  - vscode导入前端项目
+  - 前后端联调测试基本功能
+
+#### 3.6 创建项目微服务
+
+- 商品服务、仓储服务、订单服务、优惠券服务、用户服务
+- 共同:
+  - 1.包含web、openfeign依赖
+  - 2.每一个服务，包名 com.atguigu.gulimall.xx(product/order/ware/coupon/member)
+  - 3.模块名:gulimall-coupon

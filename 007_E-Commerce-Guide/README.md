@@ -106,7 +106,7 @@ A服务调用B服务，A服务并不知道B服落当前在哪几台服务器有�
 #### 2.8 API网关
 - 在微服务架构中，APl Gateway作为整体架构的重要组件，它抽象了微服务中都需要的公共功能，同时提供了客户端负载均衡，服务自动熔断，灰度发布，统一认证，限流流控，日志统计等丰富的功能，帮助我们解决很多API管理难题
 
-## 3.项目搭建
+## 3.环境搭建
 
 #### 3.1 安装linux虚拟机
 
@@ -161,3 +161,109 @@ A服务调用B服务，A服务并不知道B服落当前在哪几台服务器有�
 - 修改完利用`vagrant reload`命令重启虚拟机，使用`vagrant ssh`重新连接，利用`ip addr`命令查看虚拟机ip地址：
 
 ![image-20230302015622360](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303020223901.png)
+
+
+
+#### 3.2 安装Docker
+
+虚拟化容器技术。Docker基于镜像，可以秒级启动各种容器。每一种容器都是一个完整的运行环境，容器之间互相隔离
+
+![image-20230302024513566](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303020245302.png)
+
+安装步骤见：   `https://docs.docker.com/engine/install/centos/`
+
+1.卸载docker:
+
+```dockerfile
+sudo yum remove docker \
+                  docker-client \
+                  docker-client-latest \
+                  docker-common \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
+                  docker-engine
+```
+
+2.安装yum工具：
+
+```dockerfile
+sudo yum install -y yum-utils \
+           device-mapper-persistent-data \
+           lvm2 --skip-broken
+```
+
+3.设置docker仓库地址：
+
+```dockerfile
+sudo yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
+```
+
+4.安装docker引擎：
+
+```dockerfile
+sudo yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+5.启动docker:
+
+```dockerfile
+sudo systemctl start docker
+```
+
+6.查看docker版本：
+
+```dockerfile
+docker -v
+```
+
+7.设置docker开机自启：
+
+```dockerfile
+sudo systemctl enable docker
+```
+
+8.为docker配置阿里云镜像加速器：支付宝登录后选择容器镜像服务，复制命令到cmd窗口执行
+
+![image-20230302232641506](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303022326541.png)
+
+#### 3.3 docker安装mysql
+
+1.下载镜像文件
+
+```
+docker pull mysql:5.7
+```
+
+2.查看docker镜像
+
+```
+sudo docker images
+```
+
+2.创建实例并启动
+
+```
+sudo docker run -p 3306:3306 --name mysql \
+-v /mydata/mysql/log:/var/log/mysql \
+-v /mydata/mysql/data:/var/lib/mysql \
+-v /mydata/mysql/conf:/etc/mysql \
+-e MYSQL_ROOT_PASSWORD=root \
+-d mysql:5.7
+```
+
+- 参数说明：
+
+![image-20230302233855299](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303022338979.png)
+
+3.查看运行中的容器:
+
+```dockerfile
+sudo docker ps
+```
+
+**docker容器文件挂载与端口映射**:
+
+![image-20230302234409649](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303022345722.png)

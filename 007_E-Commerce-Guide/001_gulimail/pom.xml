@@ -6,7 +6,7 @@
 
     <groupId>com.atguigu.gulimail</groupId>
     <artifactId>001_gulimail</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
     <name>001_gulimail</name>
     <description>聚合服务</description>
     <packaging>pom</packaging>

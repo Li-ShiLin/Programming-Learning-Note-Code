@@ -1,4 +1,4 @@
-gulimail_ums;
+USE `gulimail_ums`;
 
 DROP TABLE IF EXISTS ums_growth_change_history;
 

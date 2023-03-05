@@ -408,3 +408,291 @@ vscode安装插件 auto close 、 auto Rename 、 ESLint (前端ES语法检查) 
   - 1.包含web、openfeign依赖
   - 2.每一个服务，包名 com.atguigu.gulimall.xx(product/order/ware/coupon/member)
   - 3.模块名:gulimall-coupon
+
+#### 3.7 数据库初始化
+
+1.设置mysql  、 redis 开机自启
+
+```
+sudo docker ps
+sudo docker ps -a
+# 这两个命令的差别就是后者会显示  【已创建但没有启动的容器】
+
+# 我们接下来设置我们要用的容器每次都是自动启动
+sudo docker update redis --restart=always
+sudo docker update mysql --restart=always
+# 如果不配置上面的内容的话，我们也可以选择手动启动
+sudo docker start mysql
+sudo docker start redis
+# 如果要进入已启动的容器
+sudo docker exec -it mysql /bin/bash
+# /bin/bash就是进入一般的命令行，如果改成redis就是进入了redis
+```
+
+2.依次创建数据库、并执行sql
+
+![image-20230303210623895](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303051118877.png)
+
+
+
+#### 3.8 人人开源搭建后台管理系统
+
+##### 1.后端项目下载启动
+
+- 人人开源:   `https://gitee.com/renrenio`
+
+![image-20230303224256944](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303051119372.png)
+
+- 在码云上搜索人人开源，使用renren-fast（后端）、renren-fast-vue（前端）项目  加速开发
+
+```sh
+git clone https://gitee.com/renrenio/renren-fast.git
+git clone https://gitee.com/renrenio/renren-fast-vue.git
+```
+
+- 下载好后删除代码中的 .git 文件，将renren-fast导入到gulimail项目中：
+
+![image-20230303225958171](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303051119719.png)
+
+- 在IDEA项目里的gulimail下的pom.xml中添加一个renrnen-fast模块
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.atguigu.gulimail</groupId>
+    <artifactId>001_gulimail</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>001_gulimail</name>
+    <description>聚合服务</description>
+    <packaging>pom</packaging>
+
+    <!--  聚合其他模块 -->
+    <modules>
+        <module>gulimail-coupon</module>
+        <module>gulimail-member</module>
+        <module>gulimail-order</module>
+        <module>gulimail-product</module>
+        <module>gulimail-ware</module>
+        <module>renren-fast</module>
+    </modules>
+</project>
+```
+
+- 将renren-fast下的mysql.sql文件中的sql语句复制到SQLyog执行
+- 修改项目里renren-fast中的application-dev.yml中的数库的url，通常把localhost修改为`192.168.56.10`即可。然后该对后面那个数据库
+
+```properties
+url: jdbc:mysql://192.168.56.10:3306/guli_admin?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+username: root
+password: root
+```
+
+- 然后运行该java项目下的RenrenApplication
+- 浏览器输入`http://localhost:8080/renren-fast/` 得到{“msg”:“invalid token”,“code”:401}就代表无误
+
+##### 2.前端项目下载启动
+
+**安装Node.js**
+
+- 前端开发，少不了node.j3 Node.js是一个基于Chrome v8引擎的 JavaScript运行环境。http://nodejs.cn/api/
+- 我们关注node.js  的 npm功能就行
+- NPM是随同 NodeJS一起安装的包管理工具，JavaScript-NPM类似于java-Maven
+  - 官网下载安装node.is，并使用node -v检查版本
+  - 配置npm,使用淘宝镜像提速 :    `npm config set registry http://registry.pm.taobao.org/`
+
+```npm
+npm config set registry http://registry.npm.taobao.org/
+```
+
+**前端项目：**
+
+- 在码云上搜索人人开源，下载renren-fast-vue（前端）项目 
+
+```sh
+git clone https://gitee.com/renrenio/renren-fast-vue.git
+```
+
+- 下载好后删除代码中的 .git 文件，用vscode打开renren-fast-vue，在控制台运行`npm install`命令下载前端组件
+
+![image-20230304005308652](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303051119457.png)
+
+下载好的组件都会在 `node_modules`目录下显示：
+
+![image-20230304011546548](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303051120250.png)
+
+- 接着运行`npm run dev`启动前端项目
+- 注意：尽量以管理员身份运行以上npm命令！否则可能会出现一些错误
+
+##### 3.逆向工程搭建
+
+- 项目下载：
+
+```
+git clone https://gitee.com/renrenio/renren-generator.git
+```
+
+- 下载到桌面后，同样把里面的.git文件删除，然后移动到我们IDEA项目目录中，同样配置好pom.xml
+- 添加renren-generator模块：
+
+```xml
+    <modules>
+        <module>gulimail-coupon</module>
+        <module>gulimail-member</module>
+        <module>gulimail-order</module>
+        <module>gulimail-product</module>
+        <module>gulimail-ware</module>
+        <module>renren-fast</module>
+        <module>renren-generator</module>
+    </modules>
+```
+
+- 解决renren-generator 的 pom.xml 文件报错：
+  - 可能报错：
+
+```
+'parent.relativePath' of POM io.renren:renren-generator:1.0.0 (D:\github\Study-Code-Note\007_E-Commerce-Guide\001_gulimail\renren-generator\pom.xml) points at com.atguigu.gulimail:001_gulimail instead of org.springframework.boot:spring-boot-starter-parent, please verify your project structure
+```
+
+- 只需在`	<parent>`中添加`<relativePath/>`即可
+
+```xml
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.6.6</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+```
+
+- 在renren-generator项目的application.yml文件中修改数据库配置信息：
+
+```yaml
+# mysql
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    #MySQL配置
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.56.10:3306/gulimail_pms?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+```
+
+- 生成product模块代码： 在renren-generator项目的generator.properties文件中修改配置信息
+
+```properties
+# 代码生成器配置信息
+mainPath=com.atguigu
+# 包名
+package=com.atguigu.gulimail
+# 模块名
+moduleName=product
+# 作者
+author=Li-ShiLin
+# Email
+email=sunlightcs@gmail.com
+# 表的前缀
+tablePrefix=pms_
+```
+
+- 补充：因为product模块对应的数据库gulimail_pms包含表前缀pms_  ，所以配置`tablePrefix=pms_`来让自动生成的JavaBean名称不包含pms前缀
+
+![image-20230304085520396](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303051120725.png)
+
+
+
+启动`renren-generator`项目，访问`http://localhost/#main.html`,在控制台选中所有数据库表，点击`生成代码`，即可生成代码文件，下载解压后即可看到生成的代码：
+
+
+
+ <table align="center">
+    <tr>
+        <td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303051121901.png" > <b>选中表之后生成代码</b></td>
+        <td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303051122036.png" > <b>代码文件的目录</b></td>
+    </tr>
+    </table>
+
+定位renren-generator的main文件，复制代码生成器生成的main文件并粘贴到src目录下
+
+ <table align="center">
+    <tr>
+        <td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303051123325.png" > <b>定位renren-generator的main文件</b></td>
+        <td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303051124356.png" > <b>复制代码生成器生成的main文件并粘贴到src目录下</b></td>
+    </tr>
+    </table>
+
+
+
+idea查看生成的代码，删除生成的前端代码，查看代码发现存在很多报错。接着就要处理这些报错，主要就是引入一些maven依赖和人人开源中已经定义的工具类（如下图中的PageUtils工具类，通用返回类R）。为了其他项目也可以重复利用这些依赖和工具类，可以创建一个`gulimail-common`公共包，每个项目导入`gulimail-common`依赖包即可
+
+ <table align="center">
+    <tr>
+        <td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303051124653.png" > <b>代码文件的目录</b></td>
+    <td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303051125229.png" > <b>存在报错</b></td>
+    </tr>
+    </table>
+
+创建一个`gulimail-common`公共包:   在项目上右击（在项目上右击很重要）new modules— maven—然后在name上输入gulimall-common,在聚合的pom.xml中也自动添加了`<module>gulimall-common</module>`
+
+在common项目的pom.xml中添加如下依赖（分析具体报错来判断要导入哪些依赖）：
+
+```xml
+        <!--mybatis-plus -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.4.12</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+```
+
+然后在`gulimail-product`项目中的pom.xml中导入`gulimail-common`依赖
+
+```xml
+        <dependency>
+            <groupId>com.atguigu.gulimail</groupId>
+            <artifactId>gulimail-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+```
+
+复制renren-fast----utils包下的Query和`PageUtils`、`R`、`Constant`等工具类复制到common项目的`java/com.atguigu.common.utils`下，同时将其他所需的类也导入进来，最终的代码结构如下(右图)。
+
+最后`gulimail-product`还存在报错，只需删除Shiro提供的`@RequiresPermissions`注解及相关包即可，因为后面不用Shiro而是采用springsecurity
+
+ <table align="center">
+    <tr>
+        <td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303051125757.png" > <b>最终的代码结构</b></td>
+                <td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303051126349.png" > <b>删除Shiro提供的@RequiresPermissions注解</b></td>
+    </tr>
+    </table>
+
+
+

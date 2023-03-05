@@ -694,5 +694,36 @@ idea查看生成的代码，删除生成的前端代码，查看代码发现存�
     </tr>
     </table>
 
+为了让之后生成的代码模板不包含`@RequiresPermissions`注解，可以在`renren-generator`中对`src/main/resources/template/Controller.java.vm`文件进行修改，把包含`@RequiresPermissions`注解的地方注释掉，如果上一步不想一个一个的删除`@RequiresPermissions`注解，也可以重新运行renren-generator项目，然后用新生成的controller替换原先的
+
+![image-20230305121436279](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303051222637.png)
+
+
+
+继续调整`gulimail-common`中的报错：删除XssFilter，XssHttpServletRequestWrapper类，引入RRException，最终结构如下图（右图）
+
+ <table align="center">
+    <tr>
+        <td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303051255797.png" > <b>删除XssFilter，XssHttpServletRequestWrapper</b></td>
+        <td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303051254972.png" > <b>最终结构</b></td>
+    </tr>
+    </table>
+
+
+
+##### 5.整合MyBatis-plus
+
+往`gulimail-common`导入mysql驱动（相当于）
+
+```
+        <!--    导入mysql驱动    -->
+        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.17</version>
+        </dependency>
+```
+
 
 

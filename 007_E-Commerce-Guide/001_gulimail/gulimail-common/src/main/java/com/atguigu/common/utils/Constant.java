@@ -1,20 +1,12 @@
 /**
  * Copyright (c) 2016-2019 人人开源 All rights reserved.
- * <p>
+ *
  * https://www.renren.io
- * <p>
+ *
  * 版权所有，侵权必究！
  */
 
 package com.atguigu.common.utils;
-
-
-import com.atguigu.common.validator.group.AliyunGroup;
-import com.atguigu.common.validator.group.QcloudGroup;
-import com.atguigu.common.validator.group.QiniuGroup;
-
-import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * 常量
@@ -22,9 +14,7 @@ import java.util.stream.Stream;
  * @author Mark sunlightcs@gmail.com
  */
 public class Constant {
-    /**
-     * 超级管理员ID
-     */
+    /** 超级管理员ID */
     public static final int SUPER_ADMIN = 1;
     /**
      * 当前页码
@@ -43,10 +33,9 @@ public class Constant {
      */
     public static final String ORDER = "order";
     /**
-     * 升序
+     *  升序
      */
     public static final String ASC = "asc";
-
     /**
      * 菜单类型
      *
@@ -114,39 +103,24 @@ public class Constant {
         /**
          * 七牛云
          */
-        QINIU(1, QiniuGroup.class),
+        QINIU(1),
         /**
          * 阿里云
          */
-        ALIYUN(2, AliyunGroup.class),
+        ALIYUN(2),
         /**
          * 腾讯云
          */
-        QCLOUD(3, QcloudGroup.class);
+        QCLOUD(3);
 
         private int value;
 
-        private Class<?> validatorGroupClass;
-
-        CloudService(int value, Class<?> validatorGroupClass) {
+        CloudService(int value) {
             this.value = value;
-            this.validatorGroupClass = validatorGroupClass;
         }
 
         public int getValue() {
             return value;
-        }
-
-        public Class<?> getValidatorGroupClass() {
-            return this.validatorGroupClass;
-        }
-
-        public static CloudService getByValue(Integer value) {
-            Optional<CloudService> first = Stream.of(CloudService.values()).filter(cs -> value.equals(cs.value)).findFirst();
-            if (!first.isPresent()) {
-                throw new IllegalArgumentException("非法的枚举值:" + value);
-            }
-            return first.get();
         }
     }
 

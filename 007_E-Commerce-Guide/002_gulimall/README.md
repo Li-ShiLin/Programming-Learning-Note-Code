@@ -676,21 +676,21 @@ server:
 
 2.把和数据源有关的配置放到新建的` datasource.yml`配置文件中：
 
-![image-20230316030501007](C:\Users\22418\AppData\Roaming\Typora\typora-user-images\image-20230316030501007.png)
+![image-20230316030501007](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303160339274.png)
 
 3.将和mybatis有关的配置放到新建的` mybatis.yml`配置文件中：
 
-![image-20230316030636139](C:\Users\22418\AppData\Roaming\Typora\typora-user-images\image-20230316030636139.png)
+![image-20230316030636139](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303160339051.png)
 
 4.将剩下的配置添加到` other.yml`配置文件中：
 
 
 
-![image-20230316030846552](C:\Users\22418\AppData\Roaming\Typora\typora-user-images\image-20230316030846552.png)
+![image-20230316030846552](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303160338677.png)
 
 5.coupon命名空间下的配置文件如下�?
 
-![image-20230316030951544](C:\Users\22418\AppData\Roaming\Typora\typora-user-images\image-20230316030951544.png)
+![image-20230316030951544](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303160338596.png)
 
 6.配置本地`bootstrap.properties`文件，即可加载nacos配置中心上的各个配置文件及对应配置信�?
 

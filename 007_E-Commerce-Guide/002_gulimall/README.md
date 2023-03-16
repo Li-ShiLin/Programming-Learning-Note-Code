@@ -726,3 +726,99 @@ spring.cloud.nacos.config.ext-config[2].refresh=true
      5.配置中心有的优先使用配置中心中的
 ```
 
+
+
+## 5. Spring Cloud Gateway网关
+### 5.1 �?�?
+
+ <table align="center">
+    <tr>
+        <td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303162357479.png" > <b></b></td>
+        <td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303162358663.png" > <b></b></td>
+    </tr>
+    </table>
+
+
+
+网关作为流量的入口，常用功能包括路由转发﹑权限校验�?�限流控制等。�?�springcloud gateway作为SpringCloud官方推出的第二代网关框架，取代了Zuul 网关
+
+网关提供API全托管服务，丰富的API管理功能，辅助企业管理大规模的API，以降低管理成本和安全风险，包括协议适配、协议转发�?�安全策略�?�防刷�?�流量�?�监控日志等功能
+
+Spring Cloud Gateway旨在提供�?种简单�?�有效的方式来对API进行路由，并为他们提供切面，例如:安全性，监控/指标和弹性等
+
+Spring Cloud Gateway官方文档�? `https://spring.io/projects/spring-cloud-gateway#learn`
+
+
+
+### 5.2 搭建网关微服�?
+
+添加�?个`gulimall-gateway`模块，引入spring cloud gateway相关依赖,引入common�?
+
+```xml
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-gateway</artifactId>
+        </dependency>
+        <!--导入common包，gatteway网关�?要nacos服务注册与发现的依赖来将网关服务注册到nacos -->
+        <dependency>
+            <groupId>com.atguigu.gulimail</groupId>
+            <artifactId>gulimail-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+```
+
+由于`gulimail-common`依赖包含mybatis相关依赖，但此处不需要连接数据库，没有配置相关信息，故启动时报错。所以需要在启动类上添加`@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})`来解决启动报�?
+
+```java
+@EnableDiscoveryClient
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
+// @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})   : 排除掉数据库有关的配�?
+public class GulimallGatewayApplication {
+
+   public static void main(String[] args) {
+      SpringApplication.run(GulimallGatewayApplication.class, args);
+   }
+
+}
+```
+
+添加`application.properties`配置�?
+
+```properties
+spring.cloud.nacos.discovery.server-addr=127.0.0.1:8848
+spring.application.name=gulimall-gateway
+server.port=8800
+```
+
+为微服务`gulimall-gateway`创建命名空间及配置文件：
+
+![image-20230317001255519](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303170016984.png)
+
+
+
+添加配置中心相关配置`bootstrap.properties`:
+
+```properties
+spring.cloud.nacos.config.server-addr=127.0.0.1:8848
+spring.cloud.nacos.config.namespace=c5e42bd2-70c9-4e28-8371-3d0dd6f7d449
+spring.cloud.nacos.config.group=dev
+```
+
+添加`application.yml`配置，为网关配置路由规则�?
+
+```yaml
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: test_route
+          uri: https://www.baidu.com
+          predicates:
+            - Query=url,baidu
+        - id: qq_route
+          uri: https://www.qq.com
+          predicates:
+            - Query=url,qq
+```
+
+测试：启动`gulimall-gateway`，访问`http://localhost:8800/hello?url=qq`，网关按照路由规则将请求转发到`https://www.qq.com`

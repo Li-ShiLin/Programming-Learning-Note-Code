@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 通过角标获取
+        let arr = [1, 2, 3];
+        let a = arr[0];
+        let b = arr[1];
+        let c = arr[2];
+        console.log(a, b, c);
+
+        // 1.数组解构
+        // 以前我们想要获取其中的值，只能通过角标，ES6可以这样：
+        const [x, y, z] = arr // x , y ,z将与arr中的每个位置对应来取值
+        // 打印：
+        console.log(x, y, z);  // 1 2 3
+
+
+        // 2.对象解构
+        const person = {
+            name: "jack",
+            age: 21,
+            language: ['java', 'js', 'css']
+        }
+        // 解构表达式获取值，将person里面的每一个属性和左边对应赋值
+        const { name, age, language } = person;
+        // 等价于下面：
+        // const name = person.name;
+        // const age = person.age;
+        // const language = person.language;
+        // 可以分别打印：
+        console.log(name);
+        console.log(age);
+        console.log(language);
+
+        // 拓展：如果想要将name的值赋值给其他变量，可以如下,nn是新的变量名
+        // const { name: nn, age, language } = person;
+        // console.log(nn);
+        // console.log(age);
+        // console.log(language);
+
+    </script>
+
+</body>
+
+</html>

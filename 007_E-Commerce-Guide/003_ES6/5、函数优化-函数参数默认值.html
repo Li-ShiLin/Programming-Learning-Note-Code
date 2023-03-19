@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //在ES6以前，我们无法给一个函数参数设置默认值，只能采用变通写法：
+        function add(a, b) {
+            // 判断b是否为空，为空就给默认值1
+            b = b || 1;
+            return a + b;
+        }
+        // 传一个参数
+        console.log(add(10));
+
+
+        //现在可以这么写：直接给参数写上默认值，没传就会自动使用默认值
+        function add2(a, b = 1) {
+            return a + b;
+        }
+        console.log(add2(20));
+    </script>
+</body>
+</html>

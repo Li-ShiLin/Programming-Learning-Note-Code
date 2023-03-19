@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //3）、箭头函数。lambda
+        //以前声明一个方法
+        // var print = function (obj) {
+        //     console.log(obj);
+        // }
+        // 现在：
+        var print = obj => console.log(obj);
+        print("hello");  // hell0
+
+        var sum = function (a, b) {
+            c = a + b;
+            return a + c;
+        }
+
+        var sum2 = (a, b) => a + b;
+        console.log(sum2(11, 12)); // 23
+
+        var sum3 = (a, b) => {
+            c = a + b;
+            return a + c;
+        }
+        console.log(sum3(10, 20)); // 40
+
+
+        const person = {
+            name: "jack",
+            age: 21,
+            language: ['java', 'js', 'css']
+        }
+
+        function hello(person) {
+            console.log("hello," + person.name)
+        }
+
+        var hello2 = (param) => console.log("hello," + param.name);// hello,jack
+        hello2(person);
+
+        //箭头函数+解构
+        var hello3 = ({name}) => console.log("hello," + name);// hello,jack
+        hello3(person);
+    </script>
+</body>
+</html>

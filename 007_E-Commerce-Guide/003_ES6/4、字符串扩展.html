@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 字符串扩展：
+        let str = "hello.vue";
+        // 1、新的api
+        console.log(str.startsWith("hello")); // true
+        console.log(str.endsWith(".vue")); // true
+        console.log(str.includes("e")); // true
+        console.log(str.includes("hello")); // true
+
+        // 2、字符串模板
+        // 2.1 多行字符串
+        let ss = `
+              <div>
+                   <span>hello world</span>
+              </div>  
+              `
+        console.log(ss);
+        
+        // 2.2 字符串插入变量和表达式
+        // 变量名写在${}中，${}中可以放入Javascript表达式
+        let name = "张三";
+        let age = 18;
+        let info = `我是${name}.今年${age}了`;
+        console.log(name);
+        console.log(age);
+        console.log(info);
+
+        function fun(){
+            return "这是一个函数";
+        }
+
+        let info_02 = `我是${name}.今年${age}了.我想说：${fun()}`;
+        console.log(info_02);
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 1.声明对象简写
+        const age = 23;
+        const name = "张三";
+        // 传统
+        const person = { age: age, name: name }
+        console.log(person); // {age:23 ,name: "张三"}
+
+
+        // ES6: 属性名和属性值变量名一样，可以省略
+        const person2 = { age, name }
+        console.log(person2); // {age:23 ,name: "张三"}
+
+        // 2.对象的函数属性简写
+        let person3 = {
+            name: "jack",
+            // 以前：
+            eat: function (food) {
+                console.log(this.name + "在吃" + food);
+            },
+            // 箭头函数不能使用this，必须使用 对象.属性
+            eat2: food => console.log(this.name + "在吃" + food),
+            // 箭头函数必须使用 对象.属性
+            eat3: food => console.log(person3.name + "在吃" + food),
+            eat4(food) {
+                console.log(this.name + "在吃" + food)
+            }
+        }
+        person3.eat("香蕉"); // jack在吃香蕉
+
+        person3.eat2("苹果"); // 在吃苹果
+
+        person3.eat3("草莓"); // jack在吃草莓
+
+        person3.eat4("桃子"); // jack在吃桃子
+    </script>
+</body>
+
+</html>

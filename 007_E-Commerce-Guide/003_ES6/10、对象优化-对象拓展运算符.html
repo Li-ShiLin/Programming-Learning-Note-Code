@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 1、拷贝对象（深拷贝）
+        let p1 = { name: "Amy", age: 15 }
+        let someone = { ...p1 }
+        console.log(someone)  //{name: "Amy", age: 15}
+
+        // 2、合并对象
+        let age1 = { age: 18 }
+        let name1 = { name: "lisi" }
+        let p2 = { name: "zhangsan" }
+        p2 = { ...age1, ...name1 } // 如果两个对象的字段名重复，后面对象字段值会覆盖前面对象的字段值
+        console.log(p2) //{age: 18, name: "harvey"}
+    </script>
+</body>
+
+</html>

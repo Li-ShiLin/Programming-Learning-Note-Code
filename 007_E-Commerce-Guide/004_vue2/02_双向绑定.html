@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <!-- 将输入框与vue中的数据模型num绑定 -->
+        <!-- v-model指令实现双向绑定 -->
+        <input type="text" v-model="num">  
+        <h1>{{name}},非常帅。有{{num}}个人为他点赞</h1>
+    </div>
+
+    <!-- 引入vue.js -->
+    <script src="./node_modules/vue/dist/vue.js"></script>
+
+    <script>
+        // 1.双向绑定：模型变化会引起视图变化，视图变化会引起模型变化
+        let vm = new Vue({
+            el:"#app",
+            data:{
+                name:"张三",
+                num:1
+            }
+        });
+    </script>
+</body>
+</html>

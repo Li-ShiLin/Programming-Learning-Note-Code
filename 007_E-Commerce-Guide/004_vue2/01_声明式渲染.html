@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <h1>{{name}},非常帅</h1>
+    </div>
+
+    <!-- 引入vue.js -->
+    <script src="./node_modules/vue/dist/vue.js"></script>
+
+    <script>
+        // 1.声明式渲染
+        // 声明Vue对象vm来管控div
+        let vm = new Vue({
+            // 用id选择器管控div
+            el: "#app",
+
+            data: {
+                name: "张三"
+            }
+        });
+    </script>
+</body>
+
+</html>

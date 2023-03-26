@@ -825,105 +825,80 @@ v-for指令用来遍历数组或对象：
 
 生命周期:你不�?要立马弄明白�?有的东西
 
-
-
-
-
-
-
-
-
-五�?�Babel
-Babel是一�? JavaScript 编译器，我们可以使用es 的最新语法编程，而不用担心浏览器兼容间题。他会自动转化为浏览器兼容的代码
-l
-
-
-
-
-
-
-
-
-
-
-
-四�?�Vue
-1、MVM思想
-M:�? Model，模型，包括数据和一些基本操作V:�? View，视图，页面渲染结果
-VM:�? View-Model，模型与视图间的双向操作（无�?�?发人员干�?)
-在MVM之前，开发人员从后端获取�?要的数据模型，然后要通过DOM操作Model渲染到View中�?��?�后当用户操作视图，我们还需要�?�过DOM获取View中的数据，然后同步到Model中�??
-而MVM中的VM要做的事情就是把DOM操作完全封装起来，开发人员不用再关心Model和View之间是如何互相影响的:
-
-
-
-
-
-
-
-2.ES6
-
-
-
-
-
-3.Node.js
-
-
-
-
-
-4.Vue
-
-5.Babel
-
-6.Webpack
-
-
-
-
-
-
-
-
-
-
-
-
-
-前端�?发，少不了node.js; Node.js是一个基于Chrome v8引擎�? JavaScript运行环境�?
-
-http://nodejs.cn/api/
-
-我们关注与node.js 的npm 功能就行;
-NPM是随同NodeS�?起安装的包管理工具，JavaScript-NPM，Java-Maven;
-
-1)、官网下载安装node.js，并使用node-v�?查版�?
-2）�?�配置npm，使用淘宝镜�?
-
-npm config set registry http://registry.mpm.taobao.org/
-
-
-
-
-
-
-
-四�?�MMes
-1、MVVM思想
-M:�? Model，模型，包括数据和一些基本操作V:�? view，视图，页面渲染结果
-VM:�? View-Model．模型与视图间的双向操作（无熏开发人员干�?)
-
-
-
-
-
-五�?�Babel
-Babel是一�? JavaScript 编译器，我们可以使用es 的最新语法编程，而不用担心浏览器兼容间题。他会自动转化为浏览器兼容的代码
-
-
-
-
-
-六�?�Weppack
-自动化项目构建工具�?�gulp也是同类产品
+![生命周期](C:\Users\22418\Desktop\生命周期.png)
+
+
+
+**生命周期钩子函数**
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <span id="num">{{num}}</span>
+        <button @click="num++">赞！</button>
+        <h2>{{name}}，有{{num}}个人点赞</h2>
+    </div>
+
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    
+    <script>
+        let app = new Vue({
+            el: "#app",
+            data: {
+                name: "张三",
+                num: 100
+            },
+            methods: {
+                show() {
+                    return this.name;
+                },
+                add() {
+                    this.num++;
+                }
+            },
+            beforeCreate() {
+                console.log("=========beforeCreate=============");
+                console.log("数据模型未加载：" + this.name, this.num);
+                console.log("方法未加载：" + this.show());
+                console.log("html模板未加载：" + document.getElementById("num"));
+            },
+            created: function () {
+                console.log("=========created=============");
+                console.log("数据模型已加载：" + this.name, this.num);
+                console.log("方法已加载：" + this.show());
+                console.log("html模板已加载：" + document.getElementById("num"));
+                console.log("html模板未渲染：" + document.getElementById("num").innerText);
+            },
+            beforeMount() {
+                console.log("=========beforeMount=============");
+                console.log("html模板未渲染：" + document.getElementById("num").innerText);
+            },
+            mounted() {
+                console.log("=========mounted=============");
+                console.log("html模板已渲染：" + document.getElementById("num").innerText);
+            },
+            beforeUpdate() {
+                console.log("=========beforeUpdate=============");
+                console.log("数据模型已更新：" + this.num);
+                console.log("html模板未更新：" + document.getElementById("num").innerText);
+            },
+            updated() {
+                console.log("=========updated=============");
+                console.log("数据模型已更新：" + this.num);
+                console.log("html模板已更新：" + document.getElementById("num").innerText);
+            }
+        });
+    </script>
+</body>
+</html>
+```
 

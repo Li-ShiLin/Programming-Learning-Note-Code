@@ -1,0 +1,20 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+
+## 转发到商品服务
+        - id: product_route
+          uri: lb://gulimall-product
+          predicates:
+            - Path=/api/product/**,/hello
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+## 转发renren-fast
+        - id: admin_route
+          uri: lb://renren-fast
+          predicates:
+            ## 前端项目发送请求都带上一个api前缀
+            - Path=/api/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}

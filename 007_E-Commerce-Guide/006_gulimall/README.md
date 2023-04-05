@@ -2,7 +2,7 @@
 
 ## 1.商品三级分类
 
-### 1.1 数据库设计和后端接口实现
+### 1.1 数据库设计
 
 三级分类：电商项目中每个商品都会所属于一个类别，常见三级分类结构如下图
 
@@ -31,6 +31,8 @@ CREATE TABLE `pms_category` (
 建表语句、添加商品服务相关数据的Insert语句都在`006_gulimail`下`pms_catelog.sql`文件：
 
 ![image-20230331010800623](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202304040142649.png)
+
+### 1.2 树形结构数据获取
 
 **商品服务`gulimail-product`三级分类后端接口编写：**
 
@@ -213,7 +215,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
 
 
-### 1.2 配置网关路由及路径重写
+### 1.3 配置网关路由及路径重写
 
 在`renren-fast`项目中添加`gulimail-common`，即引入nacos等依赖
 
@@ -295,7 +297,7 @@ spring:
 
 ![image-20230401234152943](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202304040147583.png)
 
-### 1.3 网关配置跨域
+### 1.4 网关配置跨域
 
 **跨域:**  指的是浏览器不能执行其他网站的脚本。它是由浏览器的同源策略造成的，是**浏览器对javascript施加的安全限制**
 
@@ -422,5 +424,134 @@ spring:
 spring.application.name=gulimall-product
 spring.cloud.nacos.config.server-addr=127.0.0.1:8848
 spring.cloud.nacos.config.namespace=320c3af9-0870-42c9-aba3-f0d54f9cbc63
+```
+
+### 1.5 三级分类逻辑删除
+
+mybatis-plus逻辑删除:
+
+- 配置全局的逻辑删除规则（高版本省略）
+- 配置逻辑删除的组件Bean（高版本省略）
+- 实体类字段上加上@TableLogic注解：给Bean加上逻辑删除注解@TableLogic
+
+给商品服务`gulimall-product`添加逻辑删除配置，修改`application.yml`如下：
+
+```yaml
+mybatis-plus:
+  global-config:
+    db-config:
+#      logic-delete-field: flag # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+```
+
+给` CategoryEntity`类的`showStatus`字段添加@TableLogic注解，因为此处showStatus为1时表示显示，为0时显示删除，和全局配置的逻辑删除规则相反，所以要给注解添加属性。最终注解写为`    @TableLogic(value = "1",delval = "0")`
+
+```java
+/**
+ * 商品三级分类
+ */
+@Data
+@TableName("pms_category")
+public class CategoryEntity implements Serializable {
+    private static final long serialVersionUID = 1L;
+    /**
+     * 是否显示[0-不显示，1显示]
+     */
+    // 逻辑删除注解@TableLogic
+    @TableLogic(value = "1",delval = "0")
+    private Integer showStatus;
+}
+```
+
+**删除接口编写：**
+
+CategoryController类：
+
+```java
+/**
+ * 商品三级分类
+ *
+ * @author Li-ShiLin
+ * @email sunlightcs@gmail.com
+ * @date 2023-03-05 12:18:20
+ */
+@RestController
+@RequestMapping("product/category")
+public class CategoryController {
+    @Autowired
+    private CategoryService categoryService;
+    /**
+     * 删除
+     * @RequestBody:获取请求体，必须发送POST请求
+     * SpringMVC自动将请求体的数据(json), 转为对应的对象
+     */
+    @RequestMapping("/delete")
+    public R delete(@RequestBody Long[] catIds){
+        // 检查当前删除的菜单是否被别的地方引用
+//		categoryService.removeByIds(Arrays.asList(catIds));
+        categoryService.removeMenuByIds(Arrays.asList(catIds));
+        return R.ok();
+    }
+}
+```
+
+CategoryService接口：
+
+```java
+/**
+ * 商品三级分类
+ */
+public interface CategoryService extends IService<CategoryEntity> {
+    void removeMenuByIds(List<Long> asList);
+}
+```
+
+CategoryServiceImpl实现类：
+
+```java
+@Service("categoryService")
+public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
+
+    @Override
+    public void removeMenuByIds(List<Long> asList) {
+        //TODO 检查当前删除的菜单是否被别的地方引用
+        //逻辑删除
+        baseMapper.deleteBatchIds(asList);
+    }
+}
+```
+
+测试：postman访问`http://localhost:88/api/product/category/delete`
+
+![image-20230405163623032](C:\Users\22418\AppData\Roaming\Typora\typora-user-images\image-20230405163623032.png)
+
+完成代码编写后，执行下列SQL恢复被删除的数据
+
+```sql
+UPDATE pms_category SET `show_status` = 1; 
+```
+
+### 1.6 三级分类新增
+
+CategoryController 类：直接调用
+
+```java
+@RestController
+@RequestMapping("product/category")
+public class CategoryController {
+    @Autowired
+    private CategoryService categoryService;
+    /**
+     * 保存
+     */
+    @RequestMapping("/save")
+    public R save(@RequestBody CategoryEntity category){
+      categoryService.save(category);
+
+        return R.ok();
+    }
+
+}
 ```
 

@@ -555,3 +555,49 @@ public class CategoryController {
 }
 ```
 
+### 1.7 三级分类拖拽
+
+**拖拽：修改排序信息**
+
+```java
+    /**
+     * 批量修改三级分类的排序信息
+     */
+    @RequestMapping("/update/sort")
+    public R updateSort(@RequestBody CategoryEntity[] categoryList){
+        categoryService.updateBatchById(Arrays.asList(categoryList));
+        return R.ok();
+    }
+```
+
+测试：向`http://localhost:88/api/product/category/update/sort`发送如下JSON数据
+
+```json
+[
+  {
+    "catId": 1,
+    "sort" : 10
+  },
+  {
+    "catId": 225,
+    "catLevel": 2
+  }
+]
+```
+
+
+
+![image-20230408133731818](C:\Users\22418\AppData\Roaming\Typora\typora-user-images\image-20230408133731818.png)
+
+
+
+![image-20230408134123497](C:\Users\22418\AppData\Roaming\Typora\typora-user-images\image-20230408134123497.png)
+
+
+
+![image-20230408134311866](C:\Users\22418\AppData\Roaming\Typora\typora-user-images\image-20230408134311866.png)
+
+
+
+
+

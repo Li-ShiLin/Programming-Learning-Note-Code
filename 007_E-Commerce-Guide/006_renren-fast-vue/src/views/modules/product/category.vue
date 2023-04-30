@@ -1,24 +1,16 @@
 <template>
   <div>
-    <el-tree
-      :data="menus"
-      :props="defaultProps"
-      :expand-on-click-node="false"
-      show-checkbox
-      node-key="catId"
-      :default-expanded-keys="expandedKey"
-    >
+    <el-switch v-model="draggable" active-text="开启拖拽" inactive-text="关闭拖拽">
+    </el-switch>
+    <el-button v-if="draggable" @click="batchSave">批量保存拖拽</el-button>
+    <el-button type="danger" @click="batchDelete">批量删除</el-button>
+    <el-tree :data="menus" :props="defaultProps" :expand-on-click-node="false" show-checkbox node-key="catId" :default-expanded-keys="expandedKey" :draggable="draggable" :allow-drop="allowDrop" @node-drop="handleDrop" ref="menuTree">
       <!-- span标签内容 -->
       <span class="custom-tree-node" slot-scope="{ node, data }">
         <span>{{ node.label }}</span>
         <span>
           <!-- 非叶子节点才能显示append按钮 -->
-          <el-button
-            v-if="node.level <= 2"
-            type="text"
-            size="mini"
-            @click="() => append(data)"
-          >
+          <el-button v-if="node.level <= 2" type="text" size="mini" @click="() => append(data)">
             Append
           </el-button>
 
@@ -28,24 +20,14 @@
           </el-button>
 
           <!-- 只有叶子节点(没有子节点)才能显示delete -->
-          <el-button
-            v-if="node.childNodes.length == 0"
-            type="text"
-            size="mini"
-            @click="() => remove(node, data)"
-          >
+          <el-button v-if="node.childNodes.length == 0" type="text" size="mini" @click="() => remove(node, data)">
             Delete
           </el-button>
         </span>
       </span>
     </el-tree>
 
-    <el-dialog
-      :title="title"
-      :visible.sync="dialogVisible"
-      width="30%"
-      :close-on-click-modal="false"
-    >
+    <el-dialog :title="title" :visible.sync="dialogVisible" width="30%" :close-on-click-modal="false">
       <!-- 将表单与三级分类实体类category绑定 -->
       <el-form :model="category">
         <el-form-item label="分类名称">
@@ -55,10 +37,7 @@
           <el-input v-model="category.icon" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="计量单位">
-          <el-input
-            v-model="category.productUnit"
-            autocomplete="off"
-          ></el-input>
+          <el-input v-model="category.productUnit" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -85,6 +64,14 @@ export default {
   watch: {},
   data() {
     return {
+      // 批量保存过后要展开的菜单id
+      pCid: [],
+      // 是否开启拖拽
+      draggable: false,
+      // 拖拽时所有要要修改的节点信息
+      updateNodes: [],
+      // 节点的最大层级，默认为0
+      maxLevel: 0,
       // 对话框被新增和修改复用，用title动态绑定对话框的标题
       title: "",
       // 点击修改时设dialogType为edit,点击新增时设dialogType为add,
@@ -113,6 +100,153 @@ export default {
     };
   },
   methods: {
+    batchDelete() {
+      let catIds = [];
+      // 获取所有被选中的元素
+      let checkedNodes = this.$refs.menuTree.getCheckedNodes();
+      console.log("被选中的元素", checkedNodes);
+      for (let i = 0; i < checkedNodes.length; i++) {
+        catIds.push(checkedNodes[i].catId);
+      }
+      this.$confirm(`是否批量删除【${catIds}】菜单?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          // 点击确认以后发送删除请求
+          this.$http({
+            url: this.$http.adornUrl("/product/category/delete"),
+            method: "post",
+            data: this.$http.adornData(catIds, false),
+          }).then(({ data }) => {
+            this.$message({
+              message: "菜单批量删除成功",
+              type: "success",
+            });
+            this.getMenus();
+          });
+        })
+        .catch(() => {
+          // 点了取消后执行
+        });
+    },
+
+    allowDrop(draggingNode, dropNode, type) {
+      console.log("allowDrop", draggingNode, dropNode, type);
+
+      // 被拖动的当前节点的所有子节点的最大的层级 + 目标父节点层数 <= 3
+      // 求出被拖动的当前节点的最大深度：用countNodeLevel方法更新最大深度
+      this.countNodeLevel(draggingNode);
+      // 此处的deep理解为被拖拽节点距其叶子节点的最大距离
+      let deep = Math.abs(this.maxLevel - draggingNode.level) + 1;
+      console.log("深度：", deep);
+      if (type == "inner") {
+        return deep + dropNode.level <= 3;
+      } else {
+        return deep + dropNode.parent.level <= 3;
+      }
+    },
+
+    //计算深度时，用当前数据，而不是数据库中的数据。因为可能还没来得及保存到数据库
+    countNodeLevel(node) {
+      // 找到所有子节点，求出最大深度
+      if (node.childNodes != null && node.childNodes.length > 0) {
+        for (let i = 0; i < node.childNodes.length; i++) {
+          if (node.childNodes[i].level > this.maxLevel) {
+            this.maxLevel = node.childNodes[i].level;
+          }
+          this.countNodeLevel(node.childNodes[i]);
+        }
+      }
+    },
+
+    // 拖拽成功后执行此函数：
+    handleDrop(draggingNode, dropNode, dropType, ev) {
+      console.log("handleDrop: ", draggingNode, dropNode, dropType);
+      //1、当前节点最新父节点的id
+      let pCid = 0;
+      //拖拽后的兄弟节点，分两种情况，一种是拖拽到两侧，一种是拖拽到内部
+      let sibings = null;
+      if (dropType == "before" || dropType == "after") {
+        pCid =
+          dropNode.parent.data.catId == undefined
+            ? 0
+            : dropNode.parent.data.catId;
+        sibings = dropNode.parent.childNodes;
+      } else {
+        pCid = dropNode.data.catId;
+        sibings = dropNode.childNodes;
+      }
+      this.pCid.push(pCid);
+      //2、当前拖拽节点的最新顺序
+      //遍历所有的兄弟节点，如果是拖拽节点，传入（catId，sort，parentCid，catLevel），如果是兄弟节点传入（catId，sort）
+      for (let i = 0; i < sibings.length; i++) {
+        if (sibings[i].data.catId == draggingNode.data.catId) {
+          //如果遍历的是当前正在拖拽的节点
+          let catLevel = draggingNode.level;
+          if (sibings[i].level != draggingNode.level) {
+            //当前节点的层级发生变化
+            catLevel = sibings[i].level;
+            //修改他子节点的层级
+            this.updateChildNodeLevel(sibings[i]);
+          }
+          this.updateNodes.push({
+            catId: sibings[i].data.catId,
+            sort: i,
+            parentCid: pCid,
+            catLevel: catLevel,
+          });
+        } else {
+          this.updateNodes.push({ catId: sibings[i].data.catId, sort: i });
+        }
+      }
+
+      // 当前拖拽节点的最新层级信息
+      console.log("updateNodes", this.updateNodes);
+
+      // 发送请求修改拖拽后的层级信息
+    },
+
+    // 修改拖拽节点的子节点的层级
+    updateChildNodeLevel(node) {
+      if (node.childNodes.length > 0) {
+        for (let i = 0; i < node.childNodes.length; i++) {
+          //遍历子节点，传入（catId，catLevel）
+          var cNode = node.childNodes[i].data;
+          this.updateNodes.push({
+            catId: cNode.catId,
+            catLevel: node.childNodes[i].level,
+          });
+          // 处理子节点的子节点
+          this.updateChildNodeLevel(node.childNodes[i]);
+        }
+      }
+    },
+
+    // 批量保存拖拽后的信息
+    batchSave() {
+      // 发送请求修改拖拽后的层级信息
+      this.$http({
+        url: this.$http.adornUrl("/product/category/update/sort"),
+        method: "post",
+        data: this.$http.adornData(this.updateNodes, false),
+      }).then(({ data }) => {
+        // 显示成功类型的提示信息
+        this.$message({
+          message: "菜单顺序修改成功",
+          type: "success",
+        });
+        // 刷新需要默认展开的菜单
+        this.getMenus();
+        // 设置需要默认展开的菜单：拖拽到的目的地位置的父节点要默认展开
+        this.expandedKey = this.pCid;
+        //每次拖拽后把数据清空，否则要修改的节点将会越拖越多
+        this.updateNodes = [];
+        this.maxLevel = 0;
+        // this.pCid = 0;
+      });
+    },
     getMenus() {
       this.$http({
         url: this.$http.adornUrl("/product/category/list/tree"),
@@ -220,10 +354,10 @@ export default {
     },
 
     submitData() {
-      if ((this.dialogType == "add")) {
+      if (this.dialogType == "add") {
         this.addCategory();
       }
-      if ((this.dialogType == "edit")) {
+      if (this.dialogType == "edit") {
         this.editCategory();
       }
     },

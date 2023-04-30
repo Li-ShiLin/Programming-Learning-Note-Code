@@ -66,6 +66,16 @@ public class CategoryController {
     }
 
     /**
+     * 批量修改三级分类的排序信息
+     */
+    @RequestMapping("/update/sort")
+    public R updateSort(@RequestBody CategoryEntity[] categoryList){
+        categoryService.updateBatchById(Arrays.asList(categoryList));
+        return R.ok();
+    }
+
+
+    /**
      * 删除
      * @RequestBody:获取请求体，必须发送POST请求
      * SpringMVC自动将请求体的数据(json), 转为对应的对象

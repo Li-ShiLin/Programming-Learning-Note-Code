@@ -1,9 +1,7 @@
-package com.atguigu.gulimail.product;
+package com.atguigu.gulimall;
 
-
-//import com.aliyun.oss.OSSClient;
-import com.atguigu.gulimail.product.entity.BrandEntity;
-import com.atguigu.gulimail.product.service.BrandService;
+import com.aliyun.oss.OSS;
+import com.aliyun.oss.OSSClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,31 +15,7 @@ import java.io.InputStream;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class DataBaseCrudTest {
-
-    @Resource
-    private BrandService brandService;
-
-    @Test
-    public void contextLoads() {
-
-        BrandEntity brandEntity = new BrandEntity();
-        brandEntity.setBrandId(1L);
-        brandEntity.setDescript("华为");
-
-        brandEntity.setName("华为");
-        brandService.save(brandEntity);
-        System.out.println("保存成功....");
-//        brandService.updateById(brandEntity);
-
-
-//        List<BrandEntity> list = brandService.list(new QueryWrapper<BrandEntity>().eq("brand_id", 1L));
-//        list.forEach((item) -> {
-//            System.out.println(item);
-//        });
-
-    }
-
+public class GulimallThirdPartyApplicationTests {
 
 //    // 使用原生的OSS SDK上传文件 ,需要引入如下依赖：
 //    /**
@@ -81,28 +55,28 @@ public class DataBaseCrudTest {
 
 
 
-//    // 使用`SpringCloud Alibaba-OSS`实现上传功能
-//    @Autowired
-//    private OSSClient ossClient;
-//
-//    @Test
-//    public void testUpload() throws FileNotFoundException {
-//
-//        String bucketName = "gulimall-bucket";
-//        // 填写Object完整路径，完整路径中不能包含Bucket名称，例如exampledir/exampleobject.txt。
-//        String objectName = "pic.jpg";
-//        // 填写本地文件的完整路径，例如D:\\localpath\\examplefile.txt。
-//        // 如果未指定本地路径，则默认从示例程序所属项目对应本地路径中上传文件流。
-//        String filePath = "D:\\gitee\\pic.jpg";
-//        // 创建OSSClient实例。
-//
-//        //上传文件流。
-//        InputStream inputStream = new FileInputStream(filePath);
-//        ossClient.putObject(bucketName, objectName, inputStream);
-//
-//        // 关闭OSSClient。
-//        ossClient.shutdown();
-//        System.out.println("上传成功.");
-//    }
+    // 使用`SpringCloud Alibaba-OSS`实现上传功能
+    @Resource
+    private OSS ossClient;
+
+    @Test
+    public void testUpload() throws FileNotFoundException {
+
+        String bucketName = "gulimall-bucket";
+        // 填写Object完整路径，完整路径中不能包含Bucket名称，例如exampledir/exampleobject.txt。
+        String objectName = "pic.jpg";
+        // 填写本地文件的完整路径，例如D:\\localpath\\examplefile.txt。
+        // 如果未指定本地路径，则默认从示例程序所属项目对应本地路径中上传文件流。
+        String filePath = "D:\\gitee\\pic.jpg";
+        // 创建OSSClient实例。
+
+        //上传文件流。
+        InputStream inputStream = new FileInputStream(filePath);
+        ossClient.putObject(bucketName, objectName, inputStream);
+
+        // 关闭OSSClient。
+        ossClient.shutdown();
+        System.out.println("上传成功.");
+    }
 
 }

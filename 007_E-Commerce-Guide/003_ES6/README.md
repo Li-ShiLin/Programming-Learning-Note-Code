@@ -1,3 +1,26 @@
+**目录导航：**
+
+<!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
+
+- [前端开发基础知识&快速入门](#)
+- [1.ES6](#1es6)
+  * [1.1 ES6简介](#11-es6)
+  * [1.2 ECMAScript简介](#12-ecmascript)
+  * [1.3 ES6新特性](#13-es6)
+    + [1.3.1 let声明变量](#131-let)
+    + [1.3.2 const声明常量](#132-const)
+    + [1.3.3 解构表达式](#133-)
+    + [1.3.4 字符串扩展](#134-)
+    + [1.3.5 函数优化](#135-)
+    + [1.3.6 对象优化](#136-)
+    + [1.3.7 map和reduce](#137-mapreduce)
+    + [1.3.8 Promise异步编排](#138-promise)
+    + [1.3.9 模块化](#139-)
+
+<!-- TOC end -->
+
+<!-- TOC --><a name=""></a>
+
 ## 前端开发基础知识&快速入门
 
 前后端技术栈对比：
@@ -6,14 +29,17 @@
 
 
 
+<!-- TOC --><a name="1es6"></a>
 ## 1.ES6
 
+<!-- TOC --><a name="11-es6"></a>
 ### 1.1 ES6简介
 
 ECMAScript 6.0（以下简称ES6，ECMAScript是一种由Ecma国际（前身为欧洲计算机制造商协会,英文名称是European Computer Manufacturers Association) 通过ECMA-262标准化的脚本程序设计语言，是JavaScript语言的下一代标准，已经在2015年6月正式发布了，并且从 ECMAScript 6开始，开始采用年号来做版本。即 ECMAScript 2015，就是ECMAScript6。它的目标,是使得 JavaScript语言可以用来编写复杂的大型应用程序,成为企业级开发语言。每年一个新版本：
 
 ![image-20230318212603828](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303200101095.png)
 
+<!-- TOC --><a name="12-ecmascript"></a>
 ### 1.2 ECMAScript简介
 
 来看下**前端的发展历程:**
@@ -32,8 +58,10 @@ ECMAScript 6.0（以下简称ES6，ECMAScript是一种由Ecma国际（前身为�
 
 
 
+<!-- TOC --><a name="13-es6"></a>
 ### 1.3 ES6新特性
 
+<!-- TOC --><a name="131-let"></a>
 #### 1.3.1 let声明变量
 
 - let 声明的变量有严格局部作用域   （ 对比： var 声明的变量往往会越域）
@@ -89,6 +117,7 @@ ECMAScript 6.0（以下简称ES6，ECMAScript是一种由Ecma国际（前身为�
 </html>
 ```
 
+<!-- TOC --><a name="132-const"></a>
 #### 1.3.2 const声明常量
 
 - const声明之后不允许改变，一但声明必须初始化，否则会报错
@@ -114,6 +143,7 @@ ECMAScript 6.0（以下简称ES6，ECMAScript是一种由Ecma国际（前身为�
 </html>
 ```
 
+<!-- TOC --><a name="133-"></a>
 #### 1.3.3 解构表达式
 
 - 数组解构  \   对象解构
@@ -178,6 +208,7 @@ ECMAScript 6.0（以下简称ES6，ECMAScript是一种由Ecma国际（前身为�
 </html>
 ```
 
+<!-- TOC --><a name="134-"></a>
 #### 1.3.4 字符串扩展
 
 **1.新的api**
@@ -254,6 +285,7 @@ ES6为字符串扩展了几个新的API:
 </html>
 ```
 
+<!-- TOC --><a name="135-"></a>
 ####  1.3.5 函数优化
 
 **1.函数参数默认值**
@@ -338,6 +370,7 @@ ES6为字符串扩展了几个新的API:
     </script>
 ```
 
+<!-- TOC --><a name="136-"></a>
 #### 1.3.6 对象优化
 
 **1.新增api:**
@@ -434,6 +467,7 @@ ES6给object 拓展了许多新的方法，如:
     </script>
 ```
 
+<!-- TOC --><a name="137-mapreduce"></a>
 ####  1.3.7 map和reduce
 
 **map:**
@@ -500,6 +534,7 @@ ES6给object 拓展了许多新的方法，如:
 
 ![image-20230319185304377](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303191856683.png)
 
+<!-- TOC --><a name="138-promise"></a>
 #### 1.3.8 Promise异步编排
 
 在JavaScript的世界中，所有代码都是单线程执行的。由于这个"缺陷”，导致JavaScript的所有网络操作，浏览器事件，都必须是异步执行。异步执行可以用回调函数实现。一旦有一连串的 ajax请求a,b,c,d... 后面的请求依赖前面的请求结果，就需要层层嵌套。这种缩进和层层嵌套的方式,非常容易造成上下文代码混乱，我们不得不非常小心翼翼处理内层函数与外层函数的数据，一旦内层函数使用了上层函数的变量，这种混乱程度就会加剧。总之，这种**层叠上下文**的层层嵌套方式，着实增加了神经的紧张程度
@@ -657,6 +692,7 @@ ES6给object 拓展了许多新的方法，如:
     </script>
 ```
 
+<!-- TOC --><a name="139-"></a>
 #### 1.3.9 模块化
 
 **1.什么是模块化**
@@ -735,4 +771,3 @@ export default {
 import abc from "./hello.js"
 abc.sum(1,2);
 ```
-

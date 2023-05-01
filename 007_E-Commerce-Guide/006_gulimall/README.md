@@ -524,7 +524,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
 测试：postman访问`http://localhost:88/api/product/category/delete`
 
-![image-20230405163623032](C:\Users\22418\AppData\Roaming\Typora\typora-user-images\image-20230405163623032.png)
+![image-20230405163623032](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305011437318.png)
 
 完成代码编写后，执行下列SQL恢复被删除的数据
 
@@ -585,17 +585,19 @@ public class CategoryController {
 ]
 ```
 
+Postman响应如下：
 
-
-![image-20230408133731818](C:\Users\22418\AppData\Roaming\Typora\typora-user-images\image-20230408133731818.png)
-
-
-
-![image-20230408134123497](C:\Users\22418\AppData\Roaming\Typora\typora-user-images\image-20230408134123497.png)
+![image-20230408133731818](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305011437127.png)
 
 
 
-![image-20230408134311866](C:\Users\22418\AppData\Roaming\Typora\typora-user-images\image-20230408134311866.png)
+数据库变化：
+
+![image-20230408134123497](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305011437272.png)
+
+
+
+![image-20230408134311866](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305011437003.png)
 
 
 

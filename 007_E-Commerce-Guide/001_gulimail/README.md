@@ -1,5 +1,32 @@
+<!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
+
+- [环境，微服务项目搭建](#)
+- [1.安装linux虚拟机](#1linux)
+- [2.安装Docker](#2docker)
+- [3.docker安装mysql](#3dockermysql)
+- [4.docker安装redis](#4dockerredis)
+- [5.开发环境统一](#5)
+  * [5.1  JDK & maven](#51-jdk-maven)
+  * [5.2 idea & vscode](#52-idea-vscode)
+  * [5.3 安装配置git](#53-git)
+  * [5.4 逆向工程使用](#54-)
+- [6.创建项目微服务](#6)
+  * [6.1 数据库初始化](#61-)
+  * [6.2 人人开源搭建后台管理系统](#62-)
+    + [6.2.1 后端项目下载启动](#621-)
+    + [6.2.2 前端项目下载启动](#622-)
+  * [6.3 逆向工程搭建](#63-)
+  * [6.4 整合MyBatis-plus](#64-mybatis-plus)
+  * [6.5 逆向生成所有微服务基础CRUD代码](#65-crud)
+    + [6.5.1 生成gulimail-coupon的CURD代码](#651-gulimail-couponcurd)
+    + [6.5.2 生成gulimail-member的CURD代码](#652-gulimail-membercurd)
+
+<!-- TOC end -->
+
+<!-- TOC --><a name=""></a>
 ##  环境，微服务项目搭建
 
+<!-- TOC --><a name="1linux"></a>
 ## 1.安装linux虚拟机
 
 **一、下载&安装VitualBox （要开启CPU虚拟化）**
@@ -54,6 +81,7 @@
 
 ![image-20230302015622360](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303020223901.png)
 
+<!-- TOC --><a name="2docker"></a>
 ## 2.安装Docker
 
 虚拟化容器技术。Docker基于镜像，可以秒级启动各种容器。每一种容器都是一个完整的运行环境，容器之间互相隔离
@@ -119,6 +147,7 @@ sudo systemctl enable docker
 
 ![image-20230302232641506](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303022326541.png)
 
+<!-- TOC --><a name="3dockermysql"></a>
 ## 3.docker安装mysql
 
 1.下载镜像文件
@@ -180,6 +209,7 @@ sudo docker ps
 
 ![image-20230303000119389](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303030001471.png)
 
+<!-- TOC --><a name="4dockerredis"></a>
 ## 4.docker安装redis
 
 1.下载镜像文件
@@ -226,8 +256,10 @@ docker restart redis
 docker -it redis redis-cli
 ```
 
+<!-- TOC --><a name="5"></a>
 ## 5.开发环境统一
 
+<!-- TOC --><a name="51-jdk-maven"></a>
 ### 5.1  JDK & maven
 
 ```
@@ -267,6 +299,7 @@ maven配置jdk编译项目：
 		</profile>
 ```
 
+<!-- TOC --><a name="52-idea-vscode"></a>
 ### 5.2 idea & vscode
 
 ```sh
@@ -274,8 +307,10 @@ idea安装插件lombok  、  MyBatisX (出一个mapper快速定位到xml文件)
 vscode安装插件 auto close 、 auto Rename 、 ESLint (前端ES语法检查) 、HTML Snippets 、 JavaScript (ES6) code snippets 、 Live Server 、 Vetur
 ```
 
+<!-- TOC --><a name="53-git"></a>
 ### 5.3 安装配置git
 
+<!-- TOC --><a name="54-"></a>
 ### 5.4 逆向工程使用
 
 - 1、导入项目逆向工程
@@ -287,6 +322,7 @@ vscode安装插件 auto close 、 auto Rename 、 ESLint (前端ES语法检查) 
   - vscode导入前端项目
   - 前后端联调测试基本功能
 
+<!-- TOC --><a name="6"></a>
 ##  6.创建项目微服务
 
 - 商品服务、仓储服务、订单服务、优惠券服务、用户服务
@@ -295,6 +331,7 @@ vscode安装插件 auto close 、 auto Rename 、 ESLint (前端ES语法检查) 
   - 2.每一个服务，包名 com.atguigu.gulimall.xx(product/order/ware/coupon/member)
   - 3.模块名:gulimall-coupon
 
+<!-- TOC --><a name="61-"></a>
 ### 6.1 数据库初始化
 
 1.设置mysql  、 redis 开机自启
@@ -319,8 +356,10 @@ sudo docker exec -it mysql /bin/bash
 
 ![image-20230303210623895](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303051118877.png)
 
+<!-- TOC --><a name="62-"></a>
 ### 6.2 人人开源搭建后台管理系统
 
+<!-- TOC --><a name="621-"></a>
 ####  6.2.1 后端项目下载启动
 
 - 人人开源:   `https://gitee.com/renrenio`
@@ -377,6 +416,7 @@ password: root
 - 然后运行该java项目下的RenrenApplication
 - 浏览器输入`http://localhost:8080/renren-fast/` 得到{“msg”:“invalid token”,“code”:401}就代表无误
 
+<!-- TOC --><a name="622-"></a>
 #### 6.2.2 前端项目下载启动
 
 **安装Node.js**
@@ -410,6 +450,7 @@ git clone https://gitee.com/renrenio/renren-fast-vue.git
 - 接着运行`npm run dev`启动前端项目
 - 注意：尽量以管理员身份运行以上npm命令！否则可能会出现一些错误
 
+<!-- TOC --><a name="63-"></a>
 ### 6.3 逆向工程搭建
 
 - 项目下载：
@@ -499,6 +540,7 @@ tablePrefix=pms_
     </tr>
     </table>
 
+
 定位renren-generator的main文件，复制代码生成器生成的main文件并粘贴到src目录下
 
  <table align="center">
@@ -510,6 +552,7 @@ tablePrefix=pms_
 
 
 
+
 idea查看生成的代码，删除生成的前端代码，查看代码发现存在很多报错。接着就要处理这些报错，主要就是引入一些maven依赖和人人开源中已经定义的工具类（如下图中的PageUtils工具类，通用返回类R）。为了其他项目也可以重复利用这些依赖和工具类，可以创建一个`gulimail-common`公共包，每个项目导入`gulimail-common`依赖包即可
 
  <table align="center">
@@ -518,6 +561,7 @@ idea查看生成的代码，删除生成的前端代码，查看代码发现存�
     <td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303051125229.png" > <b>存在报错</b></td>
     </tr>
     </table>
+
 
 创建一个`gulimail-common`公共包:   在项目上右击（在项目上右击很重要）new modules— maven—然后在name上输入gulimall-common,在聚合的pom.xml中也自动添加了`<module>gulimall-common</module>`
 
@@ -578,6 +622,7 @@ idea查看生成的代码，删除生成的前端代码，查看代码发现存�
     </tr>
     </table>
 
+
 为了让之后生成的代码模板不包含`@RequiresPermissions`注解，可以在`renren-generator`中对`src/main/resources/template/Controller.java.vm`文件进行修改，把包含`@RequiresPermissions`注解的地方注释掉，如果上一步不想一个一个的删除`@RequiresPermissions`注解，也可以重新运行renren-generator项目，然后用新生成的controller替换原先的
 
 ![image-20230305121436279](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303051222637.png)
@@ -594,6 +639,8 @@ idea查看生成的代码，删除生成的前端代码，查看代码发现存�
     </table>
 
 
+
+<!-- TOC --><a name="64-mybatis-plus"></a>
 ### 6.4 整合MyBatis-plus
 
 1.为`gulimail-product`项目导入mysql驱动。为了其他项目可以复用，直接在 `gulimail-common`的pom.xml文件中添加依赖
@@ -688,8 +735,10 @@ class DataBaseCrudTest {
 }
 ```
 
+<!-- TOC --><a name="65-crud"></a>
 ### 6.5 逆向生成所有微服务基础CRUD代码
 
+<!-- TOC --><a name="651-gulimail-couponcurd"></a>
 #### 6.5.1 生成gulimail-coupon的CURD代码
 
 - 生成`gulimail-coupon`的CURD代码，修改`renren-generator`项目的`application.yml`文件：
@@ -796,6 +845,7 @@ Please refer to dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and
 }
 ```
 
+<!-- TOC --><a name="652-gulimail-membercurd"></a>
 #### 6.5.2 生成gulimail-member的CURD代码
 
 - 生成`gulimail-member`的CURD代码，修改`renren-generator`项目的`application.yml`文件：

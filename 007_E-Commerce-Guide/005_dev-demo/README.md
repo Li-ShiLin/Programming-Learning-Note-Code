@@ -1,19 +1,39 @@
+**目录导航：**
+
+<!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
+
+- [005_vue-demo](#005_vue-demo)
+  * [Build Setup](#build-setup)
+- [install dependencies](#install-dependencies)
+- [serve with hot reload at localhost:8080](#serve-with-hot-reload-at-localhost8080)
+- [build for production with minification](#build-for-production-with-minification)
+- [build for production and view the bundle analyzer report](#build-for-production-and-view-the-bundle-analyzer-report)
+
+<!-- TOC end -->
+
+<!-- TOC --><a name="005_vue-demo"></a>
+
 # 005_vue-demo
 
 > vue-demo
 
+<!-- TOC --><a name="build-setup"></a>
 ## Build Setup
 
 ``` bash
+<!-- TOC --><a name="install-dependencies"></a>
 # install dependencies
 npm install
 
+<!-- TOC --><a name="serve-with-hot-reload-at-localhost8080"></a>
 # serve with hot reload at localhost:8080
 npm run dev
 
+<!-- TOC --><a name="build-for-production-with-minification"></a>
 # build for production with minification
 npm run build
 
+<!-- TOC --><a name="build-for-production-and-view-the-bundle-analyzer-report"></a>
 # build for production and view the bundle analyzer report
 npm run build --report
 ```
@@ -215,7 +235,7 @@ export default {
 
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
-//例如：import 《组件名称》 from '《组件路径》';
+//例如：import 《组件名称》 from '《组件路径》';
 
 export default {
   //import引入的组件需要注入到对象中才能使用
@@ -232,26 +252,26 @@ export default {
       tableData: Array(20).fill(item)
     };
   },
-  //计算属性 类似于data概念
+  //计算属性 类似于data概念
   computed: {},
   //监控data中的数据变化
   watch: {},
   //方法集合
   methods: {},
-  //生命周期 - 创建完成（可以访问当前this实例）
+  //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
-  //生命周期 - 挂载完成（可以访问DOM元素）
+  //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
-  beforeCreate() {}, //生命周期 - 创建之前
-  beforeMount() {}, //生命周期 - 挂载之前
-  beforeUpdate() {}, //生命周期 - 更新之前
-  updated() {}, //生命周期 - 更新之后
-  beforeDestroy() {}, //生命周期 - 销毁之前
-  destroyed() {}, //生命周期 - 销毁完成
+  beforeCreate() {}, //生命周期 - 创建之前
+  beforeMount() {}, //生命周期 - 挂载之前
+  beforeUpdate() {}, //生命周期 - 更新之前
+  updated() {}, //生命周期 - 更新之后
+  beforeDestroy() {}, //生命周期 - 销毁之前
+  destroyed() {}, //生命周期 - 销毁完成
   activated() {} //如果页面有keep-alive缓存功能，这个函数会触发
 };
 </script>
-<style scoped>
+<style scoped>
 
 </style>
 ```
@@ -398,4 +418,3 @@ export default {
 </style>
 
 ```
-

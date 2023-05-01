@@ -2,47 +2,18 @@
 
 <!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
 
-- [005_vue-demo](#005_vue-demo)
-  * [Build Setup](#build-setup)
-- [install dependencies](#install-dependencies)
-- [serve with hot reload at localhost:8080](#serve-with-hot-reload-at-localhost8080)
-- [build for production with minification](#build-for-production-with-minification)
-- [build for production and view the bundle analyzer report](#build-for-production-and-view-the-bundle-analyzer-report)
+- [1.vue模块化开发](#1vue)
+    + [1.1 项目搭建](#11-)
+    + [1.2 vue组件](#12-vue)
+- [2. vue整合ElementUI](#2-vueelementui)
 
 <!-- TOC end -->
 
-<!-- TOC --><a name="005_vue-demo"></a>
-
-# 005_vue-demo
-
-> vue-demo
-
-<!-- TOC --><a name="build-setup"></a>
-## Build Setup
-
-``` bash
-<!-- TOC --><a name="install-dependencies"></a>
-# install dependencies
-npm install
-
-<!-- TOC --><a name="serve-with-hot-reload-at-localhost8080"></a>
-# serve with hot reload at localhost:8080
-npm run dev
-
-<!-- TOC --><a name="build-for-production-with-minification"></a>
-# build for production with minification
-npm run build
-
-<!-- TOC --><a name="build-for-production-and-view-the-bundle-analyzer-report"></a>
-# build for production and view the bundle analyzer report
-npm run build --report
-```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
-
-
+<!-- TOC --><a name="1vue"></a>
 
 # 1.vue模块化开发
+
+<!-- TOC --><a name="11-"></a>
 
 ### 1.1 项目搭建
 
@@ -95,6 +66,7 @@ package-lock.json文件
 
 启动后访问`http://localhost:8080`
 
+<!-- TOC --><a name="12-vue"></a>
 ### 1.2 vue组件
 
 - 组件三要素：`template` 、`script`  、 `style`
@@ -160,6 +132,7 @@ export default new Router({
 
 
 
+<!-- TOC --><a name="2-vueelementui"></a>
 # 2. vue整合ElementUI
 
 - ElementUI官方文档：  `https://element.eleme.cn/#/zh-CN/component/installation`

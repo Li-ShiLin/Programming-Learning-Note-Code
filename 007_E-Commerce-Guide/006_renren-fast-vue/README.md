@@ -1,3 +1,32 @@
+<!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
+
+- [2.商品服务-三级分类前端编写](#2-)
+  * [2.1 树形展示三级分类数据](#21-)
+  * [2.2 三级分类删除](#22-)
+  * [2.3 三级分类新增](#23-)
+  * [2.4  三级分类修改](#24-)
+  * [2.5 三级分类拖拽功能](#25-)
+    + [2.5.1 拖拽效果实现](#251-)
+    + [2.5.2 拖拽数据收集](#252-)
+    + [2.5.3 发送http post请求完成修改](#253-http-post)
+    + [2.5.4 拖拽优化](#254-)
+  * [2.6 节点批量删除](#26-)
+- [3.商品服务-品牌管理](#3-)
+  * [3.1 添加商品模块并优化效果](#31-)
+  * [3.2 文件上传功能](#32-)
+    + [3.2.1 SpringCloud Alibaba-OSS使用](#321-springcloud-alibaba-oss)
+    + [3.2.2 建立第三方服务,实现服务端签名后直传](#322-)
+    + [3.2.3 OSS前后端联调测试上传](#323-oss)
+  * [3.3 前端表单校验](#33-)
+    + [3.3.1 logo图片显示](#331-logo)
+    + [3.3.2 前端表单校验实现](#332-)
+  * [3.4 后端校验实现](#34-)
+  * [3.5 统一的异常处理](#35-)
+  * [3.6 分组校验](#36-)
+  * [3.7 自定义注解](#37-)
+
+<!-- TOC end -->
+
 1.renren-fast-vue介绍
 
 - renren-fast-vue基于vue、element-ui构建开发，实现[renren-fast](https://gitee.com/renrenio/renren-fast)后台管理前端功能，提供一套更优的前端解决方案
@@ -19,8 +48,10 @@
 
 每个版本的详细更改都记录在[release notes](https://github.com/renrenio/renren-fast-vue/releases)中
 
+<!-- TOC --><a name="2-"></a>
 ## 2.商品服务-三级分类前端编写
 
+<!-- TOC --><a name="21-"></a>
 ### 2.1 树形展示三级分类数据
 
 1. 启动renren-fast和renren-fast-vue: 启动`renren-fast-vue`前端项目以及对应的后端项目`renren-fast`
@@ -34,6 +65,7 @@
     </tr>
     </table>
 
+
 3.添加完菜单后可以看到多出菜单目录模块，且数据库表`sys_menu`也出现新数据：
 
  <table align="center">
@@ -43,6 +75,7 @@
     </tr>
     </table>
 
+
 4.为商品系统添加菜单，同样可以看到数据库成功添加`分类维护`菜单
 
  <table align="center">
@@ -51,6 +84,7 @@
         <td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202304040207053.png" > <b>数据库表sys_menu出现新数据</b></td>
     </tr>
     </table>
+
 
 
 
@@ -74,6 +108,7 @@
         <td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202304040215508.png" > <b>创建模板文件</b></td>
     </tr>
     </table>
+
 
 将下面的模板拷贝到全局模板文件中：
 
@@ -382,6 +417,7 @@ export default {
 
 ![image-20230402200944954](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202304040230403.png)
 
+<!-- TOC --><a name="22-"></a>
 ### 2.2 三级分类删除
 
 找到elementUI中Tree树形控件的`自定义节点内容`
@@ -983,6 +1019,7 @@ export default {
 UPDATE pms_category SET `show_status` = 1; 
 ```
 
+<!-- TOC --><a name="23-"></a>
 ### 2.3 三级分类新增
 
 在Element-ui中找到`Dialog 对话框`组件，`https://element.eleme.cn/#/zh-CN/component/dialog`
@@ -1279,6 +1316,8 @@ export default {
 
 
 
+
+<!-- TOC --><a name="24-"></a>
 ### 2.4  三级分类修改
 
 在`  <el-tree>`标签中添加修改按钮,点击append时执行append(data)方法，点击edit时执行edit(data)方法，
@@ -1735,8 +1774,10 @@ export default {
 </style>
 ```
 
+<!-- TOC --><a name="25-"></a>
 ### 2.5 三级分类拖拽功能
 
+<!-- TOC --><a name="251-"></a>
 #### 2.5.1 拖拽效果实现
 
 拖拽功能：通过拖拽改变节点顺序、节点的父子关系
@@ -1829,6 +1870,7 @@ maxLevel: 0,
     },
 ```
 
+<!-- TOC --><a name="252-"></a>
 #### 2.5.2 拖拽数据收集
 
 前端拖拽成功之后要将节点的最新信息发送给后端进行保存，否则节点的层级信息还是维持不变。请求后端前需要收集拖拽节点的信息：新的层级信息、新的排序信息、新的父节点
@@ -1934,6 +1976,7 @@ updateNodes: [],
     },
 ```
 
+<!-- TOC --><a name="253-http-post"></a>
 #### 2.5.3 发送http post请求完成修改
 
 ```js
@@ -2005,6 +2048,7 @@ updateNodes: [],
     },
 ```
 
+<!-- TOC --><a name="254-"></a>
 #### 2.5.4 拖拽优化
 
 优化一：防止误操作导致拖拽，增加按钮来开启、关闭拖拽功能。利用Element-ui中的Switch开关来实现
@@ -2531,6 +2575,7 @@ export default {
 </style>
 ```
 
+<!-- TOC --><a name="26-"></a>
 ### 2.6 节点批量删除
 
 添加批量删除按钮：
@@ -2598,8 +2643,10 @@ batchDelete() {
     },
 ```
 
+<!-- TOC --><a name="3-"></a>
 ## 3.商品服务-品牌管理
 
+<!-- TOC --><a name="31-"></a>
 ### 3.1 添加商品模块并优化效果
 
 **使用逆向生成的前后端代码：**
@@ -2779,8 +2826,10 @@ export function isAuth (key) {
 
 ![image-20230409134056713](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305010138015.png)
 
+<!-- TOC --><a name="32-"></a>
 ### 3.2 文件上传功能
 
+<!-- TOC --><a name="321-springcloud-alibaba-oss"></a>
 #### 3.2.1 SpringCloud Alibaba-OSS使用
 
 在单体应用中文件通常上传到系统中保存。分布式架构下，如果将文件上传到每个服务显然是不太好的，这是可以将文件存储的功能独立出来。可以自建服务器来存储文件，也可以采用云存储来存储文件
@@ -2807,6 +2856,7 @@ export function isAuth (key) {
 
 
 
+
 开通阿里云OSS服务：
 
 ![image-20230409154334078](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305010149232.png)
@@ -2827,6 +2877,7 @@ export function isAuth (key) {
         <td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305010151351.png" > <b>2</b></td>
     </tr>
     </table>
+
 
 
 
@@ -2973,6 +3024,7 @@ public class DataBaseCrudTest {
 
 ![image-20230409200350478](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305010139855.png)
 
+<!-- TOC --><a name="322-"></a>
 #### 3.2.2 建立第三方服务,实现服务端签名后直传
 
 上面演示了用`SpringCloud Alibaba-OSS`上传文件，但是我们不会采用这种在服务端上传文件的方式。而是采用服务端签名后直传的方式，故在此处建立第三方工程来整合`服务端签名后直传`功能，后续还可以在这个第三方服务中添加`查物流`、`发短信`等功能
@@ -3076,6 +3128,7 @@ public class DataBaseCrudTest {
         <td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305010153184.png" > <b>新建配置`oss.yml`:</b></td>
     </tr>
     </table>
+
 
 
 
@@ -3369,6 +3422,7 @@ spring:
 
 测试:重启网关，访问`http://localhost:88/api/thirdparty/oss/policy`，正确返回响应
 
+<!-- TOC --><a name="323-oss"></a>
 #### 3.2.3 OSS前后端联调测试上传
 
 前端上传实现：使用`Element-ui`中的 `upload上传`  组件，此处直接从资料中复制`upload`文件夹到项目中即可
@@ -3388,6 +3442,7 @@ spring:
 
 
 
+
 将action中的地址替换成bucket域名
 
 ![image-20230412031702316](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305010206220.png)
@@ -3402,8 +3457,10 @@ spring:
 
 
 
+<!-- TOC --><a name="33-"></a>
 ### 3.3 前端表单校验
 
+<!-- TOC --><a name="331-logo"></a>
 #### 3.3.1 logo图片显示
 
 **自定义`品牌logo`显示**：
@@ -3458,6 +3515,7 @@ spring:
         <td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305010209154.png" > <b>2</b></td>
     </tr>
     </table>
+
 
 导入最新版的全部组件：
 
@@ -3636,6 +3694,7 @@ Vue.use(CascaderPanel);
 
 ![image-20230429174841084](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305010210858.png)
 
+<!-- TOC --><a name="332-"></a>
 #### 3.3.2 前端表单校验实现
 
 **前端表单校验实现：**
@@ -3802,6 +3861,7 @@ export default {
 </script>
 ```
 
+<!-- TOC --><a name="34-"></a>
 ### 3.4 后端校验实现
 
 **后端校验实现：**
@@ -3995,6 +4055,7 @@ public class BrandEntity implements Serializable {
                public @interface ListValue {
 ```
 
+<!-- TOC --><a name="35-"></a>
 ### 3.5 统一的异常处理
 
 上面利用BindingResult，获取到校验的结果返回给前端。如果每个类都这样写就太麻烦了，通常都会统一进行异常处理，达到简化、复用代码、优化结构的目的。
@@ -4148,6 +4209,7 @@ public class ExceptionControllerAdvice {
 }
 ```
 
+<!-- TOC --><a name="36-"></a>
 ### 3.6 分组校验
 
 在`新增`和`修改`brandEntity时，校验的规则可能不一样。此时就需要使用JSR303提供的分组校验功能。
@@ -4246,6 +4308,7 @@ public class BrandEntity implements Serializable {
          3)、默认没有指定分组的校验注解@NotBlank，在分组校验情况@Validated({AddGroup.class})下不生效，只会在@Validated生效；
 ```
 
+<!-- TOC --><a name="37-"></a>
 ### 3.7 自定义注解
 
 **接口调整**
@@ -4368,4 +4431,3 @@ public class ListValueConstraintValidator implements ConstraintValidator<ListVal
     @ListValue(values = {0, 1}, groups = {AddGroup.class, UpdateStatusGroup.class})
     private Integer showStatus;
 ```
-

@@ -1,6 +1,24 @@
+<!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
+
+- [商品服务](#)
+- [1.商品三级分类](#1)
+  * [1.1 数据库设计](#11-)
+  * [1.2 树形结构数据获取](#12-)
+  * [1.3 配置网关路由及路径重写](#13-)
+  * [1.4 网关配置跨域](#14-)
+  * [1.5 三级分类逻辑删除](#15-)
+  * [1.6 三级分类新增](#16-)
+  * [1.7 三级分类拖拽](#17-)
+
+<!-- TOC end -->
+
+<!-- TOC --><a name=""></a>
 ## 商品服务
 
+<!-- TOC --><a name="1"></a>
 ## 1.商品三级分类
+
+<!-- TOC --><a name="11-"></a>
 
 ### 1.1 数据库设计
 
@@ -32,6 +50,7 @@ CREATE TABLE `pms_category` (
 
 ![image-20230331010800623](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202304040142649.png)
 
+<!-- TOC --><a name="12-"></a>
 ### 1.2 树形结构数据获取
 
 **商品服务`gulimail-product`三级分类后端接口编写：**
@@ -215,6 +234,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
 
 
+<!-- TOC --><a name="13-"></a>
 ### 1.3 配置网关路由及路径重写
 
 在`renren-fast`项目中添加`gulimail-common`，即引入nacos等依赖
@@ -297,6 +317,7 @@ spring:
 
 ![image-20230401234152943](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202304040147583.png)
 
+<!-- TOC --><a name="14-"></a>
 ### 1.4 网关配置跨域
 
 **跨域:**  指的是浏览器不能执行其他网站的脚本。它是由浏览器的同源策略造成的，是**浏览器对javascript施加的安全限制**
@@ -418,6 +439,7 @@ spring:
     </tr>
     </table>
 
+
 `src/main/resources/bootstrap.properties`配置：
 
 ```properties
@@ -426,6 +448,7 @@ spring.cloud.nacos.config.server-addr=127.0.0.1:8848
 spring.cloud.nacos.config.namespace=320c3af9-0870-42c9-aba3-f0d54f9cbc63
 ```
 
+<!-- TOC --><a name="15-"></a>
 ### 1.5 三级分类逻辑删除
 
 mybatis-plus逻辑删除:
@@ -532,6 +555,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 UPDATE pms_category SET `show_status` = 1; 
 ```
 
+<!-- TOC --><a name="16-"></a>
 ### 1.6 三级分类新增
 
 CategoryController 类：直接调用
@@ -555,6 +579,7 @@ public class CategoryController {
 }
 ```
 
+<!-- TOC --><a name="17-"></a>
 ### 1.7 三级分类拖拽
 
 **拖拽：修改排序信息**
@@ -598,8 +623,3 @@ Postman响应如下：
 
 
 ![image-20230408134311866](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305011437003.png)
-
-
-
-
-

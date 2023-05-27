@@ -2,6 +2,7 @@ package com.atguigu.gulimail.product.service;
 
 import com.atguigu.common.utils.PageUtils;
 import com.atguigu.gulimail.product.entity.CategoryEntity;
+import com.atguigu.gulimail.product.vo.Catelog2Vo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -31,5 +32,9 @@ public interface CategoryService extends IService<CategoryEntity> {
 
 
     void updateCascade(CategoryEntity category);
+
+    List<CategoryEntity> getLevel1Categorys();
+
+    Map<String, List<Catelog2Vo>> getCatalogJson();
 }
 

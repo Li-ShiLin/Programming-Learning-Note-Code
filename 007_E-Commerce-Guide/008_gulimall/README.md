@@ -53,6 +53,19 @@
       - [7.修改当前spu的状态](#7spu)
       - [8.填充ES属性模型并发送给ES保存](#8eses)
 
+- [8.商品服务页面](#8)
+  * [8.1 项目的微服务架构](#81-)
+  * [8.2 整合thymeleaf](#82-thymeleaf)
+  * [8.3 渲染一级分类数据](#83-)
+  * [8.4 渲染二级、三级分类数据](#84-)
+- [9.搭建域名访问环境](#9)
+  * [9.1 反向代理配置](#91-)
+    - [1.正向代理与反向代理](#1)
+    - [2.Nginx+Windows搭建域名访问环境](#2nginxwindows)
+    - [3.nginx配置文件](#3nginx)
+    - [4.配置nginx将请求转发到网关](#4nginx)
+    - [5.当前域名映射的效果](#5)
+
 <!-- TOC end -->
 
 <!-- TOC --><a name="1"></a>
@@ -2903,3 +2916,391 @@ public class R extends HashMap<String, Object> {
 
 
 ![image-20230523035605765](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305240315053.png)
+
+
+
+<!-- TOC --><a name="8"></a>
+
+##  8.商品服务页面
+
+<!-- TOC --><a name="81-"></a>
+
+###  8.1 项目的微服务架构
+
+本课程的微服务项目原本都是前后端分离项目，但是为了不让前端页面的设计细节被忽视，处于教学的考虑，之后会将前端页面(视图)放到各自的微服务中，但是出于性能的考虑，将静态资源放到`nginx`中,完整架构图如下：
+
+![image-20230524034530691](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305271846015.png)
+
+用户的使用请求都经过`nginx`进行处理，`nginx`作为反向代理将请求全部转发给网关，网关再路由到各个微服务，网关的好处是可以做统一的鉴权认证、限流工作。添加`nginx`以后，我们可以将页面放到各个微服务中，页面引用的静态资源则放到`nginx`中，由此实现部署的动静分离，这么做的好处是分担微服务的压力：假设将静态资源放到微服务，那请求静态资源时`请求`也要转到微服务，微服务的`tomcat`都要建立连接进行处理。如果不设计为`动静分离`的形式，假设有3000个请求到达微服务，可能有2000个都是处理图片等静态资源的，那系统的并发度就会降低很多
+
+<!-- TOC --><a name="82-thymeleaf"></a>
+### 8.2 整合thymeleaf
+
+**Thymeleaf**
+
+- 优点：自然化语言，编写好以后前后端都可以修改。方便前后端人员的分工合作
+
+- 缺点：性能较其他模板引擎来说较差。但是如果在生产环境开启缓存功能，其性能也较优
+
+将`分布式高级篇`中`首页资源`下的文件拷贝到`gulimall-product`的`resources\static`目录下,将`index.html`拷贝到`template`目录下：
+
+![image-20230524042904532](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305271846814.png)
+
+引入`thymeleaf `依赖：
+
+```xml
+       <!-- 模板引擎： thymeleaf -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+```
+
+配置：关闭缓存，配置关闭缓存，这样在开发期间就可以实时的看到变化的数据
+
+```yaml
+spring:
+  thymeleaf:
+    cache: falses
+```
+
+引入dev-tools：页面修改不重启服务器实时更新
+
+```xml
+        <!-- devtools -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+```
+
+`thymeleaf`模板引擎整合：
+
+```sql
+5、模板引擎
+        1）、thymeleaf-starter：关闭缓存
+        2）、静态资源都放在static文件夹下就可以按照路径直接访问
+        3）、页面放在templates下，直接访问
+               SpringBoot，访问项目的时候，默认会找index
+        4）、页面修改不重启服务器实时更新
+               1）、引入dev-tools
+               2)、修改完页面 controller shift f9重新自动编译下页面，代码配置，推荐重启
+```
+
+<!-- TOC --><a name="83-"></a>
+### 8.3 渲染一级分类数据
+
+在`gulimall-product`商品服务下新建`web`包，在`web`包下新建`IndexController`用于首页的跳转
+
+**1.`IndexController`类：**
+
+- 访问首页时查出一级分类，并将这些一级分类相关的数据放到视图中，在`index.html`中就可以取出这些数据进行渲染
+
+```java
+@Controller
+public class IndexController {
+
+    @Autowired
+    private CategoryService categoryService;
+
+    @GetMapping({"/", "index.html"})
+    public String indexPage(Model model) {
+        // 1.查出所有的一级分类
+        List<CategoryEntity> categoryEntities = categoryService.getLevel1Categorys();
+
+        // 2.将查出的数据放到视图中，之后就可以在index.html 文件中取出这些数据对页面进行渲染
+        model.addAttribute("categorys",categoryEntities);
+
+        // 视图解析器进行拼串：默认前缀classpath:/templates/  默认后缀.html
+        // classpath:/templates/ +返回值+  .html
+        return "index";
+    }
+}
+```
+
+**2.在`index.html`中对数据进行渲染**
+
+- 在`templates\index.html`中加入`thymeleaf`的名称空间，有了`thymeleaf`的名称空间就可以在html中使用`thymeleaf`的语法进行代码编写：
+
+```xml
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <!--轮播主体内容-->
+    <div class="header_main">
+        <!--   通过$符获取categorys：<div th:text="${categorys}"> </div>-->
+        <div class="header_banner">
+            <div class="header_main_left">
+                <ul>
+                    <li th:each="category : ${categorys}">
+                        <a href="#" class="header_main_left_a" th:attr="ctg-data=${category.catId}"><b th:text="${category.name}">家用电器</b></a>
+                    </li>
+                </ul>
+            </div>
+    </div>
+```
+
+
+
+<!-- TOC --><a name="84-"></a>
+###  8.4 渲染二级、三级分类数据
+
+2级分类vo：
+
+```java
+//2级分类vo
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+public class Catelog2Vo {
+    private String catalog1Id; //1级父分类id
+    private List<Catelog3Vo> catalog3List;  //三级子分类
+    private String id;
+    private String name;
+    /**
+     * 三级分类vo
+     *  "catalog2Id":"1",
+     *                     "id":"1",
+     *                     "name":"电子书"
+     */
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Data
+    public static class Catelog3Vo{
+        private String catalog2Id;//父分类，2级分类id
+        private String id;
+        private String name;
+    }
+
+}
+```
+
+`IndexController`类：
+
+```java
+@Controller
+public class IndexController {
+
+    @Autowired
+    private CategoryService categoryService;
+
+    /**
+     * 渲染二级、三级分类数据
+     * /index/catalog.json
+     */
+    @ResponseBody
+    @GetMapping("/index/catalog.json")
+    public Map<String, List<Catelog2Vo>> getCatelogJson() {
+
+        Map<String, List<Catelog2Vo>> catalogJson = categoryService.getCatalogJson();
+        return catalogJson;
+    }
+}
+```
+
+`CategoryService`类：
+
+```java
+public interface CategoryService extends IService<CategoryEntity> {
+    Map<String, List<Catelog2Vo>> getCatalogJson();
+}
+```
+
+`CategoryServiceImpl`类：
+
+```java
+@Service("categoryService")
+public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
+
+    @Autowired
+    private CategoryBrandRelationService categoryBrandRelationService;
+    /**
+     * 获取一级分类列表
+     */
+    @Override
+    public List<CategoryEntity> getLevel1Categorys() {
+        List<CategoryEntity> categoryEntities = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", 0));
+        return categoryEntities;
+    }
+
+    @Override
+    public Map<String, List<Catelog2Vo>> getCatalogJson() {
+        // 1.查出所有分类1级分类
+        List<CategoryEntity> level1Categorys = getLevel1Categorys();
+
+
+        // 2.封装数据
+        Map<String, List<Catelog2Vo>> parent_cid = level1Categorys.stream().collect(Collectors.toMap(k -> k.getCatId().toString(), v -> {
+            // 每一个的一级分类，查到这个一级分类的二级分类
+            List<CategoryEntity> categoryEntities = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", v.getCatId()));
+
+            // 3.封装上面的结果
+            List<Catelog2Vo> catelog2Vos = null;
+            if (categoryEntities != null) {
+                catelog2Vos = categoryEntities.stream().map(l2 -> {
+                    Catelog2Vo catelog2Vo = new Catelog2Vo(v.getCatId().toString(), null, l2.getCatId().toString(), l2.getName());
+                    // 4、找当前二级分类的三级分类封装成vo
+                    List<CategoryEntity> level3Catelog = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", l2.getCatId()));
+                    if (level3Catelog != null) {
+                        List<Catelog2Vo.Catelog3Vo> collect = level3Catelog.stream().map(l3 -> {
+                            // 封装成指定格式
+                            Catelog2Vo.Catelog3Vo catelog3Vo = new Catelog2Vo.Catelog3Vo(l2.getCatId().toString(),l3.getCatId().toString(),l3.getName());
+
+                            return catelog3Vo;
+                        }).collect(Collectors.toList());
+                        catelog2Vo.setCatalog3List(collect);
+
+                    }
+                    return catelog2Vo;
+                }).collect(Collectors.toList());
+            }
+            return catelog2Vos;
+        }));
+
+        return parent_cid;
+    }
+
+}
+```
+
+启动`gulimall-product`商品服务，访问`http://localhost:10001/#`   ,看到如下效果，可以看到一级、二级分类、三级分类渲染成功：
+
+![image-20230526232440980](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305271847503.png)
+
+<!-- TOC --><a name="9"></a>
+## 9.搭建域名访问环境
+
+希望访问首页的时候不是通过`localhost:10001`这个URL,而是`gulimall.com`。
+
+按照正常流程，如果项目要上线，就需要买一台服务器，再申请一个公网IP地址，为这个公网IP地址绑定域名，同时需要做一些备案操作 ，用户通过该公网IP(域名)访问我们的服务器。由于现在是开发环境，我们先搭建基本环境，上线后才做正规流程
+
+<!-- TOC --><a name="91-"></a>
+
+### 9.1 反向代理配置
+
+<!-- TOC --><a name="1"></a>
+#####  1.正向代理与反向代理
+
+正向与反向是对于我们的电脑来说的，如果它帮我们上网，则是正向代理。如果是帮对方对方服务器则是反向代理
+
+![image-20230527104513541](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305271847028.png)
+
+正向代理的例子：科学上网。我们访问Google访问不上，那么我们可以搭建一台代理服务器，为我们的电脑配置上代理服务器的地址，之后访问所有的网址时，代理服务器都帮我们来访问，代理服务器拿到数据后再返回给我们的电脑。搭建的这个服务器是帮我们上网，所以这个场景就是正向代理。科学上网访问互联网时，由于是代理服务器帮我们上网，所以互联网上查看访问来自哪个IP地址时，看到的来源就是反向代理服务器的IP
+
+![image-20230527104536339](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305271847441.png)
+
+反向代理：反向代理在我们搭建集群环境时发挥作用。我们的`谷粒商城` 有各种后台集群，为了安全起见，不可能把每个服务器的内外ip暴露给用户访问(这样做任意引起攻击)，所以这些集群的服务器都要在内网部署。  为了让用户可以找到我们的服务集群，可以在这些集群的前面放置一个反向代理服务器，比如放置一个nginx,这个nginx具有一个公网IP可以将请求代理到集群。这个代理服务器可以屏蔽内网服务器信息，并实现负载均衡访问
+
+<!-- TOC --><a name="2nginxwindows"></a>
+##### 2.Nginx+Windows搭建域名访问环境
+
+- 在windows的hosts文件中配置域名与虚拟机IP地址的映射
+- 在浏览器中访问这个域名时，先查看hosts文件中的域名映射规则，如果有映射就直接访问该地址。如果hosts中没有映射规则，则需要去网络上的DNS对域名进行解析，获取到对应的IP地址后再进行访问
+- 由于我们将nginx装到了虚拟机上，所以将域名`gulimall.com`指定到虚拟机IP地址`192.168.56.10`
+
+![image-20230527001850177](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305271847257.png)
+
+
+
+**配置hosts:**
+
+- 可在`C:\Windows\System32\drivers\etc\hosts`直接进行修改,但此处我们利用`switchhost`软件进行修改：安装`switchhost`软件,解压后以管理员身份打开，打开后在本地方案中添加方案并命名为`gilimall`,添加域名映射规则后点击勾号使系统应用这个方案。测试：此时访问`http://gulimall.com:9200/`,成功访问到部署在虚拟机上的`elasticsearch`,说明配置生效
+
+<table align="center">
+<tr>
+	<td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305271848400.png" > <b>1</b></td>
+	<td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305271848953.png" > <b>2</b></td>
+</tr>
+</table>  
+
+<!-- TOC --><a name="3nginx"></a>
+#####   3.nginx配置文件
+
+- 基于上面的配置，启动虚拟机上的nginx,那访问`gulimall.com`时就会来到nginx的首页。接下来配置nginx ,让nginx帮我们进行反向代理。让nginx将来自`gulimall.com`的请求都转发到网关
+
+```sh
+docker update nginx --restart=always
+docker restart nginx
+```
+
+- 来到虚拟机中`nginx`的`conf`目录,其中`nginx.conf`文件就是`nginx`的总配置。另外还有一个`conf.d`目录，`conf.d`目录下的所有配置都会被合并到`nginx.conf`中并生效，进而起作用(`nginx.conf`中有一段配置为`include /etc/nginx/conf. d/*.conf;`)
+
+```sh
+cd /mydata/nginx/conf
+ls
+# conf.d          koi-utf  mime.types  nginx.conf   uwsgi_params
+# fastcgi_params  koi-win  modules     scgi_params  win-utf
+```
+
+- `nginx`的总配置文件`nginx.conf`的具体配置及作用见下表：
+
+
+
+![image-20230527010137087](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305271850108.png)
+
+- 配置文件使用案例：将配置`conf.d`下的配置文件`default.conf`拷贝一份并命名为`gulimall.conf`，更改其中的配置，使得访问`gulimall.com`域名时可以访问到正在windows上运行的`gulimall-product`商品服务的首页
+
+```sh
+cd /mydata/nginx/conf/conf.d
+sudo cp default.conf gulimall.conf
+sudo vi gulimall.conf
+sudo docker restart nginx
+```
+
+<table align="center">
+<tr>
+	<td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305271851718.png" > <b>1</b></td>
+	<td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305271851366.png" > <b>2</b></td>
+</tr>
+</table>  
+
+测试：访问`http://gulimall.com/`或`http://192.168.28.186:10001/`，发现都可以访问到商品服务`gulimall-product`的首页
+
+<!-- TOC --><a name="4nginx"></a>
+#####  4.配置nginx将请求转发到网关
+
+在分布式情况下，每个微服务都可能不止部署一个，如果nginx直接将请求路由给各个服务就比较麻烦。所以这里配置nginx，让nginx把请求路由到网关，网关再把请求负载均衡到各个微服务
+
+1、在`nginx.conf`中配置上游`upstream`，此`upstream`对应windows本地的88端口(即我们的网关端口) 
+
+2、在`gulimall.conf`中监听80端口，并将请求路由到本地的网关
+
+3、**重要** ：nginx代理给网关的时候，会丢失请求的host信息  。**解决方法**：`proxy_set_header Host $host`
+
+<table align="center">
+<tr>
+	<td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305271853578.png" > <b>1</b></td>
+	<td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305271853900.png" > <b>2</b></td>
+</tr>
+</table>  
+
+
+
+4、在网关服务`gulimall-gateway`的`application.yml`配置文件中配置转发规则：
+
+```yaml
+spring:
+  cloud:
+    gateway:
+      routes:
+## 将nginx过来的请求转发到商品服务
+        - id: gulimall_host_route
+          uri: lb://gulimall-product
+          predicates:
+            - Host=gulimall.com,item.gulimall.com
+```
+
+5、测试：访问`http://gulimall.com/`或`http://192.168.28.186:10001/`，发现都可以访问到商品服务`gulimall-product`的首页
+
+<!-- TOC --><a name="5"></a>
+#####   5.当前域名映射的效果
+
+经过上面的配置，当前的域名映射的效果为
+
+1、`gulimall.com`:  可以请求接口
+
+2、`gulimall.com` :   可以请求首页页面
+
+3、nginx直接代理给网关，网关判断
+
+- 如果/api/**，转交给对应的服务器
+- 如果是满足域名，转交给对应的服务

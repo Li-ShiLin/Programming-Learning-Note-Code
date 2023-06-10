@@ -9,6 +9,8 @@ import com.atguigu.gulimail.product.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -33,6 +35,7 @@ public class DataBaseCrudTest {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
 
     @Test
     public void contextLoads() {
@@ -136,6 +139,16 @@ public class DataBaseCrudTest {
         // 查询
         String value = ops.get("redis_key");
         System.out.println("之前保存的数据是" + value);
+
+    }
+
+    @Autowired
+    private RedissonClient redissonClient;
+
+
+    @Test
+    public void testRedission() {
+        System.out.println(redissonClient);
 
     }
 

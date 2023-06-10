@@ -680,56 +680,1245 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
           Spring再次封装lettuce和jedis后得到redisTemplate；
 ```
 
-###  3.4 缓存穿透
+###  3.4 高并发下缓存失效问题
 
-**高并发下缓存失效问题：缓存穿透**
+#####   1.缓存穿透
 
-- 缓存穿透：指查询一个一定不存在的数据，由于缓存是不命中，将去查询数据库，但是数据库也无此记录，我们没有将这次查询的null写入缓存，这将导致这个不存在的数据每次请求都要到存储层去查询，失去了缓存的意义
+- 缓存穿透：
+  - 指查询一个一定不存在的数据，由于缓存是不命中，将去查询数据库，但是数据库也无此记录，我们没有将这次查询的null写入缓存，这将导致这个不存在的数据每次请求都要到存储层去查询，失去了缓存的意义
+- 风险:
+  - 利用不存在的数据进行攻击，数据库瞬时压力增大，最终导致崩溃
 
-**风险**:
+- 解决 :
+  - null结果缓存，并加入短暂过期时间
 
-- 利用不存在的数据进行攻击，数据库瞬时压力增大，最终导致崩溃
+#####  2.缓存雪崩
 
-**解决** :
+- 缓存雪崩
+  - 缓存雪崩是指在我们设置缓存时key采用了相同的过期时间，导致缓存在某一时刻同时失效，请求全部转发到DB，DB瞬时压力过重雪崩
 
-- null结果缓存，并加入短暂过期时间
+- 解决:
+  - 原有的失效时间基础上增加一个随机值，比如1-5分钟随机，这样每-个缓存的过期时间的重复率就会降低，就很难引发集体失效的事件
 
-### 3.5 缓存雪崩
+#####  3. 缓存击穿
 
-**高并发下缓存失效问题-缓存雪崩**
+- 缓存击穿
 
-- 缓存雪崩是指在我们设置缓存时key采用了相同的过期时间，导致缓存在某一时刻同时失效，请求全部转发到DB，DB瞬时压力过重雪崩
+  - 对于一些设置了过期时间的key,如果这些key可能会在某些时间点被超高并发地访问，是一种非常"热点"的数据。
 
-**解决**:
+  - 如果这个key在大量请求同时进来前正好失效，那么所有对这个key的数据查询都落到db,我们称为缓存击穿
 
-- 原有的失效时间基础上增加一个随机值，比如1-5分钟随机，这样每-个缓存的过期时间的重复率就会降低，就很难引发集体失效的事件
+- 解决: 
 
-###  3.6 缓存击穿
+  -  加锁
 
-**高并发下缓存失效问题-缓存击穿**
+  - 大量并发只让一个去查，其他人等待，查到以后释放锁，其他人获取到锁，先查缓存,就会有数据，不用去db
 
-- 对于一些设置了过期时间的key,如果这些key可能会在某些时间点被超高并发地访问，是一种非常"热点"的数据。
-- 如果这个key在大量请求同时进来前正好失效，那么所有对这个key的数据查询都落到db,我们称为缓存击穿。
+#####  4.总结：
 
-**解决**:  加锁
+ 1、解决缓存穿透: 空结果缓存
+ 2、解决缓存雪崩: 设置过期时间（加随机值）
+ 3、解决缓存击穿: 加锁
 
-- 大量并发只让一个去查，其他人等待，查到以后释放锁，其他人获取到锁，先查缓存,就会有数据，不用去db
+###  3.5 加锁解决缓存击穿问题-采用本地锁
 
+#####   1.思路 & 实现
 
+- 加锁解决缓存击穿问题：大量并发只让一个去查，其他人等待，查到以后释放锁，其他人获取到锁，先查缓存,就会有数据，不用去db
+- 只要是同一把锁，就能锁住需要这个锁的所有线程。synchronized (this)：SpringBoot所有的组件在容器中都是单例的
+- 在单体应用中，利用本地锁：synchronized，JUC（Lock）即可锁住。在分布式情况下，想要锁住所有，必须使用分布式锁
 
+`IndexController`类：
 
+```java
+@Controller
+public class IndexController {
 
+    @Autowired
+    private CategoryService categoryService;
+    /**
+     * 渲染二级、三级分类数据
+     * /index/catalog.json
+     */
+    @ResponseBody
+    @GetMapping("/index/catalog.json")
+    public Map<String, List<Catelog2Vo>> getCatelogJson() {
+
+        Map<String, List<Catelog2Vo>> catalogJson = categoryService.getCatalogJson();
+        return catalogJson;
+    }
+
+}
 ```
- 7、整合redisson作为分布式锁等功能框架
-       1）、引入依赖
-            <dependency>
-                    <groupId>org.redisson</groupId>
-                     <artifactId>redisson</artifactId>
-                     <version>3.12.0</version>
-             </dependency>
-       2）、配置redisson
-              MyRedissonConfig给容器中配置一个RedissonClient实例即可
-       3）、使用
-               参照文档做
+
+`CategoryService`类：
+
+```java
+public interface CategoryService extends IService<CategoryEntity> {
+    Map<String, List<Catelog2Vo>> getCatalogJson();
+}
 ```
+
+`CategoryServiceImpl`实现类：
+
+```java
+@Slf4j
+@Service("categoryService")
+public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
+
+    @Autowired
+    private CategoryBrandRelationService categoryBrandRelationService;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    /**
+     * 三级分类数据获取性能优化二：加锁解决缓存击穿问题
+     */
+    @Override
+    public Map<String, List<Catelog2Vo>> getCatalogJson() {
+        // 给缓存中放json字符串，拿出的json字符串， 还用逆转为能用的对象类型; [序列化与反序列化]
+
+        // 1、加入缓存逻辑
+        String catalogJSON = stringRedisTemplate.opsForValue().get("catalogJSON");
+        if (StringUtils.isEmpty(catalogJSON)) {
+            log.info("缓存不命中...将要查询数据库");
+            // 2、如果缓存中不存在，则到数据库中查询
+            // 缓存中数据都要存成JSON字符串。存成JSON的好处：JSON格式的数据是跨平台、跨语言兼容的
+            Map<String, List<Catelog2Vo>> catalogJsonFromDb = getCatalogJsonFromDb();
+
+            // 返回数据
+            return catalogJsonFromDb;
+
+        }
+        log.info("缓存命中，直接返回数据");
+        // 将redis中取出来的json数据转成我们指定的对象
+        Map<String, List<Catelog2Vo>> result = JSON.parseObject(catalogJSON, new TypeReference<Map<String, List<Catelog2Vo>>>() {
+        });
+
+        return result;
+    }
+
+
+    // 从数据库查询并封装分类数据
+    public  Map<String, List<Catelog2Vo>> getCatalogJsonFromDb() {
+
+
+        // 只要是同一把锁、就能锁住需要这个锁的所有线程
+        // 因为springboot的所有组件在容器中都是单例的，所以利用此处的this即可实现上锁
+        synchronized (this) {
+            // 得到锁以后，我们应该再去缓存中再确定一次，如果没有才继续查询
+            String catalogJSON = stringRedisTemplate.opsForValue().get("catalogJSON");
+            // 如果缓存命中就直接返回
+            if (!StringUtils.isEmpty(catalogJSON)) {
+                // 将redis中取出来的json数据转成我们指定的对象
+                Map<String, List<Catelog2Vo>> result = JSON.parseObject(catalogJSON, new TypeReference<Map<String, List<Catelog2Vo>>>() {
+                });
+                return result;
+
+            }
+            log.info("缓存没命中，查询了数据库...");
+            // 查到所有数据
+            List<CategoryEntity> selectList = baseMapper.selectList(null);
+
+            /**
+             *  三级分类数据获取性能优化： 1.将数据库的多次查询变为一次
+             */
+
+            // 1.查出所有分类1级分类
+            List<CategoryEntity> level1Categorys = getParentCid(selectList, 0L);
+
+
+            // 2.封装数据
+            Map<String, List<Catelog2Vo>> parent_cid = level1Categorys.stream().collect(Collectors.toMap(k -> k.getCatId().toString(), v -> {
+                // 每一个的一级分类，查到这个一级分类的二级分类
+                List<CategoryEntity> categoryEntities = getParentCid(selectList, v.getCatId());
+
+                // 3.封装上面的结果
+                List<Catelog2Vo> catelog2Vos = null;
+                if (categoryEntities != null) {
+                    catelog2Vos = categoryEntities.stream().map(l2 -> {
+                        Catelog2Vo catelog2Vo = new Catelog2Vo(v.getCatId().toString(), null, l2.getCatId().toString(), l2.getName());
+                        // 4、找当前二级分类的三级分类封装成vo
+                        List<CategoryEntity> level3Catelog = getParentCid(selectList, l2.getCatId());
+                        if (level3Catelog != null) {
+                            List<Catelog2Vo.Catelog3Vo> collect = level3Catelog.stream().map(l3 -> {
+                                // 封装成指定格式
+                                Catelog2Vo.Catelog3Vo catelog3Vo = new Catelog2Vo.Catelog3Vo(l2.getCatId().toString(), l3.getCatId().toString(), l3.getName());
+
+                                return catelog3Vo;
+                            }).collect(Collectors.toList());
+                            catelog2Vo.setCatalog3List(collect);
+
+                        }
+                        return catelog2Vo;
+                    }).collect(Collectors.toList());
+                }
+                return catelog2Vos;
+            }));
+
+            // 3、将查到的数据放到缓存，将对象转为JSON后存到redis缓存中
+            String jsonString = JSON.toJSONString(parent_cid);
+            stringRedisTemplate.opsForValue().set("catalogJSON", jsonString);
+
+            return parent_cid;
+        }
+
+    }
+
+    private List<CategoryEntity> getParentCid(List<CategoryEntity> selectList, Long parentCid) {
+        List<CategoryEntity> collect = selectList.stream().filter(item -> item.getParentCid() == parentCid).collect(Collectors.toList());
+        return collect;
+    }
+
+
+}
+```
+
+测试：JMeter压力测试下，缓存中虽然没有键值为`catalogJSON`的缓存，但是当大量请求同时到达时，对数据库的查询也只有一次。所以即便在缓存突然失效时请求量激增也不会出现数据库崩溃的情况
+
+![image-20230601223832611](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202306101216416.png)
+
+
+
+
+
+#####   2.锁-时序问题
+
+要注意锁的范围，锁的范围太小可能导致其他问题。假如在把查到的结果放入缓存前就释放了锁，由于把结果放入缓存这个动作也需要消耗一定时间，此时有的线程如果获取了释放的锁且缓存中还没有数据，那就会再去数据库中查数据。所以正确的做法就是要在`结果放入缓存`以后再释放锁
+
+<table align="center">
+<tr>
+	<td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202306101218916.png" > <b>1</b></td>
+	<td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202306101218847.png" > <b>2</b></td>
+</tr>
+</table>  
+
+
+
+##### 3.本地锁存在的问题 
+
+本地锁，只能锁住当前进程。在分布式情况下，每个服务都将会进行一次数据库的查询。在分布式场景下要让所有的服务总共查一次数据库的话，就需要采用分布式锁
+
+![image-20230531213650628](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202306101219302.png)
+
+
+
+模拟分布式场景：启动多个商品服务，进行测试，发现每个服务都查询了一次数据库，说明在分布式场景下本地锁无法锁住各个微服务的进程
+
+<table align="center">
+<tr>
+	<td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202306101219655.png" > <b>1</b></td>
+	<td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202306101220224.png" > <b>2</b></td>
+</tr>
+</table>  
+
+
+
+###  3.6 加锁解决缓存击穿问题-分布式锁
+
+#####   3.6.1 分布式锁原理
+
+- `redis`分布式锁就是利用带了`NX`参数的`set`命令实现的（NX 代表not exist ,不存在的时候才往里面放）不存在才往里面放，存在就set失败
+
+![image-20230602033834327](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202306101221009.png)
+
+
+
+- `redis`官方文档`set`命令：`http://redis.cn/commands/set.html`
+- `set`命令：
+
+```sql
+SET key value [EX seconds] [PX milliseconds] [NX|XX]
+#  EX seconds             -设置键key的过期时间，单位时秒
+#  PX milliseconds        -设置键key的过期时间，单位时毫秒
+#  NX                     -只有键key不存在的时候才会设置key的值
+#  XX                     -只有键key存在的时候才会设置key的值
+```
+
+#####  3.6.2 set命令演示
+
+- `set`命令演示：同时开启多个redis客户端，同时利用`docker exec -it redis redis-cli`命令连接`redis`服务器。多个客户端同时向`redis`发送命令`set lock hh NX`，则只有一个客户端能够抢占成功
+
+<table align="center">
+<tr>
+	<td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202306101222486.png" > <b>1</b></td>
+	<td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202306101223741.png" > <b>2</b></td>
+</tr>
+</table>  
+
+
+
+- 多个客户端同时执行占锁命令`set lock hh NX`，只有一个客户端会返回`OK`，其余的都会返回null
+
+![image-20230603014922858](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202306101224919.png)
+
+
+
+![image-20230603051543509](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202306101224599.png)
+
+#####  3.6.3 分布式锁解决缓存击穿最终实现
+
+要点：
+
+- `获取锁的值进行对比 + 对比成功后删除锁` = `原子操作`：要确保`获取锁的值进行对比`和`对比成功后删除锁`这两个操作是原子操作
+
+- 获取锁以后，执行业务的时间可能会很长，此时锁过期就会导致其他线程抢占锁，所以要在删除锁之前为锁续期。也可以将过期时间设置得长一些，保证业务在过期之前执行完
+
+![image-20230603160705183](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202306101225718.png)
+
+`IndexController`类：
+
+```java
+@Controller
+public class IndexController {
+    @Autowired
+    private CategoryService categoryService;
+
+    @GetMapping({"/", "index.html"})
+    public String indexPage(Model model) {
+    /**
+     * 渲染二级、三级分类数据
+     * /index/catalog.json
+     */
+    @ResponseBody
+    @GetMapping("/index/catalog.json")
+    public Map<String, List<Catelog2Vo>> getCatelogJson() {
+
+        Map<String, List<Catelog2Vo>> catalogJson = categoryService.getCatalogJson();
+        return catalogJson;
+    }
+}
+```
+
+`CategoryService`类：
+
+```java
+public interface CategoryService extends IService<CategoryEntity> {
+    Map<String, List<Catelog2Vo>> getCatalogJson();
+}
+```
+
+`CategoryServiceImpl`实现类：
+
+```java
+@Slf4j
+@Service("categoryService")
+public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
+
+    @Autowired
+    private CategoryBrandRelationService categoryBrandRelationService;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    /**
+     * 三级分类数据获取性能优化二：加锁解决缓存击穿问题
+     */
+    @Override
+    public Map<String, List<Catelog2Vo>> getCatalogJson() {
+        // 给缓存中放json字符串，拿出的json字符串， 还用逆转为能用的对象类型; [序列化与反序列化]
+
+        // 1、加入缓存逻辑
+        String catalogJSON = stringRedisTemplate.opsForValue().get("catalogJSON");
+        if (StringUtils.isEmpty(catalogJSON)) {
+            log.info("缓存不命中...将要查询数据库");
+            // 2、如果缓存中不存在，则到数据库中查询
+            // 缓存中数据都要存成JSON字符串。存成JSON的好处：JSON格式的数据是跨平台、跨语言兼容的
+            Map<String, List<Catelog2Vo>> catalogJsonFromDb = getCatalogJsonFromDbWithRedisLock();
+
+            // 返回数据
+            return catalogJsonFromDb;
+
+        }
+        log.info("缓存命中，直接返回数据");
+        // 将redis中取出来的json数据转成我们指定的对象
+        Map<String, List<Catelog2Vo>> result = JSON.parseObject(catalogJSON, new TypeReference<Map<String, List<Catelog2Vo>>>() {
+        });
+
+        return result;
+    }
+
+    // 从数据库查询并封装分类数据（使用redis缓存解决缓存击穿问题）
+    public Map<String, List<Catelog2Vo>> getCatalogJsonFromDbWithRedisLock() {
+        // 1、占分布式锁。去redis占坑
+        String uuid = UUID.randomUUID().toString();
+        Boolean lock = stringRedisTemplate.opsForValue().setIfAbsent("lock", uuid, 300, TimeUnit.SECONDS);
+        if (lock) {
+            log.info("获取分布式锁成功...");
+            // 加锁成功...执行业务
+            // 设置过期时间,防止执行业务代码时出错而导致锁无法释放，锁没有释放就会造成死锁，加上过期时间后即便业务出错，也会在指定时间内释放锁
+            // stringRedisTemplate.expire("lock", 30, TimeUnit.SECONDS);
+            Map<String, List<Catelog2Vo>> dateFromDB;
+            try {
+                dateFromDB = getDateFromDB();
+            } finally {
+                //            // 执行完业务要把锁释放,将锁删除
+//            // 获取锁的值进行对比 + 对比成功后删除锁 = 原子操作
+//            String lockValue = stringRedisTemplate.opsForValue().get("lock");
+//            if (uuid.equals(lockValue)) {
+//                // 如果是自己的锁才能删除：防止误删其他线程的锁
+//                stringRedisTemplate.delete("lock");
+//            }
+
+                // 执行完业务要把锁释放,将锁删除
+                // 获取锁的值进行对比 + 对比成功后删除锁 = 原子操作
+                String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+                // 删除锁
+                Long lock1 = stringRedisTemplate.execute(new DefaultRedisScript<Long>(script, Long.class)
+                        , Arrays.asList("lock"), uuid);
+            }
+
+            return dateFromDB;
+        } else {
+            // 加锁失败...重试。
+            log.info("获取分布式锁失败...等待重试....");
+            // 本地锁的synchronized ()自带监听功能，以自旋的方式一直重试，当其他线程释放锁时尝试获取锁
+            // 此处redis缓存获取锁，我们自己通过递归调用，继续尝试获取锁（自旋的方式）
+            // 为限制重试频率，让线程休眠一段时间
+            try {
+                Thread.sleep(200L);
+            } catch (Exception e) {
+//                e.printStackTrace();
+            }
+            return getCatalogJsonFromDbWithRedisLock();
+        }
+
+    }
+
+    private Map<String, List<Catelog2Vo>> getDateFromDB() {
+        // 得到锁以后，我们应该再去缓存中再确定一次，如果没有才继续查询
+        String catalogJSON = stringRedisTemplate.opsForValue().get("catalogJSON");
+        // 如果缓存命中就直接返回
+        if (!StringUtils.isEmpty(catalogJSON)) {
+            // 将redis中取出来的json数据转成我们指定的对象
+            Map<String, List<Catelog2Vo>> result = JSON.parseObject(catalogJSON, new TypeReference<Map<String, List<Catelog2Vo>>>() {
+            });
+            return result;
+
+        }
+        log.info("缓存没命中，查询了数据库...");
+        // 查到所有数据
+        List<CategoryEntity> selectList = baseMapper.selectList(null);
+
+        /**
+         *  三级分类数据获取性能优化： 1.将数据库的多次查询变为一次
+         */
+
+        // 1.查出所有分类1级分类
+        List<CategoryEntity> level1Categorys = getParentCid(selectList, 0L);
+
+
+        // 2.封装数据
+        Map<String, List<Catelog2Vo>> parent_cid = level1Categorys.stream().collect(Collectors.toMap(k -> k.getCatId().toString(), v -> {
+            // 每一个的一级分类，查到这个一级分类的二级分类
+            List<CategoryEntity> categoryEntities = getParentCid(selectList, v.getCatId());
+
+            // 3.封装上面的结果
+            List<Catelog2Vo> catelog2Vos = null;
+            if (categoryEntities != null) {
+                catelog2Vos = categoryEntities.stream().map(l2 -> {
+                    Catelog2Vo catelog2Vo = new Catelog2Vo(v.getCatId().toString(), null, l2.getCatId().toString(), l2.getName());
+                    // 4、找当前二级分类的三级分类封装成vo
+                    List<CategoryEntity> level3Catelog = getParentCid(selectList, l2.getCatId());
+                    if (level3Catelog != null) {
+                        List<Catelog2Vo.Catelog3Vo> collect = level3Catelog.stream().map(l3 -> {
+                            // 封装成指定格式
+                            Catelog2Vo.Catelog3Vo catelog3Vo = new Catelog2Vo.Catelog3Vo(l2.getCatId().toString(), l3.getCatId().toString(), l3.getName());
+
+                            return catelog3Vo;
+                        }).collect(Collectors.toList());
+                        catelog2Vo.setCatalog3List(collect);
+
+                    }
+                    return catelog2Vo;
+                }).collect(Collectors.toList());
+            }
+            return catelog2Vos;
+        }));
+
+        // 3、将查到的数据放到缓存，将对象转为JSON后存到redis缓存中
+        String jsonString = JSON.toJSONString(parent_cid);
+        stringRedisTemplate.opsForValue().set("catalogJSON", jsonString);
+        return parent_cid;
+    }
+
+    // 从数据库查询并封装分类数据(使用本地锁解决缓存击穿问题)
+    public Map<String, List<Catelog2Vo>> getCatalogJsonFromDbWithLocalLock() {
+
+        // 只要是同一把锁、就能锁住需要这个锁的所有线程
+        // 因为springboot的所有组件在容器中都是单例的，所以利用此处的this即可实现上锁
+        synchronized (this) {
+            // 得到锁以后，我们应该再去缓存中再确定一次，如果没有才继续查询
+            return getDateFromDB();
+        }
+
+    }
+
+    private List<CategoryEntity> getParentCid(List<CategoryEntity> selectList, Long parentCid) {
+        List<CategoryEntity> collect = selectList.stream().filter(item -> item.getParentCid() == parentCid).collect(Collectors.toList());
+        return collect;
+    }
+
+}
+```
+
+###   3.7  分布式锁演进（逐步推导3.6.3中的最终实现）
+
+下面展示几种缓存击穿问题的解决方案，前几个解决方案都存在一定的问题和漏洞，我们一步步的解决这些漏洞，最后实现一个最终的解决方案。在比较这几个方案时要深刻体会线程、锁、以及原子性的重要性
+
+##### 1.方案一
+
+方案二流程图：
+
+![image-20230603060110899](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202306101226732.png)
+
+核心代码实现：
+
+```java
+// 从数据库查询并封装分类数据（使用redis缓存解决缓存击穿问题）
+public Map<String, List<Catelog2Vo>> getCatalogJsonFromDbWithRedisLock() {
+    // 1、占分布式锁。去redis占坑
+    Boolean lock = stringRedisTemplate.opsForValue().setIfAbsent("lock", "hh");
+    if (lock) {
+        // 加锁成功...执行业务
+        Map<String, List<Catelog2Vo>> dateFromDB = getDateFromDB();
+        // 执行完业务要把锁释放,将锁删除
+        stringRedisTemplate.delete("lock");
+        return dateFromDB;
+    } else {
+        // 加锁失败...重试。
+        // 本地锁的synchronized ()自带监听功能，以自旋的方式一直重试，当其他线程释放锁时尝试获取锁
+        // 此处redis缓存获取锁，我们自己通过递归调用，继续尝试获取锁（自旋的方式）
+        // 为限制重试频率，让线程休眠一段时间
+        return getCatalogJsonFromDbWithRedisLock();
+    }
+
+}
+```
+
+方案一存在的问题:
+
+- `setnx`占好了位,假如业务代码异常或者程序在业务过程中宕机，导致没有执行删除锁的逻辑,就会造成死锁
+
+解决：
+
+- 设置锁的自动过期，即使因为异常导致删除失败，`redis`中的`key`过期之后会自动删除，达到删除\释放锁的目的
+
+#####  2.方案二
+
+方案二流程图：
+
+
+
+![image-20230603122604059](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202306101226493.png)
+
+核心代码实现：
+
+```java
+    // 从数据库查询并封装分类数据（使用redis缓存解决缓存击穿问题）
+    public Map<String, List<Catelog2Vo>> getCatalogJsonFromDbWithRedisLock() {
+        // 1、占分布式锁。去redis占坑
+        Boolean lock = stringRedisTemplate.opsForValue().setIfAbsent("lock", "hh");
+        if (lock) {
+            // 加锁成功...执行业务
+            // 设置过期时间,防止执行业务代码时出错而导致锁无法释放，锁没有释放就会造成死锁，加上过期时间后即便业务出错，也会在指定时间内释放锁
+            stringRedisTemplate.expire("lock", 30, TimeUnit.SECONDS);
+            Map<String, List<Catelog2Vo>> dateFromDB = getDateFromDB();
+            // 执行完业务要把锁释放,将锁删除
+            stringRedisTemplate.delete("lock");
+            return dateFromDB;
+        } else {
+            // 加锁失败...重试。
+            // 本地锁的synchronized ()自带监听功能，以自旋的方式一直重试，当其他线程释放锁时尝试获取锁
+            // 此处redis缓存获取锁，我们自己通过递归调用，继续尝试获取锁（自旋的方式）
+            // 为限制重试频率，让线程休眠一段时间
+
+            return getCatalogJsonFromDbWithRedisLock();
+        }
+
+    }
+```
+
+方案二存在的问题:
+
+- 使用`setnx`占到锁以后， 由于`占锁`和`设置过期时间`不是同步完成(不是原子操作)，假如占好锁之后宕机，还没来得及设置过期时间，死锁问题还是存在
+
+解决:
+
+- 设置过期时间和占位必须是原子的。redis支持使用`setnx ex`命令
+- 利用如下命令保证原子性：加锁的同时设置过期时间
+
+```sql
+set lock hh EX 300 NX
+```
+
+#####  3.方案三
+
+方案三流程图：
+
+![image-20230603122709951](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202306101227033.png)
+
+核心代码实现：
+
+```java
+    // 从数据库查询并封装分类数据（使用redis缓存解决缓存击穿问题）
+    public Map<String, List<Catelog2Vo>> getCatalogJsonFromDbWithRedisLock() {
+        // 1、占分布式锁。去redis占坑
+        Boolean lock = stringRedisTemplate.opsForValue().setIfAbsent("lock", "hh", 30, TimeUnit.SECONDS);
+        if (lock) {
+            // 加锁成功...执行业务
+            // 设置过期时间,防止执行业务代码时出错而导致锁无法释放，锁没有释放就会造成死锁，加上过期时间后即便业务出错，也会在指定时间内释放锁
+            // stringRedisTemplate.expire("lock", 30, TimeUnit.SECONDS);
+            Map<String, List<Catelog2Vo>> dateFromDB = getDateFromDB();
+            // 执行完业务要把锁释放,将锁删除
+            stringRedisTemplate.delete("lock");
+            return dateFromDB;
+        } else {
+            // 加锁失败...重试。
+            // 本地锁的synchronized ()自带监听功能，以自旋的方式一直重试，当其他线程释放锁时尝试获取锁
+            // 此处redis缓存获取锁，我们自己通过递归调用，继续尝试获取锁（自旋的方式）
+            // 为限制重试频率，让线程休眠一段时间
+
+            return getCatalogJsonFromDbWithRedisLock();
+        }
+
+    }
+```
+
+方案三存在的问题：
+
+- 如果业务非常耗时，某个线程获取锁以后开始执行业务代码，但是在业务执行完之前锁就过期了，那其它线程就会获取锁，导致有多个线程同时执行业务代码，从而导致一些错误
+- 误删其它线程的如果线程A获取到锁，A在执行业务代码的过程中锁过期了。线程B又在此时成功抢占到锁，线程A执行完业务代码就会把线程B的锁误删
+
+解决:
+
+- 占锁的时候，值指定为uuid,每个线程匹配是自己的锁才删除
+
+
+
+#####  4. 方案四
+
+方案四流程图：
+
+
+
+![image-20230603153744284](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202306101227519.png)
+
+核心代码实现：
+
+```java
+    // 从数据库查询并封装分类数据（使用redis缓存解决缓存击穿问题）
+    public Map<String, List<Catelog2Vo>> getCatalogJsonFromDbWithRedisLock() {
+        // 1、占分布式锁。去redis占坑
+        String uuid = UUID.randomUUID().toString();
+        Boolean lock = stringRedisTemplate.opsForValue().setIfAbsent("lock", uuid, 30, TimeUnit.SECONDS);
+        if (lock) {
+            // 加锁成功...执行业务
+            // 设置过期时间,防止执行业务代码时出错而导致锁无法释放，锁没有释放就会造成死锁，加上过期时间后即便业务出错，也会在指定时间内释放锁
+            // stringRedisTemplate.expire("lock", 30, TimeUnit.SECONDS);
+            Map<String, List<Catelog2Vo>> dateFromDB = getDateFromDB();
+            // 执行完业务要把锁释放,将锁删除
+            String lockValue = stringRedisTemplate.opsForValue().get("lock");
+            if (uuid.equals(lockValue)){
+                // 如果是自己的锁才能删除：防止误删其他线程的锁
+                stringRedisTemplate.delete("lock");
+            }
+            return dateFromDB;
+        } else {
+            // 加锁失败...重试。
+            // 本地锁的synchronized ()自带监听功能，以自旋的方式一直重试，当其他线程释放锁时尝试获取锁
+            // 此处redis缓存获取锁，我们自己通过递归调用，继续尝试获取锁（自旋的方式）
+            // 为限制重试频率，让线程休眠一段时间
+
+            return getCatalogJsonFromDbWithRedisLock();
+        }
+
+    }
+```
+
+问题：
+
+- 由于`查询redis并判断锁值`这个操作和`删除redis锁`这两个操作并非原子操作，所以可能在查到缓存中的锁是当前进程的锁并准备将其删除时，当前线程的锁过期了，其他线程继续抢占锁，那还是会出现误删的情况
+
+解决:
+
+- 删除锁必须保证原子性。使用redis+Lua脚本完成
+
+#####  5.方案五(最终实现)
+
+方案五流程图：
+
+
+
+![image-20230603160705183](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202306101228113.png)
+
+要点：
+
+- 获取锁的值进行对比 + 对比成功后删除锁 = 原子操作
+
+- 获取锁以后，执行业务的时间可能会很长，此时锁过期就会导致其他线程抢占锁，所以要在删除锁之前为锁续期。也可以将过期时间设置得长一些，保证业务在过期之前执行完
+
+核心代码(完整代码见3.6.3)：
+
+```java
+    // 从数据库查询并封装分类数据（使用redis缓存解决缓存击穿问题）
+    public Map<String, List<Catelog2Vo>> getCatalogJsonFromDbWithRedisLock() {
+        // 1、占分布式锁。去redis占坑
+        String uuid = UUID.randomUUID().toString();
+        Boolean lock = stringRedisTemplate.opsForValue().setIfAbsent("lock", uuid, 300, TimeUnit.SECONDS);
+        if (lock) {
+            log.info("获取分布式锁成功...");
+            // 加锁成功...执行业务
+            // 设置过期时间,防止执行业务代码时出错而导致锁无法释放，锁没有释放就会造成死锁，加上过期时间后即便业务出错，也会在指定时间内释放锁
+            // stringRedisTemplate.expire("lock", 30, TimeUnit.SECONDS);
+            Map<String, List<Catelog2Vo>> dateFromDB;
+            try {
+                dateFromDB = getDateFromDB();
+            } finally {
+                //            // 执行完业务要把锁释放,将锁删除
+//            // 获取锁的值进行对比 + 对比成功后删除锁 = 原子操作
+//            String lockValue = stringRedisTemplate.opsForValue().get("lock");
+//            if (uuid.equals(lockValue)) {
+//                // 如果是自己的锁才能删除：防止误删其他线程的锁
+//                stringRedisTemplate.delete("lock");
+//            }
+
+                // 执行完业务要把锁释放,将锁删除
+                // 获取锁的值进行对比 + 对比成功后删除锁 = 原子操作
+                String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+                // 删除锁
+                Long lock1 = stringRedisTemplate.execute(new DefaultRedisScript<Long>(script, Long.class)
+                        , Arrays.asList("lock"), uuid);
+            }
+
+            return dateFromDB;
+        } else {
+            // 加锁失败...重试。
+            log.info("获取分布式锁失败...等待重试....");
+            // 本地锁的synchronized ()自带监听功能，以自旋的方式一直重试，当其他线程释放锁时尝试获取锁
+            // 此处redis缓存获取锁，我们自己通过递归调用，继续尝试获取锁（自旋的方式）
+            // 为限制重试频率，让线程休眠一段时间
+            try {
+                Thread.sleep(200L);
+            } catch (Exception e) {
+//                e.printStackTrace();
+            }
+            return getCatalogJsonFromDbWithRedisLock();
+        }
+
+    }
+```
+
+##  4.redission分布式锁
+
+###  4.1 redission概述 & 依赖 & 配置
+
+- 概述：`redisson`和`jedis`、`lettuce`都是操作`redis`的客户端，`redisson`可以提供更加强大的功能
+
+- 官方描述：
+  - Redisson是一个在Redis的基础上实现的Java驻内存数据网格（In-Memory Data Grid）。它不仅提供了一系列的分布式的Java常用对象，还提供了许多分布式服务。其中包括(`BitSet`, `Set`, `Multimap`, `SortedSet`, `Map`, `List`, `Queue`, `BlockingQueue`, `Deque`, `BlockingDeque`, `Semaphore`, `Lock`, `AtomicLong`, `CountDownLatch`, `Publish / Subscribe`, `Bloom filter`, `Remote service`, `Spring cache`, `Executor service`, `Live Object service`, `Scheduler service`) Redisson提供了使用Redis的最简单和最便捷的方法。Redisson的宗旨是促进使用者对Redis的关注分离（Separation of Concern），从而让使用者能够将精力更集中地放在处理业务逻辑上
+
+- redis官方文档—redis分布式锁：`https://redis.io/docs/manual/patterns/distributed-locks/`
+- redission官方github地址：`https://github.com/redisson/redisson`
+- redission官方文档：`github.com/redisson/redisson/wiki/Table-of-Content`
+
+引入`redisson`的原生依赖：
+
+```xml
+        <!-- 以后使用redisson作为所有分布式锁，分布式对象等功能框架-->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.13.4</version>
+        </dependency>
+```
+
+配置`redission` :
+
+```java
+/**
+ * 配置redisson
+ * MyRedissonConfig给容器中配置一个RedissonClient实例即可
+ */
+@Configuration
+public class MyRedissonConfig {
+
+    /**
+     * 所有对Redisson的使用都是通过RedissonClient对象
+     */
+    @Bean(destroyMethod = "shutdown")
+    public RedissonClient redisson() throws IOException {
+        //1、创建配置
+        //Redis url should start with redis:// or rediss://
+        Config config = new Config();
+        config.useSingleServer().setAddress("redis://192.168.56.10:6379");
+
+        //2、根据Config配置创建出RedissonClient示例
+        RedissonClient redissonClient = Redisson.create(config);
+        return redissonClient;
+    }
+}
+```
+
+`application.yml`配置：
+
+```yaml
+spring:
+  redis:
+    host: 192.168.56.10
+    port: 6379
+```
+
+###  4.2 redission 分布式可重入锁
+
+**可重入锁与不可重入锁区分**：
+
+- 讨论前提：
+  - 条件一：A方法中调用了B方法   
+  - 条件二：A方法和B方法都要获取同一把锁C才能运行
+- 可重入锁：
+  - 假如A方法获取了锁C,那么其内部的B方法就天然地获取了锁C,也就是B方法可以直接运行,那么锁就是可重入锁
+- 不可重入锁         
+  - 假如A方法获取了锁C,B方法要执行的话需要A方法释放锁C，那么锁就是不可重入锁
+  - 不可重入锁一定会导致死锁
+
+```sh
+# 可重入锁:
+A方法(){ // A方法获取了锁C
+    B方法(){ // A方法获取了锁C,那么B方法天然地获取锁C
+    }
+}
+
+# 不可重入锁
+A方法(){ // A方法获取了锁C
+    B方法(){ // A方法获取了锁C,B方法要执行的话需要A方法释放锁C
+    }
+}
+
+可重入锁与不可重入锁：
+     讨论前提：
+              条件一：A方法中调用了B方法   
+              条件二：A方法和B方法都要获取同一把锁C才能运行
+     可重入锁：
+              假如A方法获取了锁C,那么其内部的B方法就天然地获取了锁C,也就是B方法可以直接运行,那么锁就是可重入锁
+     不可重入锁         
+             假如A方法获取了锁C,B方法要执行的话需要A方法释放锁C，那么锁就是不可重入锁
+             不可重入锁一定会导致死锁
+```
+
+- `redisson`官方文档—分布式锁：`github.com/redisson/redisson/wiki/8.-分布式锁和同步器`
+- 基于`Redis`的`Redisson`分布式可重入锁`RLock Java`对象实现了`java.util.concurrent.locks.Lock`接口。同时还提供了异步`（Async）`、反射式`（Reactive）`和`RxJava2`标准的接口
+- Redisson的lock锁采用了看门狗机制，实现了过期时间的自动续期、实现了阻塞式等待
+
+**redission可重入锁测试**：
+
+`RedissionTestController`类：
+
+```java
+@Controller
+public class RedissionTestController {
+
+    @Autowired
+    private RedissonClient redissonClient;
+
+    /**
+     * redission的强大之处：
+     * 1、解决了锁的自动续期：如果业务时间超长，运行期间自动给锁续上新的30秒。不用担心业务时间长，锁自动过期被删掉
+     * 2、加锁的业务只要运行完成，就不会给当前锁续期，即使不手动解锁，锁默认在30s以后自动删除。
+     */
+    @ResponseBody
+    @GetMapping("/hello")
+    public String redissionLock() {
+
+        // 1、获取一把锁，只要锁的名字一样，就是同一把锁
+        RLock lock = redissonClient.getLock("my-lock");
+
+        // 2. 加锁     阻塞式等待：默认加的锁都是30s时间
+        lock.lock();  // 阻塞式等待： 一直执行此语句，直到抢占到锁，才执行后面的程序
+        try {
+            System.out.println("加锁成功，执行业务..." + Thread.currentThread().getId());
+            // 模拟业务的超长时间
+            Thread.sleep(30000);
+        } catch (Exception e) {
+
+        } finally {
+            // 3. 解锁
+            System.out.println("释放锁" + Thread.currentThread().getId());
+            lock.unlock();
+        }
+        return "hello";
+    }
+}
+```
+
+测试：多个浏览器页面同时访问`http://localhost:10001/hello`，每个线程获取锁以后下一个线程才能抢占到锁并执行业务。锁会自动分配30s的过期时间，如果业务过长的话，redission会对过期时间进行续期，执行完业务锁就会被删除
+
+
+
+![image-20230605222208051](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202306101228695.png)
+
+
+
+
+
+![image-20230605213545594](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202306101228649.png)
+
+### 4.3 redission看门狗机制
+
+3.6 节和3.7节中最后对于分布式锁的实现和redission的看门狗机制原理的某些实现思路差不多。下面通过测试研究一下redission看门狗机制中关于过期时间续期的一些细节内容：
+
+` lock.lock(10, TimeUnit.SECONDS);`
+
+```java
+@Controller
+public class RedissionTestController {
+
+    @Autowired
+    private RedissonClient redissonClient;
+    
+    /**
+     * 看门狗原理
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("/helloworld")
+    public String redissionLockTime() {
+
+        // 1、获取一把锁，只要锁的名字一样，就是同一把锁
+        RLock lock = redissonClient.getLock("my-lock");
+
+        // 2. 加锁
+        // 阻塞式等待：默认加的锁都是30s时间
+        // 阻塞式等待： 一直执行此语句，直到抢占到锁，才执行后面的程序
+        lock.lock(10, TimeUnit.SECONDS); // 10秒后自动解锁，自动解锁时间一定大于业务的执行时间
+        //  问题：指定了过期时间之后，在锁时间到了以后，不会自动续期
+        //  1、如果我们传递了锁的超时时间，就发送给redis执行脚本，进行占锁，默认超时就是我们指定的时间
+        //  2、如果我们未指定锁的超时时间，就使用30 * 1000【LockwatchdogTimeout看门狗的默认时间】;
+        //  只要占锁成功，就会启动一个定时任务，这个定时任务会重新给锁设置过期时间，新的过期时间就是看门狗的默认过期时间
+        //  到三分之一看门狗时间，也就是10s后就会自动续期，  internalLockLeaseTime【看门狗时间】 / 3,10s
+
+        //最佳实践
+        //1）、lock.lock(30,TimeUnit.SECONDS);省掉了整个续期操作。手动解锁
+        try {
+            System.out.println("加锁成功，执行业务..." + Thread.currentThread().getId());
+            // 模拟业务的超长时间
+            Thread.sleep(30000);
+        } catch (Exception e) {
+
+        } finally {
+            // 3. 解锁
+            System.out.println("释放锁" + Thread.currentThread().getId());
+            lock.unlock();
+        }
+        return "hello";
+    }
+}
+```
+
+测试：访问 `http://localhost:10001/helloworld`，由于过期时间为10秒，而业务执行时间长于10秒，导致程序异常。程序报错`There was an unexpected error (type=Internal Server Error, status=500).attempt to unlock lock, not locked by current thread by node id: 6185840d-5843-4f10-bb63-028c60239df9 thread-id: 78`
+
+原因：代码中通过`lock.lock(10, TimeUnit.SECONDS);` 指定了过期时间。而在redission的看门狗机制实现中，**如果指定了过期时间之后，在锁时间到了以后，不会自动续期**
+
+
+
+**看门狗机制中关于过期时间的细节**：
+
+- 如果我们传递了锁的超时时间，就发送给redis执行脚本，进行占锁，默认超时就是我们指定的时间
+- 如果我们未指定锁的超时时间，就使用30 * 1000【LockwatchdogTimeout看门狗的默认时间】
+  - 只要占锁成功，就会启动一个定时任务，这个定时任务会重新给锁设置过期时间，新的过期时间就是看门狗的默认过期时间
+  - 到三分之一看门狗时间`internalLockLeaseTime【看门狗时间】 / 3`，也就是10s后就会自动续期
+
+- 最佳实践
+  - `lock.lock(30,TimeUnit.SECONDS);`省掉了整个续期操作。手动解锁
+
+### 4.4 redission 分布式读写锁
+
+加读写锁目的： 保证一定能读到最新数据。修改期间，写锁是一个排他锁（互斥锁、独享锁）。读锁是一个共享锁
+
+`RedissionTestController`类：
+
+```java
+@Controller
+public class RedissionTestController {
+
+    @Autowired
+    private RedissonClient redissonClient;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    // 加读写锁目的： 保证一定能读到最新数据,修改期间，写锁是一个排他锁（互斥锁、独享锁）。读锁是一个共享锁
+    // 写锁没释放读就必须等待
+    // 读 + 读： 相当于无锁，并发读，只会在redis中记录好，所有当前的读锁。他们都会同时加锁成功
+    // 写 + 读： 等待写锁释放，读才能开始
+    // 写 + 写： 阻塞方式。上一个写完下一个才能写
+    // 读 + 写： 有读锁。写也需要等待。
+    // 总结：只要有写的存在，都必须等待
+    @GetMapping("/write")
+    @ResponseBody
+    public String writeValue() {
+        RReadWriteLock lock = redissonClient.getReadWriteLock("rw-lock");
+        String s = "";
+        RLock rLock = lock.writeLock();
+        try {
+            //1、改数据加写锁，读数据加读锁
+            rLock.lock();
+            System.out.println("写锁加锁成功..." + Thread.currentThread().getId());
+            s = UUID.randomUUID().toString();
+            Thread.sleep(30000);
+            stringRedisTemplate.opsForValue().set("writeValue", s);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            rLock.unlock();
+            System.out.println("写锁释放" + Thread.currentThread().getId());
+        }
+
+        return s;
+    }
+
+    @GetMapping("/read")
+    @ResponseBody
+    public String readValue() {
+        RReadWriteLock lock = redissonClient.getReadWriteLock("rw-lock");
+//        ReentrantReadWriteLock writeLock = new ReentrantReadWriteLock();
+        String s = "";
+        //加读锁
+        RLock rLock = lock.readLock();
+        rLock.lock();
+        try {
+            System.out.println("读锁加锁成功" + Thread.currentThread().getId());
+            s = stringRedisTemplate.opsForValue().get("writeValue");
+            Thread.sleep(30000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            rLock.unlock();
+            System.out.println("读锁释放" + Thread.currentThread().getId());
+        }
+        return s;
+    }
+
+}
+```
+
+测试：先访问`http://localhost:10001/write` ，紧接着访问`http://localhost:10001/read` ，redis中出现`rw-lock` 和`writeValue` 此时还不能读到数据，当写进程释放锁以后，读进程才能读到数据
+
+
+
+**读写锁总结**：
+
+- 加读写锁目的： 保证一定能读到最新数据,修改期间，写锁是一个排他锁（互斥锁、独享锁）。读锁是一个共享锁， 写锁没释放读就必须等待
+- 读 + 读： 相当于无锁，并发读，只会在redis中记录好，所有当前的读锁。他们都会同时加锁成功
+- 写 + 读： 等待写锁释放，读才能开始
+- 写 + 写： 阻塞方式。上一个写完下一个才能写
+- 读 + 写： 有读锁。写也需要等待
+- 总结：只要有写的存在，都必须等待
+
+###   4.5 redission 分布式闭锁 CountDownLatch
+
+`CountDownLatch`用于多线程调度任务中，只有多个线程将子任务都完成，整个任务才算完成
+
+```java
+@Controller
+public class RedissionTestController {
+
+    @Autowired
+    private RedissonClient redissonClient;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    /**
+     * 闭锁
+     * 放假，锁门
+     * 1班没人了，2
+     * 5个班全部走完，我们可以锁大门
+     */
+    @GetMapping("/lockDoor")
+    @ResponseBody
+    public String lockDoor() throws InterruptedException {
+        RCountDownLatch door = redissonClient.getCountDownLatch("door");
+        door.trySetCount(5); // 等待5个班的人都走完
+        door.await(); //等待闭锁都完成
+
+        return "放假了...";
+    }
+
+    @GetMapping("/gogogo/{id}")
+    @ResponseBody
+    public String gogogo(@PathVariable("id") Long id) {
+        RCountDownLatch door = redissonClient.getCountDownLatch("door");
+        door.countDown();//计数减一；
+
+//        CountDownLatch
+
+        return id + "班的人都走了...";
+    }
+
+}
+```
+
+测试：访问`http://localhost:10001/lockDoor`,请求不会立即返回数据，只有访问`http://localhost:10001/gogogo/1`并且访问次数达到5次以后，前者才返回数据
+
+###  4.6 redission  分布式信号量(Semaphore)
+
+`RedissionTestController`类：
+
+```java
+@Controller
+public class RedissionTestController {
+
+    @Autowired
+    private RedissonClient redissonClient;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    /**
+     * 分布式信号量 Semaphore
+     * 车库停车，
+     * 3车位
+     * 信号量也可以用作分布式限流；
+     */
+    @GetMapping("/park")
+    @ResponseBody
+    public String park() throws InterruptedException {
+        RSemaphore park = redissonClient.getSemaphore("park");
+        // 阻塞式等待
+        park.acquire();//获取一个信号，获取一个值,占一个车位
+        
+        //        // 非阻塞式等待
+//        boolean b = park.tryAcquire();
+//        if (b) {
+//            //执行业务
+//        } else {
+//            return "error";
+//        }
+//
+//        return "ok=>" + b;
+        return "ok";
+    }
+
+    //  分布式信号量 Semaphore
+    @GetMapping("/go")
+    @ResponseBody
+    public String go() throws InterruptedException {
+        RSemaphore park = redissonClient.getSemaphore("park");
+        park.release();//释放一个车位
+
+        return "ok";
+    }
+
+}
+```
+
+测试：往redis中添加键为`park`值为`3`的数据，访问`http://localhost:10001/go`则`park`的值增加，访问`http://localhost:10001/park`则`park`的值增加
+
+
+
+分布式信号量(Semaphore)的应用：实现分布式限流
+
+- 假如当前服务只能支持每秒1000的并发请求，为防止过多请求导致服务崩溃，就要对服务进行限流。将信号量总量设为1000。如果线程能够获取信号量，就说明系统存在空余线程，可以处理请求。如果获取失败，就说明没有空闲线程，只有当其他线程的信号量释放以后，这个请求才能被处理
+- 分布式限流时也可以采用` boolean b = park.tryAcquire();`实现非阻塞式等待，如果信号量获取失败的话，直接提醒用户当前流量过高，请稍后重试
+
+### 4.7 redission解决缓存击穿问题
+
+redission解决缓存击穿问题: 将3.6.3中的`getCatalogJsonFromDbWithRedisLock`方法改为如下的`getCatalogJsonFromDbWithRedissionLock`方法即可
+
+```java
+    /**
+     * 从数据库查询并封装分类数据（使用redission缓存解决缓存击穿问题）
+     * 缓存数据一致性问题： 缓存里面的数据如何与数据库保持一致
+     * 数据一致性的两种模式：
+     *     1）、双写模式：
+     *     2）、失效模式：
+     */
+    public Map<String, List<Catelog2Vo>> getCatalogJsonFromDbWithRedissionLock() {
+
+        // 锁的粒度越细，程序效率越高。
+        // 锁的名字相同就代表同一把锁，锁的名字尽量具体一些，具体点的名字就可以保证锁的粒度
+        // 最佳实践：缓存某一个具体的数据，如缓存11号商品防止该商品的缓存击穿问题，就应该将锁的名字设为product-11-lock,缓存13号商品,就应该将锁的名字设为product-13-lock
+        // 而不应该将所有商品的锁笼统地设为product-lock
+        RLock lock = redissonClient.getLock("catalogJson-lock");
+        lock.lock(); // 阻塞式等待
+
+
+        Map<String, List<Catelog2Vo>> dateFromDB;
+        try {
+            dateFromDB = getDateFromDB();
+        } finally {
+            lock.unlock();
+        }
+
+        return dateFromDB;
+
+    }
+```
+
+分布锁的命名与锁的粒度：
+
+```sh
+1、锁的粒度越细，程序效率越高
+2、锁的名字相同就代表同一把锁，锁的名字尽量具体一些，具体点的名字就可以保证锁的粒度
+3、最佳实践：
+       缓存某一个具体的数据，如缓存11号商品防止该商品的缓存击穿问题，就应该将锁的名字设为product-11-lock,
+       缓存13号商品,就应该将锁的名字设为product-13-lock，而不应该将所有商品的锁笼统地设为product-lock
+```
+
+##  5.缓存数据一致性
+
+###  5.1 方案一：双写模式
+
+![image-20230610050136462](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202306101229271.png)
+
+###  5.2 方案二：失效模式
+
+![image-20230610050201531](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202306101229265.png)
+
+###   5.3 缓存数据一致性解决方案选择与优化
+
+- 无论是双写模式还是失效模式，都会导致缓存的不一致问题。即多个实例同时更新会出事。怎么办?
+
+  - 1、如果是用户维度数据(订单数据、用户数据)，这种并发几率非常小(用户不可能在短时间内频繁地修改自己的信息)，不用考虑这个问题，缓存数据加上过期时间，每隔一段时间触发读的主动更新即可
+
+  - 2、如果是菜单，商品介绍等基础数据，一般缓存的一致性要求不高，可以容忍一定程度的不一致。如果要保证更好的一致性，也可以去使用canal订阅binlog的方式
+
+  - 3、缓存数据+过期时间也足够解决大部分业务对于缓存的要求
+
+  - 4、通过加锁保证并发读写，写写的时候按顺序排好队。读读无所谓。所以适合使用读写锁。(业务不关心脏数据，允许临时脏数据可忽略)
+
+- 总结:
+  - 我们能放入缓存的数据本就不应该是实时性、一致性要求超高的。所以缓存数据的时候加上过期时间，保证每天拿到当前最新数据即可
+  - 我们不应该过度设计，增加系统的复杂性
+  - 遇到实时性、一致性要求高的数据，就应该查数据库，即使慢点
+
+
+
+###  5.4 缓存数据一致性解决：Canal
+
+canal 是阿里开源的一款中间件，canal的主要作用就是实现数据的实时同步。这个中间件可以模拟成一个数据库的从服务器。比如我们有一个MySQL的数据库，canal将自己伪装成一个MySQL的从服务器，MySQL真正的服务器中只要有变化，都会被同步到canal的从服务器上
+
+
+
+使用Canal解决缓存数据一致性问题：让canal监控binlog，binlog发生变化canal监听到变化就去更新redis缓存
+
+![image-20230610121236199](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202306101229901.png)
+
+
+
+
+
+
+
+**拓展知识**： canal在大数据场景下的应用——解决数据异构问题
+
+每个人的京东首页推荐的东西都不同，这些都是基于用户的爱好进行推荐。在数据库中存储特定用户的浏览记录、商品信息表、购物车记录表等信息，让canal订阅这些表的更新，然后实时地进行计算，通过计算生成一个用户推荐表，然后当用户访问京东的时候，直接将这些推荐表中的商品推荐到首页即可
+
+![image-20230610121337790](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202306101229117.png)
+
+
+
+
 

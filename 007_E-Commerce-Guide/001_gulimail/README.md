@@ -87,7 +87,9 @@
 
 1.在C:\Users\mmm目录下创建一个空文件夹Empty
 
-![image-20230630040531996](https://cdn.jsdelivr.net/gh/gulimall/202306300503496.png)
+
+
+![image-20230630040531996](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/gulimall/202306300518836.png)
 
 2.修改Vagrantfile配置文件内容：
 
@@ -111,9 +113,7 @@ end
 
 二、默认虚拟机存储路径为`C:\Users\mmm\VirtualBox VMs`，创建虚拟机是会占用大量的C盘空间，可以在执行`vagrant up`命令之前将这个文件路径做一下更改:点击`管理`中的全局设定，在下面`更改默认虚拟电脑位置`
 
-![image-20230630041620082](https://cdn.jsdelivr.net/gh/gulimall/202306300503037.png)
-
-
+![image-20230630041620082](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/gulimall/202306300518220.png)
 
 <!-- TOC --><a name="2docker"></a>
 

@@ -81,7 +81,42 @@
 
 ![image-20230302015622360](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202303020223901.png)
 
+**虚拟机配置填坑**：
+
+一、安装完Oracle VM VirtualBox和vagrant，创建虚拟机之后不久，后续使用vagrant up启动虚拟机出现"No space left on device"的问题，以下附解决方法
+
+1.在C:\Users\mmm目录下创建一个空文件夹Empty
+
+![image-20230630040531996](https://cdn.jsdelivr.net/gh/gulimall/202306300503496.png)
+
+2.修改Vagrantfile配置文件内容：
+
+修改前：
+
+```
+#修改前：
+Vagrant.configure("2") do |config|
+  config.vm.synced_folder ".", "/vagrant", type: "rsync"
+end
+```
+
+修改后：
+
+```
+#修改后：
+Vagrant.configure("2") do |config|
+  config.vm.synced_folder "./Empty", "/vagrant", type: "rsync"
+end
+```
+
+二、默认虚拟机存储路径为`C:\Users\mmm\VirtualBox VMs`，创建虚拟机是会占用大量的C盘空间，可以在执行`vagrant up`命令之前将这个文件路径做一下更改:点击`管理`中的全局设定，在下面`更改默认虚拟电脑位置`
+
+![image-20230630041620082](https://cdn.jsdelivr.net/gh/gulimall/202306300503037.png)
+
+
+
 <!-- TOC --><a name="2docker"></a>
+
 ## 2.安装Docker
 
 虚拟化容器技术。Docker基于镜像，可以秒级启动各种容器。每一种容器都是一个完整的运行环境，容器之间互相隔离

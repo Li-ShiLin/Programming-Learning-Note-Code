@@ -31,10 +31,17 @@
 
         <!--导入common包，gatteway网关需要nacos服务注册与发现的依赖来将网关服务注册到nacos -->
         <dependency>
-            <groupId>com.atguigu.gulimail</groupId>
-            <artifactId>gulimail-common</artifactId>
+            <groupId>com.atguigu.gulimall</groupId>
+            <artifactId>gulimall-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.alibaba.cloud</groupId>
+                    <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
 
         <dependency>
             <groupId>org.projectlombok</groupId>

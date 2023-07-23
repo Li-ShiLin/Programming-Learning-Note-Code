@@ -13,10 +13,13 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>gulimall-search</name>
     <description>gulimall-search</description>
+
     <properties>
         <java.version>1.8</java.version>
         <elasticsearch.version>7.4.2</elasticsearch.version>
+        <spring-cloud.version>Greenwich.SR3</spring-cloud.version>
     </properties>
+
     <dependencies>
 
         <!--导入es的 rest-high-level-client-->
@@ -33,8 +36,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.atguigu.gulimail</groupId>
-            <artifactId>gulimail-common</artifactId>
+            <groupId>com.atguigu.gulimall</groupId>
+            <artifactId>gulimall-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
@@ -42,6 +45,11 @@
                     <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 
         <dependency>
@@ -68,6 +76,18 @@
 
 
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>

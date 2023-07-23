@@ -268,21 +268,25 @@
 
 2、规则:   `/static/**`所有请求都由`nginx`直接返回
 
-	<table align="center">
-	<tr>
-		<td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305300308026.png" > <b>nginx动静分离</b></td>
-		<td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305300310590.png" > <b>Nginx转发效果</b></td>
-	</tr>
-	</table>  
+```html
+<table align="center">
+<tr>
+	<td><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305300308026.png"> <b>nginx动静分离</b></td>
+	<td><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305300310590.png"> <b>Nginx转发效果</b></td>
+</tr>
+</table>
+```
 
 在`/mydata/nginx/html/`目录下新建`static`目录，并将`gulimall-product`商品服务下的`resources\index`文件(静态资源)上传到虚拟机的`/mydata/nginx/html/static`目录下：
 
-	<table align="center">
-	<tr>
-		<td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305300308646.png" > <b>1</b></td>
-		<td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305300309185.png" > <b>2</b></td>
-	</tr>
-	</table>  
+```html
+<table align="center">
+<tr>
+	<td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305300308646.png" > <b>1</b></td>
+	<td ><img src="https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305300309185.png" > <b>2</b></td>
+</tr>
+</table>  
+```
 
 修改`index.html`页面里的路径：
 

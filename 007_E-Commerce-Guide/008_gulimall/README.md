@@ -86,6 +86,7 @@
   - `http://doc.codingdict.com/elasticsearch/0/`
 
 <!-- TOC --><a name="2-"></a>
+
 ## 2. 基本概念：
 
 1、Index (索引)
@@ -1271,17 +1272,20 @@ POST _analyze
 3.执行下列命令安装ik分词器
 
 ```sh
-# 进入es容器内部plugins目录：
-docker exec -it 容器 id /bin/bash
-
 # 创建ik目录
 mkdir -p /mydata/elasticsearch/plugins/ik
 
 # cd 到plugins下的ik目录
 cd /mydata/elasticsearch/plugins/ik
 
+# 安装weget
+yum install wget
+
 # 下载安装包
 wget https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v7.4.2/elasticsearch-analysis-ik-7.4.2.zip
+
+# 下载安装unzip
+sudo yum install unzip
 
 # 解压下载的文件
 unzip elasticsearch-analysis-ik-7.4.2.zip
@@ -1296,6 +1300,9 @@ chmod -R 777 /mydata/elasticsearch/plugins/ik/
 验证是否安装成功：
 
 ```sh
+# 进入es容器内部plugins目录：docker exec -it 容器id /bin/bash
+sudo docker exec -it elasticsearch  /bin/bash
+
 # 验证是否安装成功：
 cd /usr/share/elasticsearch/bin
 
@@ -1340,30 +1347,25 @@ POST  _analyze
 - **复制一份nginx的配置文件出来**
 
 ```sh
-# 删除掉nginx镜# 创建nginx目录：
-cd /mydata/nginx/
+# 删除掉nginx镜
+# cd 到mydata目录
+cd /mydata/
 
 # 拉取、创建一个容器，并运行
 docker run -p 80:80 --name nginx -d nginx:1.10
 
-# cd 到mydata目录
-cd /mydata/
-
+# 下载安装nginx1.10，只是为了获取配置信息，进行配置映射，直接安装会先下载再安装
 # 从nginx容器中复制nginx文件到当前目录的nginx下（不用漏了最后的点.）
 docker container cp nginx:/etc/nginx .
-
-cd /mydata/nginx/
-ls
-#/mydata/nginx/ 下显示 conf.d  koi-utf  mime.types  nginx.conf   uwsgi_params fastcgi_params  koi-win  modules     scgi_params  win-utf
 
 # 停掉nginx
 docker stop nginx
 
 # 删除掉nginx容器
-docker stop nginx
+docker rm nginx
 
-# 返回到 /mydata/目录
-cd ../
+# 到/mydata/目录
+cd /mydata/
 
 # 将复制出来的nginx文件改名为conf
 mv nginx conf
@@ -1373,6 +1375,10 @@ mkdir nginx
 
 # 将复制出来的conf移动到nginx
 mv conf nginx/
+
+cd /mydata/nginx/conf
+ls
+#/mydata/nginx/ 下显示 conf.d  koi-utf  mime.types  nginx.conf   uwsgi_params fastcgi_params  koi-win  modules     scgi_params  win-utf
 ```
 
 - **创建新的nginx容器**
@@ -1405,13 +1411,17 @@ vi fenci.txt
 
 - **配置IK分词器的远程词库地址：**
 
-```sh
-# cd 到ik的config目录,对应 es容器的 /usr/share/elasticseardh/plugins/ik/config
-cd /mydata/elasticsearch/plugins/ik/config
+- [ ] ```sh
+  # cd 到ik的config目录,对应 es容器的 /usr/share/elasticseardh/plugins/ik/config
+  cd /mydata/elasticsearch/plugins/ik/config
+  
+  # 修改`/usr/share/elasticsearch/plugins/ik/config/`中的 `IKAnalyzer.cfg.xml`
+   vi IKAnalyzer.cfg.xml
+  
+  # 将如下配置加入，192.168.56.10下es下的fenci.txt文件，找对应的文件即可
+  <entry key="remote_ext_dict">http://192.168.56.10/es/fenci.txt</entry>
+  ```
 
-# 修改`/usr/share/elasticsearch/plugins/ik/config/`中的 `IKAnalyzer.cfg.xml`
- vi IKAnalyzer.cfg.xml
-```
 
 ![image-20230516034415846](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/D:%5Cgithub%5Cimages202305240312278.png)
 
@@ -3216,6 +3226,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 #####   3.nginx配置文件
 
 - 基于上面的配置，启动虚拟机上的nginx,那访问`gulimall.com`时就会来到nginx的首页。接下来配置nginx ,让nginx帮我们进行反向代理。让nginx将来自`gulimall.com`的请求都转发到网关
+- 注意：在**安装ik分词器**部分已经对nginx进行了安装和配置，具体操作见**安装ik分词器**
 
 ```sh
 docker update nginx --restart=always

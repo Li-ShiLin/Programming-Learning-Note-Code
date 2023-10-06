@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.mybatispuls.mapper.UserMapper">
+
+    <!--SQL片段，记录基础字段-->
+    <sql id="BaseColumns">uid,user_name,age,email</sql>
+
+    <!--Page<User> selectPageVo(@Param("page") Page<User> page, @Param("age") Integer age);-->
+    <select id="selectPageVo" resultType="User">
+        select <include refid="BaseColumns"></include> from t_user where age > #{age}
+    </select>
+
+</mapper>

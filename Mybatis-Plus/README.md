@@ -75,7 +75,7 @@
 
 ## 1.MyBatis-Plus概述
 
-#####  1.1 简介
+###  1.1 简介
 
 MyBatis-Plus是一个MyBatis的增强工具，在MyBatis的基础上只做增强不做改变，为简化开发、提高效率而生。MyBatis-Plus提供了通用的mapper和service，可以在不编写任何SQL语句的情况下，快速的实现对单表的CRUD、批量、逻辑删除、分页等操作。本视频从MyBatis-Plus的特性及使用，到MyBatis-Plus所提供的优秀的插件，以及多数据源的配置都有详细的讲解。并对ldea中的快速开发插件MyBatisX也进行了功能的演示
 
@@ -87,7 +87,7 @@ MyBatis-Plus优势概括：
 - 只需简单配置，即可快速进行单表CRUD操作，从而节省大呈时间
 - 代码生成、自动分页、逻辑删除、自动填充等功能—应俱全
 
-#####  1.2 特性
+###  1.2 特性
 
 MyBatis-Plus特性
 
@@ -104,7 +104,7 @@ MyBatis-Plus特性
 - **内置性能分析插件**：可输出SQL语句以及其执行时间，建议开发测试时启用该功能，能快速揪出慢查询
 - **内置全局拦截插件**：提供全表delete、update操作智能分析阻断，也可自定义拦截规则，预防误操作
 
-#####  1.3 支持的数据库
+###  1.3 支持的数据库
 
 MyBatis-Plus支持的数据库
 
@@ -112,7 +112,9 @@ MyBatis-Plus支持的数据库
 - MySQL，Oracle，DB2，H2，HSQL，SQLite，PostgreSQL，SQLServer，Phoenix，Gauss，ClickHouse，Sybase,OceanBase，Firebird，Cubrid，Goldilocks，csiidb，informix，TDengine，redshift
 - 达梦数据库，虚谷数据库，人大金仓数据库，南大通用(华库)数据库，南大通用数据库，神通数据库，瀚高数据库，优炫数据库，星瑞格数据库
 
-#####  1.4 框架结构
+
+
+###  1.4 框架结构
 
 MyBatis-Plus框架结构：
 
@@ -128,7 +130,7 @@ MyBatis-Plus框架结构：
 
 ![image-20231005022236203](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/gulimall/202310070120167.png)
 
-#####  1.5 代码及文档地址
+###  1.5 代码及文档地址
 
 官方文档地址: `http://mp.baomidou.com`
 
@@ -307,7 +309,7 @@ public class MyBatisPlusTest {
 
 ## 3.基本增删改查：BaseMapper的使用
 
-#####  3.1 内置的BaseMapper
+###  3.1 内置的BaseMapper
 
 MyBatis-Plus中的基本CRUD在内置的BaseMapper中都已得到了实现，我们可以直接使用，接口如 下：
 
@@ -479,7 +481,7 @@ public interface BaseMapper<T> extends Mapper<T> {
 对于SQL语句设置不同的条件，若没有条件，则可以为该形参赋值null，即查询（删除/修改）所
 有数据
 
-#####  3.2 新增数据：insert
+###  3.2 新增数据：insert
 
 `INSERT INTO user ( id, name, age, email ) VALUES ( ?, ?, ?, ? )`
 
@@ -510,7 +512,7 @@ public class MyBatisPlusTest {
 
 所获取的id为1709849120311668738 这是因为MyBatis-Plus在实现插入数据时，会默认基于雪花算法的策略生成id
 
-#####  3.3 删除数据：deleteById | deleteBatchIds | deleteByMap
+###  3.3 删除数据：deleteById | deleteBatchIds | deleteByMap
 
  **deleteById**：通过id删除
 
@@ -570,7 +572,7 @@ public class MyBatisPlusTest {
 }
 ```
 
-##### 3.4 修改数据：updateById
+###  3.4 修改数据：updateById
 
 **updateById**：通过id进行修改
 
@@ -593,7 +595,7 @@ public class MyBatisPlusTest {
 }
 ```
 
-#####  3.5 查询数据：selectById | selectBatchIds | selectByMap | selectList
+###  3.5 查询数据：selectById | selectBatchIds | selectByMap | selectList
 
 **selectById**：通过id查询数据
 
@@ -668,7 +670,7 @@ public class MyBatisPlusTest {
 }
 ```
 
-#####  3.6 自定义sql查询
+###  3.6 自定义sql查询
 
 `application.yml`：配置`mapper`文件位置
 
@@ -729,7 +731,7 @@ public class MyBatisPlusTest {
 
 ## 4. 通用Service 
 
-#####  4.1 通用Service 概述
+###  4.1 通用Service 概述
 
 **Service CRUD接口**：
 
@@ -745,7 +747,7 @@ public class MyBatisPlusTest {
 
 官方文档：`https://baomidou.com/pages/49cc81/#service-crud-接口`
 
-#####  4.2 IService和ServiceImpl使用
+###  4.2 IService和ServiceImpl使用
 
 `UserService`：
 
@@ -816,7 +818,7 @@ public class MyBatisPlusServiceTest {
 
 ## 5.常用注解
 
-#####  5.1 @TableName
+###  5.1 @TableName
 
 **一、类名和数据库表的表名不一致问题**
 
@@ -899,7 +901,7 @@ public class MyBatisPlusTest {
 }
 ```
 
-#####  5.2 @TableId
+###  5.2 @TableId
 
 **一、使用`@TableId`将属性所对应的字段指定为主键**
 
@@ -1014,7 +1016,7 @@ mybatis-plus:
       id-type: auto
 ```
 
-#####  5.3 @TableField
+### 5.3 @TableField
 
 若实体类中的属性使用的是驼峰命名风格，而表中的字段使用的是下划线命名风格 例如实体类属性userName，表中字段user_name 此时MyBatis-Plus会自动将下划线命名风格转化为驼峰命名风格 相当于在MyBatis中配置
 
@@ -1044,7 +1046,7 @@ public class User {
 }
 ```
 
-#####  5.4 @TableLogic：逻辑删除
+###  5.4 @TableLogic：逻辑删除
 
 物理删除：真实删除，将对应数据从数据库中删除，之后查询不到此条被删除的数据
 
@@ -1115,9 +1117,7 @@ UPDATE t_user SET is_deleted=1 WHERE uid IN ( ? , ? , ? ) AND is_deleted=0
 SELECT uid AS id,name,age,email,is_deleted FROM t_user WHERE name = ? AND age = ? AND is_deleted=0
 ```
 
-
-
-#####  5.5 雪花算法
+###  5.5 雪花算法
 
 **雪花算法背景**：
 
@@ -1509,7 +1509,7 @@ public class MyBatisPlusWrapperTest {
 
 ##  7. MyBatis-Plus插件
 
-#####  7.1 分页插件使用
+###   7.1 分页插件使用
 
 ```
 MyBatis Plus自带分页插件，只要简单的配置即可实现分页功能
@@ -1571,7 +1571,7 @@ public class MyBatisPlusPluginsTest {
 }
 ```
 
-#####  7.2 自定义分页功能
+###  7.2 自定义分页功能
 
 1.UserMapper中定义接口方法
 
@@ -2012,7 +2012,7 @@ public class FastAutoGeneratorTest {
 
 ##  11. 多数据源
 
-#####  11.1 多数据源应用场景
+###  11.1 多数据源应用场景
 
 **MyBatis-Plus多数据源相关文**档：`https://baomidou.com/pages/a61e1b/#文档-documentation`
 
@@ -2020,7 +2020,7 @@ public class FastAutoGeneratorTest {
 
 **场景说明**：我们创建两个库，分别为: mybatis_plus (以前的库不动)与mybatis_plus_1 (新建)，将mybatis_plus库的product表移动到mybatis_plus_1库，这样每个库一张表，通过一个测试用例分别获取用户数据与商品数据，如果获取到说明多库模拟成功
 
-#####  11.2 MyBatis-Plus多数据源实现
+###  11.2 MyBatis-Plus多数据源实现
 
 1.创建数据库及表：创建数据库`mybatis_plus_1`和表`product`并添加测试数据，创建数据库`mybatis_plus`和表`t_user`并添加测试数据
 

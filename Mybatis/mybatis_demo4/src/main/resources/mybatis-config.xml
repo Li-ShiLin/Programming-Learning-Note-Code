@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!--引入properties文件，此时就可以${属性名}的方式访问属性值-->
+    <properties resource="jdbc.properties"></properties>
+
+    <!--设置MyBatis的全局配置-->
+    <settings>
+        <!--将_自动映射为驼峰，emp_name:empName-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+
+        <!--开启延迟加载-->
+        <setting name="lazyLoadingEnabled" value="true"/>
+    </settings>
+
+
+    <!--设置类型别名-->
+    <typeAliases>
+        <!--以包为单位，将包下所有的类型设置默认的类型别名，即类名且不区分大小写-->
+        <package name="com.atguigu.mybatis.pojo"/>
+    </typeAliases>
+
+    <!--设置连接数据库的环境-->
+    <environments default="development">
+        <!-- environment：配置某个具体的环境,id属性表示连接数据库的环境的唯一标识，不能重复-->
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <!--设置驱动类的全类名-->
+                <property name="driver" value="${jdbc.driver}"/>
+                <!--设置连接数据库的连接地址-->
+                <property name="url" value="${jdbc.url}"/>
+                <!--设置连接数据库的用户名-->
+                <property name="username" value="${jdbc.username}"/>
+                <!--设置连接数据库的密码-->
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!--引入映射文件-->
+    <mappers>
+        <!--以包为单位，将包下所有的映射文件引入核心配置文件。注意：此方式必须保证mapper接口和mapper映射文件必须在相同的包下-->
+        <!--举例：如果mapper接口在src/main/java/com/atguigu/mybatis/mapper目录下，那mapper映射文件就应该放在src/main/resources/com/atguigu/mybatis/mapper下-->
+        <package name="com.atguigu.mybatis.mapper"/>
+    </mappers>
+</configuration>

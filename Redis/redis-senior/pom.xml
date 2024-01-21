@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.example</groupId>
+  <artifactId>redis-senior</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <name>redis-senior</name>
+  <description>聚合</description>
+  <packaging>pom</packaging>
+  <!--  聚合其他模块 -->
+  <modules>
+    <module>canal_demo02</module>
+    <module>mybatis_generator</module>
+    <module>redis7_study</module>
+    <module>redis_distributed_lock2</module>
+    <module>redis_distributed_lock3</module>
+    <module>redis_redlock</module>
+  </modules>
+
+</project>

@@ -1,3 +1,21 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [配置](#%E9%85%8D%E7%BD%AE)
+- [1.基本配置](#1%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE)
+  - [1.1 configLocation](#11-configlocation)
+  - [1.2 mapperLocations](#12-mapperlocations)
+  - [1.3 typeAliasesPackage](#13-typealiasespackage)
+- [2.其他配置](#2%E5%85%B6%E4%BB%96%E9%85%8D%E7%BD%AE)
+  - [2.1 mapUnderscoreToCamelCase](#21-mapunderscoretocamelcase)
+  - [2.3 cacheEnabled](#23-cacheenabled)
+- [3. DB 策略配置](#3-db-%E7%AD%96%E7%95%A5%E9%85%8D%E7%BD%AE)
+  - [3.1 idType](#31-idtype)
+  - [3.2 tablePrefix](#32-tableprefix)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # 配置
 
 在MP中有大量的配置，其中有一部分是Mybatis原生的配置，另一部分是MP的配置，详情：https://mybatis.plus/config/

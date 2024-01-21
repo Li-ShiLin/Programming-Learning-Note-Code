@@ -1,3 +1,30 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [1.SpringBoot + Mybatis + MP](#1springboot--mybatis--mp)
+  - [1.1 快速入门](#11-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8)
+- [2. 通用CRUD](#2-%E9%80%9A%E7%94%A8crud)
+  - [2.1 插入操作](#21-%E6%8F%92%E5%85%A5%E6%93%8D%E4%BD%9C)
+  - [2.2 更新操作](#22-%E6%9B%B4%E6%96%B0%E6%93%8D%E4%BD%9C)
+    - [2.2.1 根据id更新](#221-%E6%A0%B9%E6%8D%AEid%E6%9B%B4%E6%96%B0)
+    - [2.2.2 根据条件更新](#222-%E6%A0%B9%E6%8D%AE%E6%9D%A1%E4%BB%B6%E6%9B%B4%E6%96%B0)
+  - [2.3 删除操作](#23-%E5%88%A0%E9%99%A4%E6%93%8D%E4%BD%9C)
+    - [2.3.1 deleteById](#231-deletebyid)
+    - [2.3.2 deleteByMap](#232-deletebymap)
+    - [2.3.3 delete](#233-delete)
+    - [2.3.4 deleteBatchIds](#234-deletebatchids)
+  - [2.4 查询操作](#24-%E6%9F%A5%E8%AF%A2%E6%93%8D%E4%BD%9C)
+    - [2.4.1 selectById](#241-selectbyid)
+    - [2.4.2 selectBatchIds](#242-selectbatchids)
+    - [2.4.3 selectOne](#243-selectone)
+    - [2.4.4 selectCount](#244-selectcount)
+    - [2.4.5 selectList](#245-selectlist)
+    - [2.4.6 selectPage](#246-selectpage)
+- [3.SQL注入的原理](#3sql%E6%B3%A8%E5%85%A5%E7%9A%84%E5%8E%9F%E7%90%86)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # 1.SpringBoot + Mybatis + MP
 
 使用SpringBoot将进一步的简化MP的整合，需要注意的是，由于使用SpringBoot需要继承parent，所以需要重新创 建工程，并不是创建子Module

@@ -1,3 +1,17 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Redis实战篇- 实现点赞功能和点赞排行榜功能](#redis%E5%AE%9E%E6%88%98%E7%AF%87--%E5%AE%9E%E7%8E%B0%E7%82%B9%E8%B5%9E%E5%8A%9F%E8%83%BD%E5%92%8C%E7%82%B9%E8%B5%9E%E6%8E%92%E8%A1%8C%E6%A6%9C%E5%8A%9F%E8%83%BD)
+  - [8、达人探店](#8%E8%BE%BE%E4%BA%BA%E6%8E%A2%E5%BA%97)
+    - [8.1、达人探店-发布探店笔记](#81%E8%BE%BE%E4%BA%BA%E6%8E%A2%E5%BA%97-%E5%8F%91%E5%B8%83%E6%8E%A2%E5%BA%97%E7%AC%94%E8%AE%B0)
+    - [8.2 达人探店-查看探店笔记](#82-%E8%BE%BE%E4%BA%BA%E6%8E%A2%E5%BA%97-%E6%9F%A5%E7%9C%8B%E6%8E%A2%E5%BA%97%E7%AC%94%E8%AE%B0)
+    - [8.3 达人探店-点赞功能](#83-%E8%BE%BE%E4%BA%BA%E6%8E%A2%E5%BA%97-%E7%82%B9%E8%B5%9E%E5%8A%9F%E8%83%BD)
+    - [8.4 达人探店-点赞排行榜](#84-%E8%BE%BE%E4%BA%BA%E6%8E%A2%E5%BA%97-%E7%82%B9%E8%B5%9E%E6%8E%92%E8%A1%8C%E6%A6%9C)
+    - [8.6 sql细节处理(重要)](#86-sql%E7%BB%86%E8%8A%82%E5%A4%84%E7%90%86%E9%87%8D%E8%A6%81)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Redis实战篇- 实现点赞功能和点赞排行榜功能
 
 ## 8、达人探店

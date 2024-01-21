@@ -1,3 +1,15 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [redis实战](#redis%E5%AE%9E%E6%88%98)
+- [10、附近商户](#10%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7)
+  - [10.1、附近商户-GEO数据结构的基本用法](#101%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7-geo%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95)
+  - [10.2、 附近商户-导入店铺数据到GEO](#102-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7-%E5%AF%BC%E5%85%A5%E5%BA%97%E9%93%BA%E6%95%B0%E6%8D%AE%E5%88%B0geo)
+  - [10.3 附近商户-实现附近商户功能](#103-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7-%E5%AE%9E%E7%8E%B0%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E5%8A%9F%E8%83%BD)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## redis实战
 
 ## 10、附近商户

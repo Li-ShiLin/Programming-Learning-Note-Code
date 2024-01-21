@@ -1,3 +1,22 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [1.MyBatis概述](#1mybatis%E6%A6%82%E8%BF%B0)
+  - [1.1框架](#11%E6%A1%86%E6%9E%B6)
+  - [1.2 三层架构](#12-%E4%B8%89%E5%B1%82%E6%9E%B6%E6%9E%84)
+  - [1.3 JDBC的不足](#13-jdbc%E7%9A%84%E4%B8%8D%E8%B6%B3)
+  - [1.4了解MyBatis](#14%E4%BA%86%E8%A7%A3mybatis)
+  - [1.5 MyBatis源码、jar包、文档下载](#15-mybatis%E6%BA%90%E7%A0%81jar%E5%8C%85%E6%96%87%E6%A1%A3%E4%B8%8B%E8%BD%BD)
+- [2.开发第一个MyBatis程序](#2%E5%BC%80%E5%8F%91%E7%AC%AC%E4%B8%80%E4%B8%AAmybatis%E7%A8%8B%E5%BA%8F)
+  - [2.1 开发步骤](#21-%E5%BC%80%E5%8F%91%E6%AD%A5%E9%AA%A4)
+  - [2.2 第一个MyBatis程序细节](#22-%E7%AC%AC%E4%B8%80%E4%B8%AAmybatis%E7%A8%8B%E5%BA%8F%E7%BB%86%E8%8A%82)
+  - [2.3 MyBatis程序改进](#23-mybatis%E7%A8%8B%E5%BA%8F%E6%94%B9%E8%BF%9B)
+  - [2.4  引⼊⽇志框架logback](#24--%E5%BC%95%E2%BC%8A%E2%BD%87%E5%BF%97%E6%A1%86%E6%9E%B6logback)
+  - [2.5 MyBatis⼯具类SqlSessionUtil的封装](#25-mybatis%E2%BC%AF%E5%85%B7%E7%B1%BBsqlsessionutil%E7%9A%84%E5%B0%81%E8%A3%85)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # 1.MyBatis概述
 
 ## 1.1框架

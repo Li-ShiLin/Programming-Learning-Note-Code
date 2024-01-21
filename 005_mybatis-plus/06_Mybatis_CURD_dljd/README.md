@@ -1,3 +1,27 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [使⽤MyBatis完成CRUD](#%E4%BD%BF%E2%BD%A4mybatis%E5%AE%8C%E6%88%90crud)
+- [1.insert(Create)](#1insertcreate)
+  - [1.1 程序演示](#11-%E7%A8%8B%E5%BA%8F%E6%BC%94%E7%A4%BA)
+  - [1.2 总结](#12-%E6%80%BB%E7%BB%93)
+- [2.delete(Delete)](#2deletedelete)
+  - [2.1 程序演示](#21-%E7%A8%8B%E5%BA%8F%E6%BC%94%E7%A4%BA)
+  - [2.2 总结](#22-%E6%80%BB%E7%BB%93)
+- [3.update（Update）](#3updateupdate)
+  - [3.1 程序演示](#31-%E7%A8%8B%E5%BA%8F%E6%BC%94%E7%A4%BA)
+  - [3.2 总结](#32-%E6%80%BB%E7%BB%93)
+- [4.select（Retrieve）](#4selectretrieve)
+  - [4.1 查询⼀条数据](#41-%E6%9F%A5%E8%AF%A2%E2%BC%80%E6%9D%A1%E6%95%B0%E6%8D%AE)
+  - [4.2 查询多条数据](#42-%E6%9F%A5%E8%AF%A2%E5%A4%9A%E6%9D%A1%E6%95%B0%E6%8D%AE)
+  - [4.3 总结](#43-%E6%80%BB%E7%BB%93)
+- [5. 关于SQL Mapper的namespace](#5-%E5%85%B3%E4%BA%8Esql-mapper%E7%9A%84namespace)
+  - [5.1 程序演示](#51-%E7%A8%8B%E5%BA%8F%E6%BC%94%E7%A4%BA)
+  - [5.2 总结](#52-%E6%80%BB%E7%BB%93)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # 使⽤MyBatis完成CRUD
 
 ```sh

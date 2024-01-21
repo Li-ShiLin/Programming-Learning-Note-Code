@@ -1,3 +1,20 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [1、了解Mybatis-Plus](#1%E4%BA%86%E8%A7%A3mybatis-plus)
+    - [1.1、Mybatis-Plus介绍](#11mybatis-plus%E4%BB%8B%E7%BB%8D)
+    - [1.2、代码以及文档](#12%E4%BB%A3%E7%A0%81%E4%BB%A5%E5%8F%8A%E6%96%87%E6%A1%A3)
+    - [1.3、特性](#13%E7%89%B9%E6%80%A7)
+    - [1.4、架构](#14%E6%9E%B6%E6%9E%84)
+    - [1.5 作者](#15-%E4%BD%9C%E8%80%85)
+- [2、快速开始](#2%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B)
+    - [2.1 创建数据库表](#21-%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8)
+    - [2.2 引入依赖](#22-%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96)
+    - [2.3 Mybatis实现查询User](#23-mybatis%E5%AE%9E%E7%8E%B0%E6%9F%A5%E8%AF%A2user)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # 1、了解Mybatis-Plus 
 
 ### 1.1、Mybatis-Plus介绍 

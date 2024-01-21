@@ -1,3 +1,19 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [redis实战](#redis%E5%AE%9E%E6%88%98)
+- [11、用户签到](#11%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0)
+    - [11.1、用户签到-BitMap功能演示](#111%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0-bitmap%E5%8A%9F%E8%83%BD%E6%BC%94%E7%A4%BA)
+    - [11.2 、用户签到-实现签到功能](#112-%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0-%E5%AE%9E%E7%8E%B0%E7%AD%BE%E5%88%B0%E5%8A%9F%E8%83%BD)
+    - [11.3 用户签到-签到统计](#113-%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0-%E7%AD%BE%E5%88%B0%E7%BB%9F%E8%AE%A1)
+    - [11.4 额外加餐-关于使用bitmap来解决缓存穿透的方案](#114-%E9%A2%9D%E5%A4%96%E5%8A%A0%E9%A4%90-%E5%85%B3%E4%BA%8E%E4%BD%BF%E7%94%A8bitmap%E6%9D%A5%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%9A%84%E6%96%B9%E6%A1%88)
+- [12、UV统计](#12uv%E7%BB%9F%E8%AE%A1)
+  - [12.1 、UV统计-HyperLogLog](#121-uv%E7%BB%9F%E8%AE%A1-hyperloglog)
+  - [12.2 UV统计-测试百万数据的统计](#122-uv%E7%BB%9F%E8%AE%A1-%E6%B5%8B%E8%AF%95%E7%99%BE%E4%B8%87%E6%95%B0%E6%8D%AE%E7%9A%84%E7%BB%9F%E8%AE%A1)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ##  redis实战
 
 ## 11、用户签到

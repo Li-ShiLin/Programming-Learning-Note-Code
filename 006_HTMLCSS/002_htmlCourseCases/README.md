@@ -1,3 +1,37 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [1.列表标签](#1%E5%88%97%E8%A1%A8%E6%A0%87%E7%AD%BE)
+    - [1.1 列表的应用场景](#11-%E5%88%97%E8%A1%A8%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF)
+    - [1.2无序列表](#12%E6%97%A0%E5%BA%8F%E5%88%97%E8%A1%A8)
+    - [1.3有序列表](#13%E6%9C%89%E5%BA%8F%E5%88%97%E8%A1%A8)
+    - [1.4 自定义列表](#14-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%88%97%E8%A1%A8)
+- [2.表格标签](#2%E8%A1%A8%E6%A0%BC%E6%A0%87%E7%AD%BE)
+    - [2.1 表格的基本标签](#21-%E8%A1%A8%E6%A0%BC%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A0%87%E7%AD%BE)
+    - [2.2 表格相关属性](#22-%E8%A1%A8%E6%A0%BC%E7%9B%B8%E5%85%B3%E5%B1%9E%E6%80%A7)
+    - [2.3 表格标题和表头单元格标签](#23-%E8%A1%A8%E6%A0%BC%E6%A0%87%E9%A2%98%E5%92%8C%E8%A1%A8%E5%A4%B4%E5%8D%95%E5%85%83%E6%A0%BC%E6%A0%87%E7%AD%BE)
+    - [2.4 表格的结构标签（了解)](#24-%E8%A1%A8%E6%A0%BC%E7%9A%84%E7%BB%93%E6%9E%84%E6%A0%87%E7%AD%BE%E4%BA%86%E8%A7%A3)
+    - [2.5 合并单元格](#25-%E5%90%88%E5%B9%B6%E5%8D%95%E5%85%83%E6%A0%BC)
+- [3.表单标签](#3%E8%A1%A8%E5%8D%95%E6%A0%87%E7%AD%BE)
+    - [3.1 input系列标签](#31-input%E7%B3%BB%E5%88%97%E6%A0%87%E7%AD%BE)
+      - [1.input系列标签](#1input%E7%B3%BB%E5%88%97%E6%A0%87%E7%AD%BE)
+      - [2.type属性值: text](#2type%E5%B1%9E%E6%80%A7%E5%80%BC-text)
+      - [3.type属性值: radio](#3type%E5%B1%9E%E6%80%A7%E5%80%BC-radio)
+      - [3.type属性值: file](#3type%E5%B1%9E%E6%80%A7%E5%80%BC-file)
+      - [5.type属性值](#5type%E5%B1%9E%E6%80%A7%E5%80%BC)
+    - [3.2 button按钮标签](#32-button%E6%8C%89%E9%92%AE%E6%A0%87%E7%AD%BE)
+    - [3.3 select下拉菜单标签](#33-select%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95%E6%A0%87%E7%AD%BE)
+    - [3.4 textarea文本域标签](#34-textarea%E6%96%87%E6%9C%AC%E5%9F%9F%E6%A0%87%E7%AD%BE)
+    - [3.5 label标签](#35-label%E6%A0%87%E7%AD%BE)
+- [4. 语义化标签](#4-%E8%AF%AD%E4%B9%89%E5%8C%96%E6%A0%87%E7%AD%BE)
+    - [4.1 没有语义的布局标签](#41-%E6%B2%A1%E6%9C%89%E8%AF%AD%E4%B9%89%E7%9A%84%E5%B8%83%E5%B1%80%E6%A0%87%E7%AD%BE)
+    - [4.2 有语义的布局标签（了解)](#42-%E6%9C%89%E8%AF%AD%E4%B9%89%E7%9A%84%E5%B8%83%E5%B1%80%E6%A0%87%E7%AD%BE%E4%BA%86%E8%A7%A3)
+- [5.字符实体](#5%E5%AD%97%E7%AC%A6%E5%AE%9E%E4%BD%93)
+    - [5.1常见字符实体](#51%E5%B8%B8%E8%A7%81%E5%AD%97%E7%AC%A6%E5%AE%9E%E4%BD%93)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## 1.列表标签
 
 #### 1.1 列表的应用场景

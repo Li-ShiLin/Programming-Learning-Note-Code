@@ -1,3 +1,22 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Redis实战篇�?��?�分布式�?-redission](#redis%E5%AE%9E%E6%88%98%E7%AF%87%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81-redission)
+- [5、分布式�?-redission](#5%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81-redission)
+  - [5.1 分布式锁-redission功能介绍](#51-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81-redission%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D)
+  - [5.2 分布式锁-Redission快�?�入门](#52-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81-redission%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8)
+  - [5.3 分布式锁-redission可重入锁原理](#53-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81-redission%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81%E5%8E%9F%E7%90%86)
+  - [5.4 分布式锁-redission锁重试和WatchDog机制](#54-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81-redission%E9%94%81%E9%87%8D%E8%AF%95%E5%92%8Cwatchdog%E6%9C%BA%E5%88%B6)
+  - [5.5 分布式锁-redission锁的MutiLock原理](#55-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81-redission%E9%94%81%E7%9A%84mutilock%E5%8E%9F%E7%90%86)
+  - [5.6 分布式锁总结](#56-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E6%80%BB%E7%BB%93)
+- [6、秒�?优化](#6%E7%A7%92%E6%9D%80%E4%BC%98%E5%8C%96)
+  - [6.1 秒杀优化-异步秒杀思路](#61-%E7%A7%92%E6%9D%80%E4%BC%98%E5%8C%96-%E5%BC%82%E6%AD%A5%E7%A7%92%E6%9D%80%E6%80%9D%E8%B7%AF)
+  - [6.2 秒杀优化-Redis完成秒杀资格判断](#62-%E7%A7%92%E6%9D%80%E4%BC%98%E5%8C%96-redis%E5%AE%8C%E6%88%90%E7%A7%92%E6%9D%80%E8%B5%84%E6%A0%BC%E5%88%A4%E6%96%AD)
+  - [6.3 秒杀优化-基于阻塞队列实现秒杀优化](#63-%E7%A7%92%E6%9D%80%E4%BC%98%E5%8C%96-%E5%9F%BA%E4%BA%8E%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E5%AE%9E%E7%8E%B0%E7%A7%92%E6%9D%80%E4%BC%98%E5%8C%96)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Redis实战篇�?��?�分布式�?-redission
 
 ## 5、分布式�?-redission

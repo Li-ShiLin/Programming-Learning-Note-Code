@@ -1,3 +1,24 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [MyBatis核⼼配置⽂件详解](#mybatis%E6%A0%B8%E2%BC%BC%E9%85%8D%E7%BD%AE%E2%BD%82%E4%BB%B6%E8%AF%A6%E8%A7%A3)
+- [1.核心配置文件之 mybatis-config.xml](#1%E6%A0%B8%E5%BF%83%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%B9%8B-mybatis-configxml)
+  - [1.1 配置文件核心属性简介](#11-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E6%A0%B8%E5%BF%83%E5%B1%9E%E6%80%A7%E7%AE%80%E4%BB%8B)
+  - [1.2  environment](#12--environment)
+  - [1.3  transactionManager](#13--transactionmanager)
+    - [1.3.1 演示](#131-%E6%BC%94%E7%A4%BA)
+    - [1.3.2 总结](#132-%E6%80%BB%E7%BB%93)
+  - [1.4  dataSource](#14--datasource)
+    - [1.4.1 type="UNPOOLED"](#141-typeunpooled)
+    - [1.4.2 type="POOLED"](#142-typepooled)
+    - [1.4.3 type="JNDI"](#143-typejndi)
+    - [1.4.4 type="POOLED"时的属性](#144-typepooled%E6%97%B6%E7%9A%84%E5%B1%9E%E6%80%A7)
+    - [1.4.5 总结](#145-%E6%80%BB%E7%BB%93)
+- [1.5 properties](#15-properties)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # MyBatis核⼼配置⽂件详解
 
 # 1.核心配置文件之 mybatis-config.xml

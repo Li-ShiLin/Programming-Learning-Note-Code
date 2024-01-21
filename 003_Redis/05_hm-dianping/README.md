@@ -1,3 +1,17 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [7. redis实战篇 ——Redis消息队列](#7-redis%E5%AE%9E%E6%88%98%E7%AF%87-redis%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97)
+    - [7.1 Redis消息队列-认识消息队列](#71-redis%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97-%E8%AE%A4%E8%AF%86%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97)
+    - [7.2 Redis消息队列-基于List实现消息队列](#72-redis%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97-%E5%9F%BA%E4%BA%8Elist%E5%AE%9E%E7%8E%B0%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97)
+    - [7.3 Redis消息队列-基于PubSub的消息队列](#73-redis%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97-%E5%9F%BA%E4%BA%8Epubsub%E7%9A%84%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97)
+    - [7.4 Redis消息队列-基于Stream的消息队列](#74-redis%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97-%E5%9F%BA%E4%BA%8Estream%E7%9A%84%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97)
+    - [7.5 Redis消息队列-基于Stream的消息队列-消费者组](#75-redis%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97-%E5%9F%BA%E4%BA%8Estream%E7%9A%84%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97-%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84)
+    - [7.6 基于Redis的Stream结构作为消息队列，实现异步秒杀下单](#76-%E5%9F%BA%E4%BA%8Eredis%E7%9A%84stream%E7%BB%93%E6%9E%84%E4%BD%9C%E4%B8%BA%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5%E7%A7%92%E6%9D%80%E4%B8%8B%E5%8D%95)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # 7. redis实战篇 ——Redis消息队列
 
 ### 7.1 Redis消息队列-认识消息队列

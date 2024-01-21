@@ -1,3 +1,17 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [redis实战篇 —— 实现好友关注](#redis%E5%AE%9E%E6%88%98%E7%AF%87--%E5%AE%9E%E7%8E%B0%E5%A5%BD%E5%8F%8B%E5%85%B3%E6%B3%A8)
+- [9、好友关注](#9%E5%A5%BD%E5%8F%8B%E5%85%B3%E6%B3%A8)
+  - [9.1 好友关注-关注和取消关注](#91-%E5%A5%BD%E5%8F%8B%E5%85%B3%E6%B3%A8-%E5%85%B3%E6%B3%A8%E5%92%8C%E5%8F%96%E6%B6%88%E5%85%B3%E6%B3%A8)
+  - [9.2 好友关注-共同关注](#92-%E5%A5%BD%E5%8F%8B%E5%85%B3%E6%B3%A8-%E5%85%B1%E5%90%8C%E5%85%B3%E6%B3%A8)
+  - [9.3 好友关注-Feed流实现方案](#93-%E5%A5%BD%E5%8F%8B%E5%85%B3%E6%B3%A8-feed%E6%B5%81%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%A1%88)
+  - [9.4 好友关注-推送笔记到粉丝收件箱](#94-%E5%A5%BD%E5%8F%8B%E5%85%B3%E6%B3%A8-%E6%8E%A8%E9%80%81%E7%AC%94%E8%AE%B0%E5%88%B0%E7%B2%89%E4%B8%9D%E6%94%B6%E4%BB%B6%E7%AE%B1)
+  - [9.5好友关注-实现分页查询收邮箱](#95%E5%A5%BD%E5%8F%8B%E5%85%B3%E6%B3%A8-%E5%AE%9E%E7%8E%B0%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2%E6%94%B6%E9%82%AE%E7%AE%B1)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## redis实战篇 —— 实现好友关注
 
 ## 9、好友关注

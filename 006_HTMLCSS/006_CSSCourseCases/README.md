@@ -1,3 +1,26 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [1.结构伪类选择器](#1%E7%BB%93%E6%9E%84%E4%BC%AA%E7%B1%BB%E9%80%89%E6%8B%A9%E5%99%A8)
+- [2.伪元素](#2%E4%BC%AA%E5%85%83%E7%B4%A0)
+- [3.标准流](#3%E6%A0%87%E5%87%86%E6%B5%81)
+- [4.浮动](#4%E6%B5%AE%E5%8A%A8)
+    - [4.1 浮动的作用](#41-%E6%B5%AE%E5%8A%A8%E7%9A%84%E4%BD%9C%E7%94%A8)
+    - [4.2 浮动的代码](#42-%E6%B5%AE%E5%8A%A8%E7%9A%84%E4%BB%A3%E7%A0%81)
+    - [4.3 浮动的特点](#43-%E6%B5%AE%E5%8A%A8%E7%9A%84%E7%89%B9%E7%82%B9)
+    - [4.4 浮动的案例](#44-%E6%B5%AE%E5%8A%A8%E7%9A%84%E6%A1%88%E4%BE%8B)
+- [5.清除浮动](#5%E6%B8%85%E9%99%A4%E6%B5%AE%E5%8A%A8)
+    - [5.1 清除浮动的介绍](#51-%E6%B8%85%E9%99%A4%E6%B5%AE%E5%8A%A8%E7%9A%84%E4%BB%8B%E7%BB%8D)
+    - [5.2 清除浮动的方法](#52-%E6%B8%85%E9%99%A4%E6%B5%AE%E5%8A%A8%E7%9A%84%E6%96%B9%E6%B3%95)
+      - [1.直接设置父元素高度](#1%E7%9B%B4%E6%8E%A5%E8%AE%BE%E7%BD%AE%E7%88%B6%E5%85%83%E7%B4%A0%E9%AB%98%E5%BA%A6)
+      - [2.额外标签法](#2%E9%A2%9D%E5%A4%96%E6%A0%87%E7%AD%BE%E6%B3%95)
+      - [3.单伪元素清除法](#3%E5%8D%95%E4%BC%AA%E5%85%83%E7%B4%A0%E6%B8%85%E9%99%A4%E6%B3%95)
+      - [4.双伪元素清除法](#4%E5%8F%8C%E4%BC%AA%E5%85%83%E7%B4%A0%E6%B8%85%E9%99%A4%E6%B3%95)
+      - [5 给父元素设置overflow : hidden](#5-%E7%BB%99%E7%88%B6%E5%85%83%E7%B4%A0%E8%AE%BE%E7%BD%AEoverflow--hidden)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## 1.结构伪类选择器
 
 - 作用与优势:

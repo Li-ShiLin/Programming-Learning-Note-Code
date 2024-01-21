@@ -1,3 +1,35 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+    - [1.1 CSS的介绍](#11-css%E7%9A%84%E4%BB%8B%E7%BB%8D)
+    - [1.2 CSS引入方式](#12-css%E5%BC%95%E5%85%A5%E6%96%B9%E5%BC%8F)
+- [2.基础选择器](#2%E5%9F%BA%E7%A1%80%E9%80%89%E6%8B%A9%E5%99%A8)
+    - [2.1 标签选择器](#21-%E6%A0%87%E7%AD%BE%E9%80%89%E6%8B%A9%E5%99%A8)
+    - [2.2 类选择器](#22-%E7%B1%BB%E9%80%89%E6%8B%A9%E5%99%A8)
+    - [2.3 id选择器](#23-id%E9%80%89%E6%8B%A9%E5%99%A8)
+    - [2.4 通配符选择器](#24-%E9%80%9A%E9%85%8D%E7%AC%A6%E9%80%89%E6%8B%A9%E5%99%A8)
+- [3.字体和文本样式](#3%E5%AD%97%E4%BD%93%E5%92%8C%E6%96%87%E6%9C%AC%E6%A0%B7%E5%BC%8F)
+    - [3.1 字体样式](#31-%E5%AD%97%E4%BD%93%E6%A0%B7%E5%BC%8F)
+      - [1. 字体大小: font-size](#1-%E5%AD%97%E4%BD%93%E5%A4%A7%E5%B0%8F-font-size)
+      - [2.字体粗细:font-weight](#2%E5%AD%97%E4%BD%93%E7%B2%97%E7%BB%86font-weight)
+      - [3.字体样式: font-style](#3%E5%AD%97%E4%BD%93%E6%A0%B7%E5%BC%8F-font-style)
+      - [4.字体类型: font-family](#4%E5%AD%97%E4%BD%93%E7%B1%BB%E5%9E%8B-font-family)
+      - [5.常见字体系列（了解)](#5%E5%B8%B8%E8%A7%81%E5%AD%97%E4%BD%93%E7%B3%BB%E5%88%97%E4%BA%86%E8%A7%A3)
+      - [6.样式的层叠问题](#6%E6%A0%B7%E5%BC%8F%E7%9A%84%E5%B1%82%E5%8F%A0%E9%97%AE%E9%A2%98)
+      - [7.字体font相关属性的连写](#7%E5%AD%97%E4%BD%93font%E7%9B%B8%E5%85%B3%E5%B1%9E%E6%80%A7%E7%9A%84%E8%BF%9E%E5%86%99)
+    - [3.2 文本样式](#32-%E6%96%87%E6%9C%AC%E6%A0%B7%E5%BC%8F)
+      - [1.文本缩进: text-indent](#1%E6%96%87%E6%9C%AC%E7%BC%A9%E8%BF%9B-text-indent)
+      - [2.文本水平对齐方式: text-align](#2%E6%96%87%E6%9C%AC%E6%B0%B4%E5%B9%B3%E5%AF%B9%E9%BD%90%E6%96%B9%E5%BC%8F-text-align)
+      - [3.文本修饰: text-decoration](#3%E6%96%87%E6%9C%AC%E4%BF%AE%E9%A5%B0-text-decoration)
+    - [3.3 行高](#33-%E8%A1%8C%E9%AB%98)
+    - [3.4 拓展颜色常见取值](#34-%E6%8B%93%E5%B1%95%E9%A2%9C%E8%89%B2%E5%B8%B8%E8%A7%81%E5%8F%96%E5%80%BC)
+    - [3.5 标签水平居中](#35-%E6%A0%87%E7%AD%BE%E6%B0%B4%E5%B9%B3%E5%B1%85%E4%B8%AD)
+- [4. Chrome调试工具](#4-chrome%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7)
+- [5.综合案例](#5%E7%BB%BC%E5%90%88%E6%A1%88%E4%BE%8B)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 1.CSS的介绍 
 
 #### 1.1 CSS的介绍 

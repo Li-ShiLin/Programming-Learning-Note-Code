@@ -1,3 +1,25 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [1.在WEB中应用MyBatis(使用MVC架构模式)](#1%E5%9C%A8web%E4%B8%AD%E5%BA%94%E7%94%A8mybatis%E4%BD%BF%E7%94%A8mvc%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F)
+  - [1.目标](#1%E7%9B%AE%E6%A0%87)
+  - [2. 数据库表的设计和准备数据](#2-%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8%E7%9A%84%E8%AE%BE%E8%AE%A1%E5%92%8C%E5%87%86%E5%A4%87%E6%95%B0%E6%8D%AE)
+  - [3.实现步骤](#3%E5%AE%9E%E7%8E%B0%E6%AD%A5%E9%AA%A4)
+    - [步骤一：引入依赖](#%E6%AD%A5%E9%AA%A4%E4%B8%80%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96)
+    - [步骤二：引入配置文件](#%E6%AD%A5%E9%AA%A4%E4%BA%8C%E5%BC%95%E5%85%A5%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6)
+    - [步骤三：前端页面](#%E6%AD%A5%E9%AA%A4%E4%B8%89%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2)
+    - [步骤四：定义pojo类：Account](#%E6%AD%A5%E9%AA%A4%E5%9B%9B%E5%AE%9A%E4%B9%89pojo%E7%B1%BBaccount)
+    - [步骤五：mybatis工具类](#%E6%AD%A5%E9%AA%A4%E4%BA%94mybatis%E5%B7%A5%E5%85%B7%E7%B1%BB)
+    - [步骤六：编写AccountDao接⼝，以及AccountDaoImpl实现类](#%E6%AD%A5%E9%AA%A4%E5%85%AD%E7%BC%96%E5%86%99accountdao%E6%8E%A5%E2%BC%9D%E4%BB%A5%E5%8F%8Aaccountdaoimpl%E5%AE%9E%E7%8E%B0%E7%B1%BB)
+    - [步骤七：AccountDaoImpl中编写了mybatis代码，需要编写SQL映射⽂件了](#%E6%AD%A5%E9%AA%A4%E4%B8%83accountdaoimpl%E4%B8%AD%E7%BC%96%E5%86%99%E4%BA%86mybatis%E4%BB%A3%E7%A0%81%E9%9C%80%E8%A6%81%E7%BC%96%E5%86%99sql%E6%98%A0%E5%B0%84%E2%BD%82%E4%BB%B6%E4%BA%86)
+    - [步骤八：编写AccountService接⼝以及AccountServiceImpl](#%E6%AD%A5%E9%AA%A4%E5%85%AB%E7%BC%96%E5%86%99accountservice%E6%8E%A5%E2%BC%9D%E4%BB%A5%E5%8F%8Aaccountserviceimpl)
+    - [步骤九：编写AccountController](#%E6%AD%A5%E9%AA%A4%E4%B9%9D%E7%BC%96%E5%86%99accountcontroller)
+    - [步骤十：测试](#%E6%AD%A5%E9%AA%A4%E5%8D%81%E6%B5%8B%E8%AF%95)
+- [2. MyBatis对象作用域以及事务问题](#2-mybatis%E5%AF%B9%E8%B1%A1%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%BB%A5%E5%8F%8A%E4%BA%8B%E5%8A%A1%E9%97%AE%E9%A2%98)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 #  1.在WEB中应用MyBatis(使用MVC架构模式)
 
 ## 1.目标

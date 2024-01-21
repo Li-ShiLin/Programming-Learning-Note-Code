@@ -1,3 +1,16 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [项目实战](#%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98)
+- [1.项目结构搭建](#1%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84%E6%90%AD%E5%BB%BA)
+    - [1.1 文件和目录准备](#11-%E6%96%87%E4%BB%B6%E5%92%8C%E7%9B%AE%E5%BD%95%E5%87%86%E5%A4%87)
+    - [1.2 基础公共样式](#12-%E5%9F%BA%E7%A1%80%E5%85%AC%E5%85%B1%E6%A0%B7%E5%BC%8F)
+    - [1.3 index页面骨架](#13-index%E9%A1%B5%E9%9D%A2%E9%AA%A8%E6%9E%B6)
+- [2.项目开发](#2%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## 项目实战
 
 ## 1.项目结构搭建

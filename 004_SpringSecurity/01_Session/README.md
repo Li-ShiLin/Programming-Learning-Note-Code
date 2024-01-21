@@ -1,3 +1,20 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [1.简本概念](#1%E7%AE%80%E6%9C%AC%E6%A6%82%E5%BF%B5)
+    - [1.1 认证](#11-%E8%AE%A4%E8%AF%81)
+    - [1.2 会话](#12-%E4%BC%9A%E8%AF%9D)
+    - [1.3 授权](#13-%E6%8E%88%E6%9D%83)
+    - [1.4 授权的数据模型](#14-%E6%8E%88%E6%9D%83%E7%9A%84%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B)
+    - [1.5 RBAC](#15-rbac)
+      - [1.5.1基于角色的访问控制](#151%E5%9F%BA%E4%BA%8E%E8%A7%92%E8%89%B2%E7%9A%84%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6)
+      - [1.5.2基于资源的访问控制](#152%E5%9F%BA%E4%BA%8E%E8%B5%84%E6%BA%90%E7%9A%84%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6)
+- [2. 基于Session的认证方式](#2-%E5%9F%BA%E4%BA%8Esession%E7%9A%84%E8%AE%A4%E8%AF%81%E6%96%B9%E5%BC%8F)
+    - [2.1 认证流程](#21-%E8%AE%A4%E8%AF%81%E6%B5%81%E7%A8%8B)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # 1.简本概念
 
 ### 1.1 认证

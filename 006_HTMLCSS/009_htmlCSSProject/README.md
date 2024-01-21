@@ -1,3 +1,32 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [项目实战](#%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98)
+- [1.样式补充](#1%E6%A0%B7%E5%BC%8F%E8%A1%A5%E5%85%85)
+    - [1.1 精灵图](#11-%E7%B2%BE%E7%81%B5%E5%9B%BE)
+      - [1.1.1 介绍](#111-%E4%BB%8B%E7%BB%8D)
+      - [1.1.2 精灵图的使用步骤](#112-%E7%B2%BE%E7%81%B5%E5%9B%BE%E7%9A%84%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4)
+    - [1.2 背景图片大小](#12-%E8%83%8C%E6%99%AF%E5%9B%BE%E7%89%87%E5%A4%A7%E5%B0%8F)
+    - [1.3文字阴影](#13%E6%96%87%E5%AD%97%E9%98%B4%E5%BD%B1)
+    - [1.4 盒子阴影](#14-%E7%9B%92%E5%AD%90%E9%98%B4%E5%BD%B1)
+    - [1.5 过渡](#15-%E8%BF%87%E6%B8%A1)
+- [2.项目前置知识补充](#2%E9%A1%B9%E7%9B%AE%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86%E8%A1%A5%E5%85%85)
+    - [2.1 网页与网站的关系](#21-%E7%BD%91%E9%A1%B5%E4%B8%8E%E7%BD%91%E7%AB%99%E7%9A%84%E5%85%B3%E7%B3%BB)
+    - [2.2 骨架结构标签](#22-%E9%AA%A8%E6%9E%B6%E7%BB%93%E6%9E%84%E6%A0%87%E7%AD%BE)
+      - [2.2.1 DOCTYPE文档说明](#221-doctype%E6%96%87%E6%A1%A3%E8%AF%B4%E6%98%8E)
+      - [2.2.2 网页语言](#222-%E7%BD%91%E9%A1%B5%E8%AF%AD%E8%A8%80)
+      - [2.2.3 字符编码（了解)](#223-%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E4%BA%86%E8%A7%A3)
+    - [2.3 SEO三大标签](#23-seo%E4%B8%89%E5%A4%A7%E6%A0%87%E7%AD%BE)
+      - [2.3.1 SEO简介](#231-seo%E7%AE%80%E4%BB%8B)
+      - [2.3.2 SEO三大标签](#232-seo%E4%B8%89%E5%A4%A7%E6%A0%87%E7%AD%BE)
+    - [2.4 有语义的布局标签](#24-%E6%9C%89%E8%AF%AD%E4%B9%89%E7%9A%84%E5%B8%83%E5%B1%80%E6%A0%87%E7%AD%BE)
+    - [2.5 ico图标设置](#25-ico%E5%9B%BE%E6%A0%87%E8%AE%BE%E7%BD%AE)
+    - [2.6 版心](#26-%E7%89%88%E5%BF%83)
+- [3.CSS书写顺序](#3css%E4%B9%A6%E5%86%99%E9%A1%BA%E5%BA%8F)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## 项目实战
 
 ## 1.样式补充

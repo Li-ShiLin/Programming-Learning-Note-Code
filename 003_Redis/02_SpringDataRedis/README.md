@@ -1,3 +1,19 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [1.SprngDataRedis客户端](#1sprngdataredis%E5%AE%A2%E6%88%B7%E7%AB%AF)
+  - [1.1.快速入门](#11%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8)
+    - [1）引入依赖](#1%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96)
+    - [2）配置Redis](#2%E9%85%8D%E7%BD%AEredis)
+    - [3）注入RedisTemplate](#3%E6%B3%A8%E5%85%A5redistemplate)
+    - [4）编写测试](#4%E7%BC%96%E5%86%99%E6%B5%8B%E8%AF%95)
+  - [1.2.数据序列化器](#12%E6%95%B0%E6%8D%AE%E5%BA%8F%E5%88%97%E5%8C%96%E5%99%A8)
+  - [1.3.StringRedisTemplate](#13stringredistemplate)
+  - [1.4 Hash结构操作](#14-hash%E7%BB%93%E6%9E%84%E6%93%8D%E4%BD%9C)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## 1.SprngDataRedis客户端
 
 SpringData是Spring中数据操作的模块，包含对各种数据库的集成，其中对Redis的集成模块就叫做SpringDataRedis，官网地址：https://spring.io/projects/spring-data-redis

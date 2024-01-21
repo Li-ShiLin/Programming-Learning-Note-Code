@@ -1,3 +1,19 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [1.@Conditional注解](#1conditional%E6%B3%A8%E8%A7%A3)
+    - [1.1 条件装配](#11-%E6%9D%A1%E4%BB%B6%E8%A3%85%E9%85%8D)
+    - [1.2 演示：@ConditionalOnBean()](#12-%E6%BC%94%E7%A4%BAconditionalonbean)
+    - [1.3  演示：@ConditionalOnMissingBean()](#13--%E6%BC%94%E7%A4%BAconditionalonmissingbean)
+- [2. @ImportResource()注解](#2-importresource%E6%B3%A8%E8%A7%A3)
+- [3. @ConfigurationProperties()注解——配置绑定](#3-configurationproperties%E6%B3%A8%E8%A7%A3%E9%85%8D%E7%BD%AE%E7%BB%91%E5%AE%9A)
+    - [3.1 方式1：利用@Component和@ConfigurationProperties()实现配置绑定](#31-%E6%96%B9%E5%BC%8F1%E5%88%A9%E7%94%A8component%E5%92%8Cconfigurationproperties%E5%AE%9E%E7%8E%B0%E9%85%8D%E7%BD%AE%E7%BB%91%E5%AE%9A)
+    - [3.2 方式二：@EnableConfigurationProperties + @ConfigurationProperties + @Configuration](#32-%E6%96%B9%E5%BC%8F%E4%BA%8Cenableconfigurationproperties--configurationproperties--configuration)
+- [4.@SpringBootApplication自动配置原理](#4springbootapplication%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8E%9F%E7%90%86)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ##  1.@Conditional注解
 
 ####   1.1 条件装配

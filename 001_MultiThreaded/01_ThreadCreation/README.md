@@ -1,3 +1,16 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [1.线程简介](#1%E7%BA%BF%E7%A8%8B%E7%AE%80%E4%BB%8B)
+- [2.线程创建方式](#2%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA%E6%96%B9%E5%BC%8F)
+    - [2.1 继承Thread类:](#21-%E7%BB%A7%E6%89%BFthread%E7%B1%BB)
+    - [2.2 实现Runnable接口:](#22-%E5%AE%9E%E7%8E%B0runnable%E6%8E%A5%E5%8F%A3)
+    - [2.3 实现Callable接口](#23-%E5%AE%9E%E7%8E%B0callable%E6%8E%A5%E5%8F%A3)
+- [3.线程创建方式总结](#3%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## 1.线程简介
 
 **普通方法调用和多线程**

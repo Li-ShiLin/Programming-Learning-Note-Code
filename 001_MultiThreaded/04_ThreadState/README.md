@@ -1,3 +1,18 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [1.线程状态](#1%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81)
+- [2.线程状态切换](#2%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81%E5%88%87%E6%8D%A2)
+    - [2.1 线程状态切换方法汇总](#21-%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81%E5%88%87%E6%8D%A2%E6%96%B9%E6%B3%95%E6%B1%87%E6%80%BB)
+    - [2.2 停止线程](#22-%E5%81%9C%E6%AD%A2%E7%BA%BF%E7%A8%8B)
+    - [2.3 线程休眠](#23-%E7%BA%BF%E7%A8%8B%E4%BC%91%E7%9C%A0)
+    - [2.4 线程礼让](#24-%E7%BA%BF%E7%A8%8B%E7%A4%BC%E8%AE%A9)
+    - [2.5 Jion](#25-jion)
+- [3.线程状态的观测](#3%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81%E7%9A%84%E8%A7%82%E6%B5%8B)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## 1.线程状态
 
 **线程状态：**

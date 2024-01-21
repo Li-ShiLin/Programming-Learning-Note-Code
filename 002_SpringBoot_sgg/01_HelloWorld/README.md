@@ -1,3 +1,17 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [1.Spring与SpringBoot](#1spring%E4%B8%8Espringboot)
+    - [1.1 Spring生态圈](#11-spring%E7%94%9F%E6%80%81%E5%9C%88)
+    - [1.2 Spring Boot诞生时代背景](#12-spring-boot%E8%AF%9E%E7%94%9F%E6%97%B6%E4%BB%A3%E8%83%8C%E6%99%AF)
+    - [1.3 Spring Boot特点](#13-spring-boot%E7%89%B9%E7%82%B9)
+- [2. Spring Boot入门](#2-spring-boot%E5%85%A5%E9%97%A8)
+    - [2.1 Hello World 入门案例](#21-hello-world-%E5%85%A5%E9%97%A8%E6%A1%88%E4%BE%8B)
+    - [2.2 Springnoot依赖管理特性](#22-springnoot%E4%BE%9D%E8%B5%96%E7%AE%A1%E7%90%86%E7%89%B9%E6%80%A7)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ##  1.Spring与SpringBoot
 
 ####  1.1 Spring生态圈

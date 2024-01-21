@@ -1,3 +1,14 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [1.线程协作](#1%E7%BA%BF%E7%A8%8B%E5%8D%8F%E4%BD%9C)
+    - [1.1 线程通信应用场景∶生产者和消费者问题](#11-%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E2%88%B6%E7%94%9F%E4%BA%A7%E8%80%85%E5%92%8C%E6%B6%88%E8%B4%B9%E8%80%85%E9%97%AE%E9%A2%98)
+    - [1.2 生产者消费者解决方式一：管程法](#12-%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E8%A7%A3%E5%86%B3%E6%96%B9%E5%BC%8F%E4%B8%80%E7%AE%A1%E7%A8%8B%E6%B3%95)
+    - [1.3 生产者消费者解决方式一：信号灯法](#13-%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E8%A7%A3%E5%86%B3%E6%96%B9%E5%BC%8F%E4%B8%80%E4%BF%A1%E5%8F%B7%E7%81%AF%E6%B3%95)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## 1.线程协作
 #### 1.1 线程通信应用场景∶生产者和消费者问题
 

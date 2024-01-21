@@ -1,3 +1,52 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [1.Redis简介](#1redis%E7%AE%80%E4%BB%8B)
+  - [1.1.NoSQL简介](#11nosql%E7%AE%80%E4%BB%8B)
+    - [1.1.1.结构化与非结构化](#111%E7%BB%93%E6%9E%84%E5%8C%96%E4%B8%8E%E9%9D%9E%E7%BB%93%E6%9E%84%E5%8C%96)
+    - [1.1.2.关联和非关联](#112%E5%85%B3%E8%81%94%E5%92%8C%E9%9D%9E%E5%85%B3%E8%81%94)
+    - [1.1.3.查询方式](#113%E6%9F%A5%E8%AF%A2%E6%96%B9%E5%BC%8F)
+    - [1.1.4.事务](#114%E4%BA%8B%E5%8A%A1)
+    - [1.1.5.关系型数据库 VS 非关系型数据库](#115%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93-vs-%E9%9D%9E%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93)
+  - [1.2.Redis简介](#12redis%E7%AE%80%E4%BB%8B)
+  - [1.3.Redis安装](#13redis%E5%AE%89%E8%A3%85)
+    - [1.3.1.依赖库](#131%E4%BE%9D%E8%B5%96%E5%BA%93)
+    - [1.3.2.上传安装包并解压](#132%E4%B8%8A%E4%BC%A0%E5%AE%89%E8%A3%85%E5%8C%85%E5%B9%B6%E8%A7%A3%E5%8E%8B)
+    - [1.3.3.启动](#133%E5%90%AF%E5%8A%A8)
+    - [1.3.4.默认启动](#134%E9%BB%98%E8%AE%A4%E5%90%AF%E5%8A%A8)
+    - [1.3.5.指定配置启动](#135%E6%8C%87%E5%AE%9A%E9%85%8D%E7%BD%AE%E5%90%AF%E5%8A%A8)
+    - [1.3.6.开机自启](#136%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF)
+  - [1.4.Redis桌面客户端](#14redis%E6%A1%8C%E9%9D%A2%E5%AE%A2%E6%88%B7%E7%AB%AF)
+    - [1.4.1.Redis命令行客户端](#141redis%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%AE%A2%E6%88%B7%E7%AB%AF)
+    - [1.4.2.图形化桌面客户端](#142%E5%9B%BE%E5%BD%A2%E5%8C%96%E6%A1%8C%E9%9D%A2%E5%AE%A2%E6%88%B7%E7%AB%AF)
+    - [1.4.3.安装图形化桌面客户端](#143%E5%AE%89%E8%A3%85%E5%9B%BE%E5%BD%A2%E5%8C%96%E6%A1%8C%E9%9D%A2%E5%AE%A2%E6%88%B7%E7%AB%AF)
+    - [1.4.4.建立连接](#144%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5)
+- [2.Redis常见命令](#2redis%E5%B8%B8%E8%A7%81%E5%91%BD%E4%BB%A4)
+  - [2.1.Redis通用命令](#21redis%E9%80%9A%E7%94%A8%E5%91%BD%E4%BB%A4)
+  - [2.2.String类型](#22string%E7%B1%BB%E5%9E%8B)
+    - [2.2.1.String的常见命令](#221string%E7%9A%84%E5%B8%B8%E8%A7%81%E5%91%BD%E4%BB%A4)
+    - [2.2.2.Redis的Key结构](#222redis%E7%9A%84key%E7%BB%93%E6%9E%84)
+  - [2.3.Hash类型](#23hash%E7%B1%BB%E5%9E%8B)
+  - [2.4.List类型](#24list%E7%B1%BB%E5%9E%8B)
+  - [2.5.Set类型](#25set%E7%B1%BB%E5%9E%8B)
+  - [2.6.SortedSet类型](#26sortedset%E7%B1%BB%E5%9E%8B)
+- [3.Redis的Java客户端](#3redis%E7%9A%84java%E5%AE%A2%E6%88%B7%E7%AB%AF)
+  - [3.1.Jedis客户端](#31jedis%E5%AE%A2%E6%88%B7%E7%AB%AF)
+    - [3.1.1 Jedis入门案例](#311-jedis%E5%85%A5%E9%97%A8%E6%A1%88%E4%BE%8B)
+    - [3.1.2.连接池](#312%E8%BF%9E%E6%8E%A5%E6%B1%A0)
+  - [3.2.SprngDataRedis客户端](#32sprngdataredis%E5%AE%A2%E6%88%B7%E7%AB%AF)
+    - [3.2.1.快速入门](#321%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8)
+      - [1）引入依赖](#1%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96)
+      - [2）配置Redis](#2%E9%85%8D%E7%BD%AEredis)
+      - [3）注入RedisTemplate](#3%E6%B3%A8%E5%85%A5redistemplate)
+      - [4）编写测试](#4%E7%BC%96%E5%86%99%E6%B5%8B%E8%AF%95)
+    - [3.2.2.数据序列化器](#322%E6%95%B0%E6%8D%AE%E5%BA%8F%E5%88%97%E5%8C%96%E5%99%A8)
+    - [3.2.3.StringRedisTemplate](#323stringredistemplate)
+    - [3.2.4 Hash结构操作](#324-hash%E7%BB%93%E6%9E%84%E6%93%8D%E4%BD%9C)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 Redis入门：Redis的常见命令和客户端使用
 
 # 1.Redis简介

@@ -1,3 +1,14 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [1.请求参数处理](#1%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0%E5%A4%84%E7%90%86)
+    - [1.1 Rest风格使用](#11-rest%E9%A3%8E%E6%A0%BC%E4%BD%BF%E7%94%A8)
+    - [1.2 Rest原理](#12-rest%E5%8E%9F%E7%90%86)
+    - [1.3  请求映射原理](#13--%E8%AF%B7%E6%B1%82%E6%98%A0%E5%B0%84%E5%8E%9F%E7%90%86)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ##  1.请求参数处理
 
 ####   1.1 Rest风格使用

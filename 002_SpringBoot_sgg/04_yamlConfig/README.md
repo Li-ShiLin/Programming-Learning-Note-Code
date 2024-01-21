@@ -1,3 +1,14 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [1.yaml配置文件](#1yaml%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6)
+    - [1.1 简介 & 语法 & 数据类型](#11-%E7%AE%80%E4%BB%8B--%E8%AF%AD%E6%B3%95--%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B)
+    - [1.2 代码演示](#12-%E4%BB%A3%E7%A0%81%E6%BC%94%E7%A4%BA)
+    - [1.3配置提示](#13%E9%85%8D%E7%BD%AE%E6%8F%90%E7%A4%BA)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ##   1.yaml配置文件
 
 ####  1.1 简介 & 语法 & 数据类型

@@ -1,3 +1,14 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [1.web开发](#1web%E5%BC%80%E5%8F%91)
+    - [1.1 静态资源](#11-%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90)
+    - [1.2 欢迎页](#12-%E6%AC%A2%E8%BF%8E%E9%A1%B5)
+    - [1.3 自定义Favicon](#13-%E8%87%AA%E5%AE%9A%E4%B9%89favicon)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ##   1.web开发
 
 ####   1.1 静态资源

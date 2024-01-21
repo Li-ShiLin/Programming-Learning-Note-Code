@@ -1,3 +1,11 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [1.线程优先级](#1%E7%BA%BF%E7%A8%8B%E4%BC%98%E5%85%88%E7%BA%A7)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## 1.线程优先级
 
 - Java提供一个线程调度器来监控程序中启动后进入就绪状态的所有线程，线程调度器按照优先级决定应该调度哪个线程来执行

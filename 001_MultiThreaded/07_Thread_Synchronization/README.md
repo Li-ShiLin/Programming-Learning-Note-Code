@@ -1,3 +1,15 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [1.线程同步机制](#1%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5%E6%9C%BA%E5%88%B6)
+- [2. 三大线程不安全案例](#2-%E4%B8%89%E5%A4%A7%E7%BA%BF%E7%A8%8B%E4%B8%8D%E5%AE%89%E5%85%A8%E6%A1%88%E4%BE%8B)
+- [3.同步方法](#3%E5%90%8C%E6%AD%A5%E6%96%B9%E6%B3%95)
+- [4.同步代码块](#4%E5%90%8C%E6%AD%A5%E4%BB%A3%E7%A0%81%E5%9D%97)
+- [5.JUC](#5juc)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## 1.线程同步机制
 
 **并发**

@@ -1,3 +1,15 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [1.数据响应与内容协商](#1%E6%95%B0%E6%8D%AE%E5%93%8D%E5%BA%94%E4%B8%8E%E5%86%85%E5%AE%B9%E5%8D%8F%E5%95%86)
+    - [1.2 数据响应](#12-%E6%95%B0%E6%8D%AE%E5%93%8D%E5%BA%94)
+      - [1.2.1 响应JSON（实现：jackson.jar+@ResponseBody）](#121-%E5%93%8D%E5%BA%94json%E5%AE%9E%E7%8E%B0jacksonjarresponsebody)
+- [2.内容协商](#2%E5%86%85%E5%AE%B9%E5%8D%8F%E5%95%86)
+    - [2.1 内容协商代码演示](#21-%E5%86%85%E5%AE%B9%E5%8D%8F%E5%95%86%E4%BB%A3%E7%A0%81%E6%BC%94%E7%A4%BA)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # 1.数据响应与内容协商
 
 ### 1.2 数据响应

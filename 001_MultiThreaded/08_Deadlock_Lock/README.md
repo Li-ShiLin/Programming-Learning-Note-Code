@@ -1,3 +1,15 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [1.死锁](#1%E6%AD%BB%E9%94%81)
+    - [1.1 模拟死锁](#11-%E6%A8%A1%E6%8B%9F%E6%AD%BB%E9%94%81)
+    - [1.2 解决死锁](#12-%E8%A7%A3%E5%86%B3%E6%AD%BB%E9%94%81)
+    - [1.3 死锁避免方法](#13-%E6%AD%BB%E9%94%81%E9%81%BF%E5%85%8D%E6%96%B9%E6%B3%95)
+- [2.Lock(锁)](#2lock%E9%94%81)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## 1.死锁
 
 - 多个线程各自占有一些共享资源﹐并且互相等待其他线程占有的资源才能运行,而导致两个或者多个线程都在等待对方释放资源,都停止执行的情形

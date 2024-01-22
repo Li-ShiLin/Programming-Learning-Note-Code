@@ -149,7 +149,7 @@ redis下载地址：`https://redis.io/download/`
 
 **redis功能与应用**：
 
-![image-20231102002653508](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220330043.png)
+![image-20231102002653508](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220330043.png)
 
 **应用一：分布式缓存**
 
@@ -199,7 +199,7 @@ redis下载地址：`https://redis.io/download/`
 
 **总结**：Redis是一种Key-Value类型的缓存数据库
 
-![image-20231102003348161](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220330749.png)
+![image-20231102003348161](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220330749.png)
 
 **Redis迭代演化和Redis7新特性浅谈**：
 
@@ -209,11 +209,11 @@ Redis之父安特雷兹的发言：`http://antirez.com/news/132`
 
 Redis历史大版本核心特性回顾
 
-![image-20231102011458499](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220330314.png)
+![image-20231102011458499](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220330314.png)
 
 
 
-![image-20231102011742260](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220330564.png)
+![image-20231102011742260](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220330564.png)
 
 Redis命名规则：
 
@@ -312,7 +312,7 @@ make && make install
 cd /usr/local/bin
 ```
 
-![image-20231104234723431](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220331929.png)
+![image-20231104234723431](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220331929.png)
 
 >redis-benchmark：性能测试工具，服务启动后运行该命令，看看自己本子性能如何
 >
@@ -345,7 +345,7 @@ cp redis.conf /myredis/redis7.conf
 >
 >添加redis密码           改为 requirepass 你自己设置的密码
 
-![image-20231105002323918](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220331979.png)
+![image-20231105002323918](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220331979.png)
 
 七、启动redis服务
 
@@ -404,7 +404,7 @@ ls -l /usr/local/bin/redis-*
 rm -rf /usr/local/bin/redis-*
 ```
 
-![image-20231105010035700](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220331619.png)
+![image-20231105010035700](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220331619.png)
 
 ###  1.3 reids 常用命令
 
@@ -528,7 +528,7 @@ redis数据类型官方文档：`https://redis.io/docs/data-types/`
 
 这里说的数据类型是value的数据类型，key的类型都是字符串
 
-![image-20231105010834843](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220331969.png)
+![image-20231105010834843](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220331969.png)
 
 ###  2.1  redis字符串(String)
 
@@ -820,7 +820,7 @@ left、right都可以插入添加
 
 它的底层实际是个双向链表，对两端的操作性能很高，通过索引下标的操作中间的节点性能会较差
 
-![image-20231105195320323](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220331618.png)
+![image-20231105195320323](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220331618.png)
 
 **redis列表常见命令**：
 
@@ -1915,7 +1915,7 @@ zrevrank key values值，作用是逆序获得下标值
 
 由0和1状态表现的二进制位的bit数组
 
-![image-20231105013118967](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220332821.png)
+![image-20231105013118967](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220332821.png)
 
 
 
@@ -2222,7 +2222,7 @@ select taxi from position where x0-r < x < x0 + r and y0-r < y < y0+r
 
 地理知识百科：`https://baike.baidu.com/item/经纬线/5596978?fr=aladdin`
 
-![image-20231109012226086](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220332225.png)
+![image-20231109012226086](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220332225.png)
 
 主要分为三步
 
@@ -2250,7 +2250,7 @@ GEOHASH 返回一个或多个位置元素的Geohash表示
 
 如何获得某个地址的经纬度：访问百度地图`http://api.map.baidu.com/lbsapi/getpoint/`，搜索地标即可获取对应的经纬度坐标
 
-![image-20231109020622285](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220332196.png)
+![image-20231109020622285](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220332196.png)
 
 
 
@@ -2445,7 +2445,7 @@ Stream还是不能100%等价于Kafka、RabbitMQ来使用的，生产案例少，
 
 所以常用来做异步队列使用，将需要延后处理的任务结构体序列化成字符串塞进 Redis 的列表，另一个线程从这个列表中轮询数据进行处理
 
-![image-20231110004238928](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220332521.png)
+![image-20231110004238928](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220332521.png)
 
 LPUSH、RPOP 左进右出  RPUSH、LPOP 右进左出
 
@@ -2474,7 +2474,7 @@ LPUSH、RPOP 左进右出  RPUSH、LPOP 右进左出
 
 方案二：Redis 发布订阅 (pub/sub) 有个缺点就是消息无法持久化，如果出现网络断开、Redis 宕机等，消息就会被丢弃。而且也没有 Ack 机制来保证数据的可靠性，假设一个消费者都没有，那消息就直接被丢弃了
 
-![image-20231110004431053](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220332344.png)
+![image-20231110004431053](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220332344.png)
 
 **Stream流实现消息队列**：
 
@@ -2486,7 +2486,7 @@ Stream可以实现消息队列，它支持消息的持久化、支持自动生�
 
 stream结构
 
-![image-20231110005838720](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220332398.png)
+![image-20231110005838720](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220332398.png)
 
 一个消息链表，将所有加入的消息都串起来，每个消息都有一个唯一的 ID 和对应的内容
 
@@ -2566,7 +2566,7 @@ stream
 
 XADD 用于向Stream 队列中添加消息，如果指定的Stream 队列不存在，则该命令执行时会新建一个Stream 队列
 
-![image-20231110013956350](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220333927.png)
+![image-20231110013956350](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220333927.png)
 
 //* 号表示服务器自动生成 MessageID(类似mysql里面主键auto_increment)，后面顺序跟着一堆 业务key/value
 
@@ -2872,11 +2872,11 @@ XREAD 小总结(类似java里面的阻塞队列)
 
 用redis-cli启动2个客户端连接上来，进行消息的生产和消费
 
-![image-20231111230716576](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220333998.png)
+![image-20231111230716576](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220333998.png)
 
 Stream的基础方法，使用xadd存入消息和xread循环阻塞读取消息的方式可以实现简易版的消息队列，交互流程如下：
 
-![image-20231111233405358](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220333477.png)
+![image-20231111233405358](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220333477.png)
 
 
 
@@ -2996,7 +2996,7 @@ v7
 
 
 
-![image-20231112001334835](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220333458.png)
+![image-20231112001334835](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220333458.png)
 
 XPENDING  查询每个消费组内所有消费者 [已读取、但尚未确认] 的消息、查看某个消费者具体读取了哪些数据
 
@@ -3036,11 +3036,11 @@ consumer4
 
 XPENDING 返回值解读
 
-![image-20231112205114732](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220333352.png)
+![image-20231112205114732](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220333352.png)
 
 
 
-![image-20231112205555445](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220336502.png)
+![image-20231112205555445](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220336502.png)
 
 XACK  向消息队列确认消息处理已完成
 
@@ -3065,7 +3065,7 @@ consumer1
 
 
 
-![image-20231112212649930](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220336029.png)
+![image-20231112212649930](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220336029.png)
 
 XINFO   用于打印stream\Consumer\Group的详细信息
 
@@ -3193,7 +3193,7 @@ hello
 111
 ```
 
-![image-20231112223529506](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220336988.png)
+![image-20231112223529506](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220336988.png)
 
 `BITFIELD key [SET type offset value]`   设置指定位域的值并返回它的原值
 
@@ -3207,7 +3207,7 @@ BITFIELD key [SET type offset value]   设置指定位域的值并返回它的�
 hxllo
 ```
 
-![image-20231112224157369](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220336239.png)
+![image-20231112224157369](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220336239.png)
 
 
 
@@ -3237,7 +3237,7 @@ OK
 
 
 
-![image-20231112225233916](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220336456.png)
+![image-20231112225233916](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220336456.png)
 
 溢出控制 OVERFLOW [WRAP|SAT|FAIL]
 
@@ -3300,7 +3300,7 @@ redis持久：Redis数据写入磁盘的方式
 
 redis的持久化方式：RDB和AOF
 
-![image-20231113001916048](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220337845.png)
+![image-20231113001916048](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220337845.png)
 
 ###  3.2  RDB (Redis DataBase)
 
@@ -3321,7 +3321,7 @@ Rdb保存的是dump.rdb文件
 
 RDB保存到磁盘的文件叫dump.rdb
 
-![image-20231115230321433](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220337850.png)
+![image-20231115230321433](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220337850.png)
 
 #####  3.2.2  RDB配置
 
@@ -3331,35 +3331,35 @@ Redis6.0.16以下：
 
 
 
-![image-20231115230731222](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220337984.png)
+![image-20231115230731222](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220337984.png)
 
 Redis6.2以及Redis-7.0.0
 
-![image-20231115230457922](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220337634.png)
+![image-20231115230457922](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220337634.png)
 
 #####  3.2.3  自动触发
 
 Redis7版本，按照redis.conf里配置的`save <seconds> <changes>`
 
-![image-20231115231520148](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220337664.png)
+![image-20231115231520148](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220337664.png)
 
 本次案例5秒2次修改：
 
-![image-20231115231625607](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220337963.png)
+![image-20231115231625607](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220337963.png)
 
 修改dump文件保存路径：
 
 默认路径：
 
-![image-20231115231735498](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220337520.png)
+![image-20231115231735498](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220337520.png)
 
 自定义修改的路径且可以进入redis里用`CONFIG GET dir`获取目录
 
-![image-20231115231838960](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220337297.png)
+![image-20231115231838960](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220337297.png)
 
 修改dump文件名称：
 
-![image-20231115231930959](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220337574.png)
+![image-20231115231930959](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220337574.png)
 
 
 
@@ -3387,13 +3387,13 @@ save <seconds> <changes>
 
 触发备份的第1种情况：5秒钟内修改了两次
 
-![image-20231115232235210](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220337153.png)
+![image-20231115232235210](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220337153.png)
 
 
 
 触发备份的第2种情况：时间间隔超过5秒
 
-![image-20231115232315656](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220337546.png)
+![image-20231115232315656](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220337546.png)
 
 **如何恢复**：
 
@@ -3401,13 +3401,13 @@ save <seconds> <changes>
 
 二、备份成功后故意用flushdb清空redis，看看是否可以恢复数据。结论：执行flushall/flushdb命令也会产生dump.rdb文件，但里面是空的，无法根据这个dump.rdb文件进行数据恢复
 
-![image-20231115232626616](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220337581.png)
+![image-20231115232626616](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220337581.png)
 
 
 
 三、物理恢复，一定服务和备份分机隔离。备注：不可以把备份文件dump.rdb和生产redis服务器放在同一台机器，必须分开各自存储，以防生产机物理损坏后备份文件也挂了
 
-![image-20231115232721336](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220337405.png)
+![image-20231115232721336](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220337405.png)
 
 #####   3.2.4 手动触发
 
@@ -3416,7 +3416,7 @@ save <seconds> <changes>
 Redis提供了两个命令来生成RDB文件,分别是save和bgsave
 
 
-![image-20231118034212425](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220338389.png)
+![image-20231118034212425](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220338389.png)
 
 Snapshotting（快照）
 
@@ -3442,7 +3442,7 @@ save 60 1000
 
 在还没有达到自动触发条件时，手动的执行`SAVA`命令也会生成备份文件`dump.rdb`
 
-![image-20231118035601077](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220338552.png)
+![image-20231118035601077](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220338552.png)
 
 在主程序中执行Save会阻塞当前redis服务器，直到持久化工作完成执行save命令期间，Redis不能处理其他命令，线上禁止使用
 
@@ -3450,7 +3450,7 @@ save 60 1000
 
 执行BGSAVE命令后Redis会在后台异步进行快照操作，不阻塞快照同时还可以响应客户端请求,该触发方式会fork—个子进程由子进程复制持久化过程。Redis会使用bgsave对当前内存中的所有数据做快照，这个操作是子进程在后台完成的，这就允许主进程同时可以修改数据
 
-![image-20231118042322382](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220338422.png)
+![image-20231118042322382](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220338422.png)
 
 fork是什么：在Linux程序中，fork()会产生一个和父进程完全相同的子进程，但子进程在此后多会exec系统调用，出于效率考虑，尽量避免膨胀
 
@@ -3458,15 +3458,15 @@ fork是什么：在Linux程序中，fork()会产生一个和父进程完全相�
 
 官网说明：
 
-![image-20231118041505636](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220338013.png)
+![image-20231118041505636](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220338013.png)
 
 BGSAVE使用案例：
 
-![image-20231118042401479](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220338776.png)
+![image-20231118042401479](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220338776.png)
 
 LASTSAVE：可以通过lastsave命令获取最后一次成功执行快照的时间
 
-![image-20231118042645182](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220338036.png)
+![image-20231118042645182](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220338036.png)
 
 
 
@@ -3507,21 +3507,21 @@ LASTSAVE：可以通过lastsave命令获取最后一次成功执行快照的时�
 
 正常录入数据：
 
-![image-20231118045919168](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220338967.png)
+![image-20231118045919168](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220338967.png)
 
 kill -9故意模拟意外down机
 
-![image-20231118053821286](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220338095.png)
+![image-20231118053821286](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220338095.png)
 
 redis重启恢复，查看数据是否丢失
 
-![image-20231118054049134](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220338374.png)
+![image-20231118054049134](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220338374.png)
 
 #####  3.2.6 RDB总结补充
 
 如何检查修复dump.rdb文件
 
-![image-20231118054614352](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220338959.png)
+![image-20231118054614352](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220338959.png)
 
 哪些情况会触发RDB快照
 
@@ -3537,7 +3537,7 @@ redis重启恢复，查看数据是否丢失
 - 动态所有停止RDB保存规则的方法: `redis-cli config set save ""`
 - 快照禁用
 
-![image-20231118054858868](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220338239.png)
+![image-20231118054858868](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220338239.png)
 
 RDB优化配置项详解：配置文件SNAPSHOTTING模块
 
@@ -3572,7 +3572,7 @@ CONFIG SET stop-writes-on-bgsave-error no
 
 
 
-![image-20231118055609882](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220339253.png)
+![image-20231118055609882](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220339253.png)
 
 rdbcompression
 
@@ -3593,7 +3593,7 @@ CONFIG SET rdbcompression no
 
 根据您的需求和服务器的性能特点，您可以选择是否启用 RDB 压缩，权衡磁盘空间和 CPU 使用之间的权衡。如果磁盘空间有限，启用压缩可能是一个好的选择。否则，如果您更关心 CPU 使用情况，可以将该参数设置为 `no`，以减少 CPU 开销
 
-![image-20231118055755143](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220339343.png)
+![image-20231118055755143](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220339343.png)
 
 | 默认yes                                                      |
 | ------------------------------------------------------------ |
@@ -3625,7 +3625,7 @@ CONFIG SET rdbchecksum no
 
 根据您的需求和服务器的性能特点，您可以选择是否启用 RDB 校验和，权衡数据的可靠性和 CPU 使用之间的权衡。如果您更关心数据的可靠性，启用校验和可能是一个好的选择。否则，如果您更关心 CPU 使用情况，可以将该参数设置为 `no`，以减少 CPU 开销。
 
-![image-20231118055934341](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220339714.png)
+![image-20231118055934341](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220339714.png)
 
 | 默认yes                                                      |
 | ------------------------------------------------------------ |
@@ -3633,7 +3633,7 @@ CONFIG SET rdbchecksum no
 
 rdb-del-sync-files：
 
-![image-20231118060004908](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220339998.png)
+![image-20231118060004908](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220339998.png)
 
 rdb-del-sync-files：在没有持久性的情况下删除复制中使用的RDB文件启用。默认情况下no，此选项是禁用的
 
@@ -3659,7 +3659,7 @@ CONFIG SET rdb-del-sync-files yes
 
 RDB总结：
 
-![image-20231118060201811](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220339077.png)
+![image-20231118060201811](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220339077.png)
 
 ###  3.3 AOF (Append Only File)
 
@@ -3687,7 +3687,7 @@ appendonly yes
 
 #####  3.3.2 AOF持久化工作流程
 
-![image-20231119072050844](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220339107.png)
+![image-20231119072050844](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220339107.png)
 
 | 1    | Client作为命令的来源，会有多个源头以及源源不断的请求命令     |
 | ---- | ------------------------------------------------------------ |
@@ -3704,7 +3704,7 @@ appendonly yes
 
 
 
-![image-20231119075049092](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220339819.png)
+![image-20231119075049092](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220339819.png)
 
 三种写回策略小总结update：
 
@@ -3720,36 +3720,36 @@ appendonly yes
 
 如何开启aof
 
-![image-20231119082405421](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220339601.png)
+![image-20231119082405421](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220339601.png)
 
 使用默认写回策略，`everysec`
 
-![image-20231119082850376](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220339922.png)
+![image-20231119082850376](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220339922.png)
 
 
 
 aof文件-保存路径
 
 redis6：AOF保存文件的位置和RDB保存文件的位置—样，都是通过`redis.conf`配置文件的`dir`配置
-![image-20231119083059066](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220339492.png)
+![image-20231119083059066](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220339492.png)
 
 redis7之后：appenddirname
 
-![image-20231119083125817](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220339371.png)
+![image-20231119083125817](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220339371.png)
 
 dir + appenddirname
 
-![image-20231119083238315](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220340932.png)
+![image-20231119083238315](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220340932.png)
 
 **aof文件-保存名称**：
 
 redis6有且仅有一个aof文件
 
-![image-20231119083422150](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220340275.png)
+![image-20231119083422150](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220340275.png)
 
 Redis7.0中存在3个aof文件（Multi Part AOF）：base基本文件、incr增量文件、manifest清单文件
 
-![image-20231119083847381](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220340550.png)
+![image-20231119083847381](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220340550.png)
 
 Redis7.0 Multi Part AOF的设计：
 
@@ -3761,15 +3761,15 @@ Redis7.0 Multi Part AOF的设计：
 
 为了管理这些AOF文件，我们引入了一个manifest(清单）文件来跟踪、管理这些AOF。同时，为了便于AOF备份和拷贝，我们将所有的AOF文件和manifest文件放入一个单独的文件目录中，目录名由appenddirname配置(Redis 7.0新增配置项)决定
 
-![image-20231119083556092](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220340606.png)
+![image-20231119083556092](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220340606.png)
 
 Redis7.0config中对应的配置项：
 
-![image-20231119084023267](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220340269.png)
+![image-20231119084023267](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220340269.png)
 
 redis进行写操作时会生成三个文件：`appendonly. aof.1.base.rdb`、`appendonly. aof. 1.incr. aof`、`appendonly. aof.manifest`
 
-![image-20231119160900079](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220340657.png)
+![image-20231119160900079](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220340657.png)
 
 `appendonly.aof.1.base.rdb`、`appendonly.aof.1.incr.aof` 和 `appendonly.aof.manifest` 是与 Redis 的持久化机制相关的文件。以下是对这三个文件的解释：
 
@@ -3798,7 +3798,7 @@ redis进行写操作时会生成三个文件：`appendonly. aof.1.base.rdb`、`a
 
 > 启动：设置Yes。修改默认的appendonly no，改为yes。写操作会生成aof文件到指定的目录，生成的三个文件：`appendonly. aof.1.base.rdb`、`appendonly. aof. 1.incr. aof`、`appendonly. aof.manifest`
 
-![image-20231119154415509](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220341532.png)
+![image-20231119154415509](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220341532.png)
 
 正常重启redis然后重新加载，发现可以正常恢复。下面先清空数据，再验证数据的恢复得益于AOF持久化
 
@@ -3808,23 +3808,23 @@ redis进行写操作时会生成三个文件：`appendonly. aof.1.base.rdb`、`a
 >
 > 备份新生成的aof.bak，然后删除dump/aof再看恢复。删除dump6379. rdb和aof文件，重启后发现恢复数据失败
 
-![image-20231119154559694](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220341350.png)
+![image-20231119154559694](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220341350.png)
 
-> 重启redis然后重新加载试试?  结论：删除dump6379. rdb和aof文件，重启后发现恢复数据失败![image-20231119154634006](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220341418.png)
+> 重启redis然后重新加载试试?  结论：删除dump6379. rdb和aof文件，重启后发现恢复数据失败![image-20231119154634006](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220341418.png)
 
 > 停止服务器，拿出AOF备份修改后再重新启动服务器。发现数据恢复成功
 
-![image-20231119154703889](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220341927.png)
+![image-20231119154703889](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220341927.png)
 
 **异常恢复**：
 
 > 故意乱写正常的AOF文件，模拟网络闪断文件写error。重启Redis之后就会进行AOF文件的载入，发现启动都不行
 
-![image-20231119163131303](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220341860.png)
+![image-20231119163131303](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220341860.png)
 
 > 异常修复命令: redis-check-aof --fix进行修复。redis-check-aof --fix 进行修复
 
-![image-20231119164102451](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220341514.png)
+![image-20231119164102451](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220341514.png)
 
 #####  3.3.6  AOF的优缺点
 
@@ -3836,7 +3836,7 @@ redis进行写操作时会生成三个文件：`appendonly. aof.1.base.rdb`、`a
 - 当AOF变得太大时，Redis能够在后台自动重写AOF。重写是完全安全的，因为当Redis继续附加到旧文件时，会使用创建当前数据集所需的最少操作集生成一个全新的文件，一旦第二个文件准备就绪，Redis 就会切换两者并开始附加到新的那一个
 - AOF 以易于理解和解析的格式依次包含所有操作的日志。您甚至可以轻松导出 AOF文件。例如，即使您不小心使用该FLUSHALL命令刷新了所有内容，只要在此期间没有执行日志重写，您仍然可以通过停止服务器、删除最新命令并重新启动Redis来保存您的数据集
 
-![image-20231119170141858](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220341226.png)
+![image-20231119170141858](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220341226.png)
 
 **AOF劣势**：
 
@@ -3871,7 +3871,7 @@ redis进行写操作时会生成三个文件：`appendonly. aof.1.base.rdb`、`a
 >
 > 注意 ，两个条件要同时满足且的关系才会触发
 
-![image-20231119174215505](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220341822.png)
+![image-20231119174215505](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220341822.png)
 
 
 
@@ -3903,19 +3903,19 @@ redis进行写操作时会生成三个文件：`appendonly. aof.1.base.rdb`、`a
 
 验证重写机制第一步：修改配置
 
-![image-20231119215949044](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220341429.png)
+![image-20231119215949044](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220341429.png)
 
 验证重写机制第二步：完成上述正确配置，重启redis服务器,执行set k1 v1查看aof文件是否正常
 
-![image-20231119220805859](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220341948.png)
+![image-20231119220805859](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220341948.png)
 
 验证重写机制第三步：进行redis写入操作，触发重写机制
 
-![image-20231119221526971](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220341783.png)
+![image-20231119221526971](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220341783.png)
 
 手动触发案例：客户端向服务器发送bgrewriteaof命令
 
-![image-20231119221729621](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220342897.png)
+![image-20231119221729621](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220342897.png)
 
 **重写机制总结**：
 
@@ -3954,7 +3954,7 @@ AOF文件重写触发机制：
 
 #####  3.3.9  AOF总结
 
-![image-20231119225529931](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220342061.png)
+![image-20231119225529931](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220342061.png)
 
 1：AOF文件时一个只进行追加的日志文件
 
@@ -3974,11 +3974,11 @@ AOF文件重写触发机制：
 
 答：AOF和RDB持久性可以同时启用而无问题。如果在启动时启用了AOF，Redis将加载AOF文件，这是具有更好耐久性保证的文件
 
-![image-20231119231224055](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220342398.png)
+![image-20231119231224055](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220342398.png)
 
 数据恢复顺序和加载流程：在同时开启rdb和aof持久化时，重启时只会加载aof文件，不会加载rdb 文件
 
-![image-20231119231601219](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220342886.png)
+![image-20231119231601219](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220342886.png)
 
 #####   3.4.2  持久化方式选择
 
@@ -4002,7 +4002,7 @@ AOF文件重写触发机制：
 - 2.RDB+AOF的混合方式------->结论:RDB镜像做全量持久化，AOF做增量持久化
 - 先使用RDB进行快照存储，然后使用AOF持久化记录所有的写操作，当重写策略满足或手动触发重写的时候，将最新的数据存储为新的ROB记录。这样的话，重启服务的时候会从RDB和AOF两部分恢复数据，既保证了数据完整性，又提高了恢复数据的性能。简单来说：混合持久化方式产生的文件一部分是RDB格式，一部分是AOF格式。AOF包括了RDB头部+AOF混写
 
-![image-20231119232357858](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220342848.png)
+![image-20231119232357858](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220342848.png)
 
 #####  3.4.3  纯缓存模式：同时关闭RDB+AOF
 
@@ -4156,7 +4156,7 @@ OK
 
 官网说明：
 
-![image-20231120015846545](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220347036.png)
+![image-20231120015846545](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220347036.png)
 
 在事务中，可能会遇到两种类型的命令错误：
 
@@ -4169,7 +4169,7 @@ OK
 
 演示：
 
-![image-20231120014525725](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220346537.png)
+![image-20231120014525725](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220346537.png)
 
 #####  4.4.4 Case4 冤头债主
 
@@ -4177,15 +4177,15 @@ OK
 
 > 官网说明：
 
-![image-20231120022243113](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220346129.png)
+![image-20231120022243113](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220346129.png)
 
 > Redis不提供事务回滚的功能，开发者必须在事务执行出错后，自行恢复数据库状态。注意和传统数据库事务区别，不一定要么一起成功要么一起失败
 
-![image-20231120022336883](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220348079.png)
+![image-20231120022336883](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220348079.png)
 
 > 案例演示：
 
-![image-20231120022729171](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220348837.png)
+![image-20231120022729171](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220348837.png)
 
 
 
@@ -4207,19 +4207,19 @@ Redis使用Watch来提供乐观锁定，类似于`CAS(Check-and-Set)`
 >
 > 例如，假设我们需要以原子方式将一个键的值增加 1（假设 Redis 没有 INCR），可以使用 `WATCH` 和事务来实现
 
-![image-20231120023447176](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220348190.png)
+![image-20231120023447176](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220348190.png)
 
 watch监控演示：
 
 1：初始化k1和balance两个key,先监控再开启multi,保证两key变动在同一个事务内。先演示没有被其他进程影响的情况
 
-![image-20231120023757827](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220348860.png)
+![image-20231120023757827](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220348860.png)
 
 
 
 2：演示watch命令作用的键被其他进程篡改的情况：
 
-![image-20231120023908455](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220348821.png)
+![image-20231120023908455](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220348821.png)
 
 - watch命令是一种乐观锁的实现，Redis在修改的时候会检测数据是否被更改，如果更改了，则执行失败
 - 第一个窗口蓝色框第5步执行结果返回为空，也就是相当于是失败
@@ -4274,7 +4274,7 @@ UNWATCH
 
 `UNWATCH` 命令演示：
 
-![image-20231120031506545](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220348879.png)
+![image-20231120031506545](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220348879.png)
 
 #####  4.4.7 事务总结
 
@@ -4305,7 +4305,7 @@ UNWATCH
 
 
 
-![image-20231120034132117](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220348243.png)
+![image-20231120034132117](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220348243.png)
 
 
 
@@ -4316,7 +4316,7 @@ UNWATCH
 
 
 
-![image-20231120035112242](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220348068.png)
+![image-20231120035112242](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220348068.png)
 
 
 
@@ -4331,7 +4331,7 @@ UNWATCH
 
 
 
-![image-20231120035408140](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220348197.png)
+![image-20231120035408140](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220348197.png)
 
 ###  5.3 Pipeline与批量命令对比 
 
@@ -4370,15 +4370,15 @@ Redis可以实现消息中间件MQ的功能，通过发布订阅实现消息的�
 
 Redis客户端可以订阅任意数量的频道，类似我们微信关注多个公众号
 
-![image-20231120043818830](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220348782.png)
+![image-20231120043818830](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220348782.png)
 
 当有新消息通过PUBLISH命令发送给频道`channel1`时
 
-![image-20231120043853998](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220349418.png)
+![image-20231120043853998](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220349418.png)
 
 发布/订阅其实是一个轻量的队列，只不过数据不会被持久化，一般用来处理实时性较高的异步消息
 
-![image-20231120043954169](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220349816.png)
+![image-20231120043954169](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220349816.png)
 
 ###  6.2 发布订阅命令
 
@@ -4422,15 +4422,15 @@ PUBSUB NUMPAT  只统计使用PSUBSCRIBE命令执行的，返回客户端订阅�
 
 开启3个客户端，演示客户端A、B订阅消息，客户端C发布消息
 
-![image-20231121234233099](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220349510.png)
+![image-20231121234233099](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220349510.png)
 
 演示批量订阅和发布
 
-![image-20231121234401638](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220349051.png)
+![image-20231121234401638](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220349051.png)
 
 取消订阅
 
-![image-20231121234456461](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220349915.png)
+![image-20231121234456461](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220349915.png)
 
 ### 6.4 总结
 
@@ -4478,7 +4478,7 @@ redis复制相关配置
 
 - 权限细节：master如果配置了`requirepass`参数，需要密码验证，那么`slave`就要配置`masterauth`来设置校验密码，否则的话`master`会拒绝`slave`的访问请求
 
-![image-20231122143540820](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220349084.png)
+![image-20231122143540820](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220349084.png)
 
 基本操作命令
 
@@ -4495,7 +4495,7 @@ redis复制相关配置
 
 一个Master两个Slave，3台虚机，每台都安装redis，三边网络相互ping通且注意防火墙配置
 
-![image-20231122150811086](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220349408.png)
+![image-20231122150811086](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220349408.png)
 
 拷贝多个redis.conf文件，并修改名称：`redis6379.conf`、`redis6380.conf`、`redis6381.conf`
 
@@ -4536,23 +4536,23 @@ redis6380.conf、redis6381.conf：
 >
 > 配置从机6380、配置从机6381
 
-![image-20231122172643095](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220349361.png)
+![image-20231122172643095](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220349361.png)
 
 > 先master后两台slave依次启动
 
-![image-20231122172843151](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220349933.png)
+![image-20231122172843151](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220349933.png)
 
 > 主从关系查看：使用命令查看主从关系  
 >
 > info replication 命令查看
 
-![image-20231122174104646](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220349941.png)
+![image-20231122174104646](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220349941.png)
 
 > 主从关系查看：
 >
 > 通过redis日志查看主从关系，主机日志和备机日志中都会包含主从关系的相应信息
 
-![image-20231122173746886](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220400302.png)
+![image-20231122173746886](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220400302.png)
 
 
 
@@ -4560,19 +4560,19 @@ redis6380.conf、redis6381.conf：
 
 > 从机停机去掉配置文件中的配置项,3台目前都是master主机状态
 
-![image-20231122194629204](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220349990.png)
+![image-20231122194629204](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220349990.png)
 
 > 使用命令指定主从关系：
 >
 > 在预设的从机上执行命令：slaveof 主库IP 主库端口
 
-![image-20231122194922697](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220349851.png)
+![image-20231122194922697](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220349851.png)
 
 > 问题：用命令指定主从关系的话，2台从机重启后，关系还在吗?
 >
 > 答：重启后主从关系失效
 
-![image-20231122195051957](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220349082.png)
+![image-20231122195051957](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220349082.png)
 
 总结：配置 VS 命令的区别
 
@@ -4585,7 +4585,7 @@ redis6380.conf、redis6381.conf：
 
 注意：链式复制中的所有`slave`都不能有写操作，中间节点只是作为一个复制的中转站
 
-![image-20231122201648532](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220350173.png)
+![image-20231122201648532](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220350173.png)
 
 **链式复制补充**：
 
@@ -4623,7 +4623,7 @@ redis6380.conf、redis6381.conf：
 >
 > 答： 从机不可以执行写命令
 
-![image-20231122181634051](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220350567.png)
+![image-20231122181634051](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220350567.png)
 
 > 2.从机切入点问题? 
 >
@@ -4637,13 +4637,13 @@ redis6380.conf、redis6381.conf：
 
 
 
-![image-20231122181936233](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220350138.png)
+![image-20231122181936233](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220350138.png)
 
 > 4.主机shutdown后，重启后主从关系还在吗? 从机还能否顺利复制?
 >
 > 答：主从关系还在、且从机能顺利复制
 
-![image-20231122182105543](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220350855.png)
+![image-20231122182105543](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220350855.png)
 
 
 
@@ -4683,7 +4683,7 @@ repl-ping-replica-period 10
 master发出PING包的周期，默认是10秒
 ```
 
-![image-20231122205936573](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220350474.png)
+![image-20231122205936573](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220350474.png)
 
 4.进入平稳，增量复制
 
@@ -4703,7 +4703,7 @@ offset是保存在backlog中的。Master只会把已经复制的offset后面的�
 
 复制延时，信号衰减：由于所有的写操作都是先在Master上操作，然后同步更新到Slave上，所以从Master同步到Slave机器有一定的延迟，当系统很繁忙的时候，延迟问题会更加严重，Slave机器数量的增加也会使这个问题更加严重
 
-![image-20231122220655817](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220350505.png)
+![image-20231122220655817](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220350505.png)
 
 master挂了如何办?  默认情况下，不会在slave节点中自动重选一个master 。那每次都要人工干预?
 无人值守安装变成刚需，所以出现了哨兵和集群模式
@@ -4720,7 +4720,7 @@ master挂了如何办?  默认情况下，不会在slave节点中自动重选一
 
 
 
-![image-20231123000636677](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220350924.png)
+![image-20231123000636677](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220350924.png)
 
 哨兵作用：
 
@@ -4758,7 +4758,7 @@ Redis Sentinel架构，前提说明：
 
 - 1主2从：用于数据读取和存放
 
-![image-20231123004859331](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220350255.png)
+![image-20231123004859331](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220350255.png)
 
 
 
@@ -4768,7 +4768,7 @@ Redis Sentinel架构，前提说明：
 
 先看看`/opt`目录下默认的`sentinel.conf`文件的内容
 
-![image-20231123020704925](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220350601.png)
+![image-20231123020704925](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220350601.png)
 
 `sentinel.conf`文件重点参数项说明：
 
@@ -4819,7 +4819,7 @@ sentinel monitor <master-name> <ip> <redis-port> <quorum>
 
 行尾最后的quorum代表什么意思呢？quorum：确认客观下线的最少的哨兵数量
 
-![image-20231123021527384](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220350197.png)
+![image-20231123021527384](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220350197.png)
 
 网络是不可靠的，有时候一个sentinel会因为网络堵塞而误以为一个master redis已经死掉了，在sentinel集群环境下需要多个sentinel互相沟通来确认某个master是否真的死了，quorum这个参数是进行客观下线的一个依据，意思是至少有quorum个sentinel认为这个master有故障，才会对这个master进行下线以及故障转移。因为有的时候，某个sentinel节点可能因为自身网络原因，导致无法连接master，而此时master并没有出现故障，所以，这就需要多个sentinel都一致认为该master有问题，才可以进行下一步操作，这就保证了公平性和高可用
 
@@ -4871,13 +4871,13 @@ sentinel auth-pass mymaster 111111
 
 master主机配置文件说明：
 
-![image-20231124005358557](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220350271.png)
+![image-20231124005358557](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220350271.png)
 
 #####  8.2.4 redis集群架构 
 
 先启动一主二从3个redis实例，测试正常的主从复制。redis服务器架构说明：
 
-![image-20231124005609449](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220350277.png)
+![image-20231124005609449](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220350277.png)
 
 redis服务器配置：
 
@@ -4888,7 +4888,7 @@ redis服务器配置：
 
 
 
-![image-20231124011818687](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220350598.png)
+![image-20231124011818687](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220350598.png)
 
 启动3台不同的虚拟机实例，启动三部真实机器实例并连接
 
@@ -4910,15 +4910,15 @@ redis-sentinel sentinel26381.conf --sentinel
 
 查看哨兵日志：
 
-![image-20231124024609600](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220350880.png)
+![image-20231124024609600](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220350880.png)
 
 哨兵配置重写：查看之前哨兵配置，发现redis会自动地在原来的基础上追加了一些配置
 
-![image-20231124024645671](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220351430.png)
+![image-20231124024645671](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220351430.png)
 
 哨兵监控下的主从复制：启动3个哨兵监控后先测试一下redis的主从复制是否正常
 
-![image-20231124013445714](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220351254.png)
+![image-20231124013445714](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220351254.png)
 
 
 
@@ -4926,7 +4926,7 @@ redis-sentinel sentinel26381.conf --sentinel
 
 自己手动关闭6379服务器，模拟master挂了
 
-![image-20231124013715784](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220351535.png)
+![image-20231124013715784](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220351535.png)
 
 
 
@@ -4934,7 +4934,7 @@ redis-sentinel sentinel26381.conf --sentinel
 
 答：出现故障之后的一段时间内两台从机的数据读取出现问题，但是一段时间后又自动恢复正常。结论：哨兵模式下master出现故障后不会导致数据读取问题。但在主节点切换期间可能会有一些短暂的写请求延迟
 
-![image-20231124025658738](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220351631.png)
+![image-20231124025658738](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220351631.png)
 
 
 
@@ -4944,9 +4944,9 @@ redis-sentinel sentinel26381.conf --sentinel
 
 答：master出现故障后，会在从机中选举一个新的master。如下演示所示，通过命令`info replication`可以查看新的主从关系。通过`vim sentinel26379.log`查看哨兵日志，哨兵日志记录了redis服务器出现故障、master选举、master变更的过程
 
-![image-20231124031830745](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220351159.png)
+![image-20231124031830745](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220351159.png)
 
-![image-20231124032301101](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220351466.png)
+![image-20231124032301101](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220351466.png)
 
 
 
@@ -4954,9 +4954,9 @@ redis-sentinel sentinel26381.conf --sentinel
 
 答：故障恢复后，之前的master重新加入集群，一旦主节点的故障被解决，它可以重新加入Redis集群作为一个从节点，以便继续服务
 
-![image-20231124044303093](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220351004.png)
+![image-20231124044303093](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220351004.png)
 
-![image-20231124044153833](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220351823.png)
+![image-20231124044153833](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220351823.png)
 
 细节补充：
 
@@ -4992,7 +4992,7 @@ sentinel配置文件中的`down-after-milliseconds`设置了判断主观下线�
 
 所谓主观下线（Subjectively Down， 简称 SDOWN）指的是单个Sentinel实例对服务器做出的下线判断，即单个sentinel认为某个服务下线（有可能是接收不到订阅，之间的网络不通等等原因）。主观下线就是说如果服务器在`[sentinel down-after-milliseconds]`给定的毫秒数之内没有回应PING命令或者返回一个错误消息， 那么这个Sentinel会主观的(单方面的)认为这个master不可以用了
 
-![image-20231125110119633](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220351273.png)
+![image-20231125110119633](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220351273.png)
 
 `sentinel down-after-milliseconds <masterName> <timeout>` 配置解读：
 
@@ -5027,7 +5027,7 @@ ODOWN需要一定数量的sentinel，多个哨兵达成一致意见才能认为�
 
 
 
-![image-20231125110449986](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220351963.png)
+![image-20231125110449986](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220351963.png)
 
 ##### 8.3.2 哨兵leader选举 | Raft算法
 
@@ -5039,15 +5039,15 @@ ODOWN需要一定数量的sentinel，多个哨兵达成一致意见才能认为�
 
 `sentinel26379.log` :
 
-![image-20231125110943308](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220351998.png)
+![image-20231125110943308](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220351998.png)
 
 `sentinel26380.log`：
 
-![image-20231125111040207](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220351202.png)
+![image-20231125111040207](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220351202.png)
 
 `sentinel26381.log`：
 
-![image-20231125111109044](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220351405.png)
+![image-20231125111109044](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220351405.png)
 
 哨兵领导者leader如何选出来的? 哨兵领导者leader选举是依据Raft算法进行的
 
@@ -5056,7 +5056,7 @@ Raft算法：
 - 监视该主节点的所有哨兵都有可能被选为领导者，选举使用的算法是Raft算法
 - Raft算法的基本思路**是先到先得**：即在一轮选举中，哨兵A向B发送成为领导者的申请，如果B没有同意过其他哨兵，则会同意A成为领导者
 
-![image-20231125111222804](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220351767.png)
+![image-20231125111222804](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220351767.png)
 
 
 
@@ -5110,7 +5110,7 @@ Raft算法通过定时选举和心跳机制来确保系统中的领导者始终�
 
 
 
-![image-20231125140207949](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220352330.png)
+![image-20231125140207949](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220352330.png)
 
 
 
@@ -5132,7 +5132,7 @@ Sentinel leader会让原来的master降级为slave并恢复正常工作
 
 上述的failover操作均由sentinel自己独自完成，完全无需人工干预
 
-![image-20231125130412173](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220352222.png)
+![image-20231125130412173](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220352222.png)
 
 ###  8.4 哨兵使用建议
 
@@ -5152,7 +5152,7 @@ Sentinel leader会让原来的master降级为slave并恢复正常工作
 
 Redis集群是一个提供在多个Redis节点间共享数据的程序集，Redis集群可以支持多个Master。**由于数据量过大**，单个Master复制集难以承担，因此需要对多个复制集进行集群，形成水平扩展，每个复制集只负责存储整个数据集的一部分，这就是Redis的集群，其作用是提供在多个Redis节点间共享数据的程序集
 
-![image-20231125215721685](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220352919.png)
+![image-20231125215721685](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220352919.png)
 
 
 
@@ -5178,7 +5178,7 @@ redis集群的槽位slot：
 >
 > Redis集群有16384个哈希槽,每个key通过CRC16校验后对16384取模来决定放置哪个槽。集群的每个节点负责一部分hash槽。举个例子，比如当前集群有3个节点，那具体的槽位如下：
 
-![image-20231125222548387](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220352532.png)
+![image-20231125222548387](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220352532.png)
 
 
 
@@ -5188,7 +5188,7 @@ Redis集群的数据分片：
 | --------------------- | ------------------------------------------------------------ |
 | 如何找到给定key的分片 | 为了找到给定key的分片，我们对key进行CRC16(key)算法处理并通过对总分片数量取模。然后，使用确定性哈希函数，这意味着给定的key将多次始终映射到同一个分片，我们可以推断将来读取特定key的位置 |
 
-![image-20231125222857154](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220352036.png)
+![image-20231125222857154](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220352036.png)
 
 
 
@@ -5208,7 +5208,7 @@ slot槽位映射，一般业界有3种解决方案：
 
 2亿条记录就是2亿个k,v，我们单机不行必须要分布式多机，假设有3台机器构成一个集群，用户每次读写操作都是根据公式：hash(key) % N个机器台数，计算出哈希值，用来决定数据映射到哪一个节点上
 
-![image-20231126003330110](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220352183.png)
+![image-20231126003330110](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220352183.png)
 
 | 优缺点                                                       |
 | ------------------------------------------------------------ |
@@ -5229,7 +5229,7 @@ slot槽位映射，一般业界有3种解决方案：
 
 它也是按照使用取模的方法，前面笔记介绍的节点取模法是对节点（服务器）的数量进行取模。而一致性Hash算法是对2^32取模，简单来说，一致性Hash算法将整个哈希值空间组织成一个虚拟的圆环，如假设某哈希函数H的值空间为0-2^32-1（即哈希值是一个32位无符号整形），整个哈希环如下图：整个空间按顺时针方向组织，圆环的正上方的点代表0，0点右侧的第一个点代表1，以此类推，2、3、4、……直到2^32-1，也就是说0点左侧的第一个点代表2^32-1， 0和2^32-1在零点中方向重合，我们把这个由2^32个点组成的圆环称为Hash环
 
-![image-20231126003722931](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220352922.png)
+![image-20231126003722931](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220352922.png)
 
 
 
@@ -5239,7 +5239,7 @@ slot槽位映射，一般业界有3种解决方案：
 
 将各个服务器使用Hash进行一个哈希，具体可以选择服务器的IP或主机名作为关键字进行哈希，这样每台机器就能确定其在哈希环上的位置。假如4个节点NodeA、B、C、D，经过IP地址的哈希函数计算(hash(ip))，使用IP地址哈希后在环空间的位置如下： 
 
-![image-20231126003841760](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220352917.png)
+![image-20231126003841760](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220352917.png)
 
 
 
@@ -5249,7 +5249,7 @@ slot槽位映射，一般业界有3种解决方案：
 
 如我们有Object A、Object B、Object C、Object D四个数据对象，经过哈希计算后，在环空间上的位置如下：根据一致性Hash算法，数据A会被定为到Node A上，B被定为到Node B上，C被定为到Node C上，D被定为到Node D上
 
-![image-20231126003942499](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220352050.png)
+![image-20231126003942499](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220352050.png)
 
 
 
@@ -5257,11 +5257,11 @@ slot槽位映射，一般业界有3种解决方案：
 
 —致性哈希算法的容错性：假设Node C宕机，可以看到此时对象A、B、D不会受到影响。一般的，在一致性Hash算法中，如果一台服务器不可用，则受影响的数据仅仅是此服务器到其环空间中前一台服务器（即沿着逆时针方向行走遇到的第一台服务器）之间数据，其它不会受到影响。简单说，就是C挂了，受到影响的只是B、C之间的数据且这些数据会转移到D进行存储
 
-![image-20231126004143236](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220352544.png)
+![image-20231126004143236](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220352544.png)
 
 —致性哈希算法的扩展性：数据量增加了，需要增加一台节点NodeX，X的位置在A和B之间，那收到影响的也就是A到X之间的数据，重新把A到X的数据录入到X上即可，不会导致hash取余全部数据重新洗牌
 
-![image-20231126005626665](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220352291.png)
+![image-20231126005626665](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220352291.png)
 
 
 
@@ -5269,7 +5269,7 @@ slot槽位映射，一般业界有3种解决方案：
 
 Hash环的数据倾斜问题：一致性Hash算法在服务**节点太少时**，容易因为节点分布不均匀而造成**数据倾斜**（被缓存的对象大部分集中缓存在某一台服务器上）问题，例如系统中只有两台服务器且两个服务器节点分布不均匀：
 
-![image-20231126005808279](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220352885.png)
+![image-20231126005808279](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220352885.png)
 
 **一致性哈希总结**
 
@@ -5288,7 +5288,7 @@ Hash环的数据倾斜问题：一致性Hash算法在服务**节点太少时**�
 
 **哈希槽分区作用**：解决均匀分配的问题，在数据和节点之间又加入了一层，把这层称为哈希槽（slot），用于管理数据和节点之间的关系，现在就相当于节点上放的是槽，槽里放的是数据。槽解决的是粒度问题，相当于把粒度变大了，这样便于数据移动。哈希解决的是映射问题，使用key的哈希值来计算所在的槽，便于数据分配
 
-![image-20231126092007311](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220352630.png)
+![image-20231126092007311](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220352630.png)
 
 
 
@@ -5298,7 +5298,7 @@ Hash环的数据倾斜问题：一致性Hash算法在服务**节点太少时**�
 
 **哈希槽计算**：Redis 集群中内置了 16384 个哈希槽，redis 会根据节点数量大致均等的将哈希槽映射到不同的节点。当需要在 Redis 集群中放置一个 key-value时，redis先对key使用crc16算法算出一个结果然后用结果对16384求余数`[ CRC16(key) % 16384]`，这样每个 key 都会对应一个编号在 0-16383 之间的哈希槽，也就是映射到某个节点上。如下代码，key之A 、B在Node2， key之C落在Node3上
 
-![image-20231126092407832](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220352710.png)
+![image-20231126092407832](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220352710.png)
 
 
 
@@ -5310,11 +5310,11 @@ Hash环的数据倾斜问题：一致性Hash算法在服务**节点太少时**�
 
 
 
-![image-20231126093759890](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220352716.png)
+![image-20231126093759890](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220352716.png)
 
 **最大槽数是16384原因**：正常的心跳数据包带有节点的完整配置，可以用幂等方式用旧的节点替换旧节点，以便更新旧的配置。这意味着它们包含原始节点的插槽配置，该节点使用2k的空间和16k的插槽，但是会使用8k的空间（使用65k的插槽）。同时，由于其他设计折衷，Redis集群不太可能扩展到1000个以上的主节点。因此16k处于正确的范围内，以确保每个主机具有足够的插槽，最多可容纳1000个矩阵，但数量足够少，可以轻松地将插槽配置作为原始位图传播。请注意，在小型群集中，位图将难以压缩，因为当N较小时，位图将设置的slot / N位占设置位的很大百分比
 
-![image-20231126093830569](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220353855.png)
+![image-20231126093830569](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220353855.png)
 
 下面用计算来进一步说明：
 
@@ -5338,17 +5338,17 @@ Hash环的数据倾斜问题：一致性Hash算法在服务**节点太少时**�
 
 计算结论：
 
-![image-20231126095908395](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220353451.png)
+![image-20231126095908395](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220353451.png)
 
 **补充说明**：Redis集群不保证强—致性，这意味着在特定的条件下，Redis集群可能会丢掉一些被系统收到的写入请求命令
 
-![image-20231126100025551](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220353974.png)
+![image-20231126100025551](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220353974.png)
 
 ###  9.4 集群环境案例步骤
 
 #####  9.4.1   3主3从redis集群配置
 
-![image-20231201011035255](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220353070.png)
+![image-20231201011035255](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220353070.png)
 
 1.找3台真实虚拟机，各自新建`/myredis/cluster`目录
 
@@ -5496,82 +5496,82 @@ redis-server /myredis/cluster/redisCluster6386.conf
 
 构建主从关系命令(注意，注意，注意自己的真实IP地址)：
 
-![image-20231201012027386](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220353432.png)
+![image-20231201012027386](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220353432.png)
 
 ```shell
 # --cluster-replicas 1 表示为每个master创建一个slave节点 
 redis-cli -a 111111 --cluster create --cluster-replicas 1 192.168.111.175:6381 192.168.111.175:6382 192.168.111.172:6383 192.168.111.172:6384 192.168.111.174:6385 192.168.111.174:6386
 ```
 
-![image-20231126224011756](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220353794.png)
+![image-20231126224011756](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220353794.png)
 
 5.链接进入6381作为切入点，查看并检验集群状态：链接进入6381作为切入点，查看节点状态
 
-![image-20231126224408143](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220353038.png)
+![image-20231126224408143](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220353038.png)
 
 `info replication`：获取有关Redis主从复制（Replication）的信息
 
-![image-20231126224530111](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220353069.png)
+![image-20231126224530111](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220353069.png)
 
 `cluster info`：获取有关Redis集群的信息
 
-![image-20231126224554976](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220353962.png)
+![image-20231126224554976](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220353962.png)
 
 `cluster nodes`：获取有关Redis集群中所有节点的详细信息
 
-![image-20231126224624508](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220353550.png)
+![image-20231126224624508](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220353550.png)
 
 #####  9.4.2 3主3从redis集群读写
 
 对6381新增两个key，看看效果如何
 
-![image-20231201215931954](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220353196.png)
+![image-20231201215931954](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220353196.png)
 
 为什么报错：一定注意槽位的范围区间，需要路由到具体槽位
 
-![image-20231201220045569](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220353104.png)
+![image-20231201220045569](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220353104.png)
 
 如何解决？为防止路由失效需要加入参数-c，优化路由。加了`-c`参数进行连接是，整个集群作为一个整体向外提供服务，不在当前redis服务器的槽位中的数据会被正确地写到其他节点而不出错
 
-![image-20231201220221767](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220353614.png)
+![image-20231201220221767](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220353614.png)
 
 查看集群信息：
 
-![image-20231201220321733](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220353475.png)
+![image-20231201220321733](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220353475.png)
 
 查看某个key该属于对应的槽位值`CLUSTER KEYSLOT`键名称：
 
-![image-20231201221017335](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220353597.png)
+![image-20231201221017335](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220353597.png)
 
 #####  9.4.3  主从容错切换迁移案例
 
 容错切换迁移：6381主机停了，对应的真实从机上位。主6381和从机切换，先停止主机6381。6381作为1号主机分配的从机以实际情况为准，具体是几号机器就是几号
 
-![image-20231201014559799](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220353506.png)
+![image-20231201014559799](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220353506.png)
 
 再次查看集群信息,本次6381主6384从
 
-![image-20231201221411069](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220400997.png)
+![image-20231201221411069](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220400997.png)
 
 停止主机6381,再次查看集群信息：6381宕机了，6384上位成为了新的master
 
-![image-20231201224018701](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220354558.png)
+![image-20231201224018701](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220354558.png)
 
 随后，6381原来的主机回来了，是否会上位?
 
-![image-20231201224353679](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220354576.png)
+![image-20231201224353679](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220354576.png)
 
-![image-20231201224714726](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220354830.png)
+![image-20231201224714726](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220354830.png)
 
 集群不保证数据一致性100%OK，可能会有数据丢失情况。Redis集群不保证强一致性，这意味着在特定的条件下，Redis集群可能会丢掉一些被系统收到的写入请求命令
 
 手动故障转移or节点从属调整该如何处理：上面一换后6381、6384主从对调了，和原始设计图不一样了，该如何重新登陆6381机器？常用命令：`CLUSTER FAILOVER`
 
-![image-20231201225811217](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220354345.png)
+![image-20231201225811217](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220354345.png)
 
 #####  9.4.4 主从扩容案例
 
-![image-20231201021232864](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220354977.png)
+![image-20231201021232864](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220354977.png)
 
 新建6387、6388两个服务实例配置文件+新建后启动
 
@@ -5624,7 +5624,7 @@ redis-server /myredis/cluster/redisCluster6387.conf
 redis-server /myredis/cluster/redisCluster6388.conf
 ```
 
-![image-20231201230335187](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220354230.png)
+![image-20231201230335187](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220354230.png)
 
 将新增的6387节点(空槽号)作为master节点加入原集群：
 
@@ -5641,7 +5641,7 @@ redis-cli -a 密码 --cluster add-node 自己实际IP地址:6387 自己实际IP�
 
 
 
-![image-20231201231402204](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220354060.png)
+![image-20231201231402204](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220354060.png)
 
 检查集群情况第1次：
 
@@ -5651,7 +5651,7 @@ redis-cli -a 密码 --cluster check 真实ip地址:6381
 redis-cli -a 111111 --cluster check 192.168.111.175:6381
 ```
 
-![image-20231201232004734](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220354354.png)
+![image-20231201232004734](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220354354.png)
 
 重新分派槽号(reshard )：
 
@@ -5661,7 +5661,7 @@ redis-cli -a 111111 --cluster check 192.168.111.175:6381
 redis-cli -a 密码 --cluster reshard 192.168.111.175:6381
 ```
 
-![image-20231201232236001](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220354388.png)
+![image-20231201232236001](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220354388.png)
 
 检查集群情况第2次：
 
@@ -5671,7 +5671,7 @@ redis-cli --cluster check 真实ip地址:6381
 redis-cli -a 111111 --cluster check 192.168.111.175:6381
 ```
 
-![image-20231201232418169](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220354863.png)
+![image-20231201232418169](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220354863.png)
 
 槽号分派说明：
 
@@ -5680,7 +5680,7 @@ redis-cli -a 111111 --cluster check 192.168.111.175:6381
 重新分配成本太高，所以前3家各自匀出来一部分，从6381/6383/6385三个旧节点分别匀出1364个坑位给新节点6387
 ```
 
-![image-20231201232535202](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220354930.png)
+![image-20231201232535202](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220354930.png)
 
 为主节点6387分配从节点6388：
 
@@ -5690,7 +5690,7 @@ redis-cli -a 111111 --cluster check 192.168.111.175:6381
 redis-cli -a 111111 --cluster add-node 192.168.111.174:6388 192.168.111.174:6387 --cluster-slave --cluster-master-id 4feb6a7ee0ed2b39ff86474cf4189ab2a554a40f-------这个是6387的编号，按照自己实际情况
 ```
 
-![image-20231201232657198](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220354662.png)
+![image-20231201232657198](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220354662.png)
 
 检查集群情况第3次：
 
@@ -5700,17 +5700,17 @@ redis-cli --cluster check 真实ip地址:6381
 redis-cli -a 111111 --cluster check 192.168.111.175:6381
 ```
 
-![image-20231201232753031](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220354523.png)
+![image-20231201232753031](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220354523.png)
 
 
 
 #####  9.4.5  主从缩容案例
 
-![image-20231201021550937](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220354673.png)
+![image-20231201021550937](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220354673.png)
 
 目的：6387和6388下线
 
-![image-20231201232858983](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220355555.png)
+![image-20231201232858983](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220355555.png)
 
 检查集群情况第一次，先获得从节点6388的节点ID：
 
@@ -5718,7 +5718,7 @@ redis-cli -a 111111 --cluster check 192.168.111.175:6381
 redis-cli -a 密码 --cluster check 192.168.111.174:6388
 ```
 
-![image-20231201232958150](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220355240.png)
+![image-20231201232958150](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220355240.png)
 
 从集群中将4号从节点6388删除：
 
@@ -5728,7 +5728,7 @@ redis-cli -a 密码 --cluster check 192.168.111.174:6388
 redis-cli -a 111111 --cluster del-node 192.168.111.174:6388 218e7b8b4f81be54ff173e4776b4f4faaf7c13da
 ```
 
-![image-20231201233225604](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220355484.png)
+![image-20231201233225604](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220355484.png)
 
 检查一下发现，6388被删除了，只剩下7台机器了
 
@@ -5736,7 +5736,7 @@ redis-cli -a 111111 --cluster del-node 192.168.111.174:6388 218e7b8b4f81be54ff17
 redis-cli -a 111111 --cluster check 192.168.111.174:6385
 ```
 
-![image-20231201233317261](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220355853.png)
+![image-20231201233317261](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220355853.png)
 
 将6387的槽号清空，重新分配，本例将清出来的槽号都给6381：
 
@@ -5744,9 +5744,9 @@ redis-cli -a 111111 --cluster check 192.168.111.174:6385
 redis-cli -a 111111 --cluster reshard 192.168.111.175:6381
 ```
 
-![image-20231201233503705](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220355421.png)
+![image-20231201233503705](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220355421.png)
 
-![image-20231201233536615](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220355171.png)
+![image-20231201233536615](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220355171.png)
 
 将6387删除：
 
@@ -5756,7 +5756,7 @@ redis-cli -a 111111 --cluster reshard 192.168.111.175:6381
 redis-cli -a 111111 --cluster del-node 192.168.111.174:6387 4feb6a7ee0ed2b39ff86474cf4189ab2a554a40f
 ```
 
-![image-20231201233712565](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220355816.png)
+![image-20231201233712565](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220355816.png)
 
 检查集群情况第三次,6387/6388被彻底祛除：
 
@@ -5764,15 +5764,15 @@ redis-cli -a 111111 --cluster del-node 192.168.111.174:6387 4feb6a7ee0ed2b39ff86
 redis-cli -a 111111 --cluster check 192.168.111.175:6381
 ```
 
-![image-20231201233906724](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220355301.png)
+![image-20231201233906724](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220355301.png)
 
-![image-20231201233933755](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220355455.png)
+![image-20231201233933755](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220355455.png)
 
 ###  9.5 集群常用操作命令和CRC16算法分析
 
 1.不在同一个slot槽位下的多键操作支持不好，通识占位符登场
 
-![image-20231202000002000](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220355211.png)
+![image-20231202000002000](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220355211.png)
 
 ```
 不在同一个slot槽位下的键值无法使用mset、mget等多键操作
@@ -5780,11 +5780,11 @@ redis-cli -a 111111 --cluster check 192.168.111.175:6381
 对照下图类似k1k2k3都映射为x，自然槽位一样
 ```
 
-![image-20231202000047512](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220355447.png)
+![image-20231202000047512](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220355447.png)
 
 2.Redis集群有16384个哈希槽，每个key通过CRC16校验后对16384取模来决定放置哪个槽。集群的每个节点负责一部分hash槽。CRC16源码浅谈：
 
-![image-20231202000317356](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220355436.png)
+![image-20231202000317356](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220355436.png)
 
 常用命令：
 
@@ -5802,7 +5802,7 @@ CLUSTER COUNTKEYSINSLOT 槽位数字编号
 CLUSTER KEYSLOT 键名称
 ```
 
-![image-20231202012528698](https://cdn.jsdelivr.net/gh/Li-ShiLin/Redis/images/Redis/202401220355233.png)
+![image-20231202012528698](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/Redis/202401220355233.png)
 
 | cluster-require-full-coverage解读                            |
 | ------------------------------------------------------------ |

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue Data Binding Example</title>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2"></script> 引入Vue.js -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+
+<div id="app">
+    <!-- 插值表达式 -->
+    <p>{{ message }}</p>
+    
+    <!-- v-bind 指令 -->
+    <a :href="url">点击这里访问Google</a>
+    
+    <!-- v-model 指令 -->
+    <input v-model="message">
+    
+    <!-- v-on 指令 -->
+    <button @click="counter += 1">点击我</button>
+    <p>点击次数: {{ counter }}</p>
+    
+    <!-- v-for 指令 -->
+    <ul>
+        <li v-for="item in items">{{ item.text }}</li>
+    </ul>
+    
+    <!-- v-if、v-else 指令 -->
+    <p v-if="seen">现在你看到我了</p>
+    <p v-else>现在你看不到我</p>
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: '你好，Vue!',
+            url: 'https://www.google.com',
+            counter: 0,
+            items: [
+                { text: '学习JavaScript' },
+                { text: '学习Vue' },
+                { text: '构建令人惊叹的项目' }
+            ],
+            seen: true
+        }
+    });
+</script>
+
+</body>
+</html>

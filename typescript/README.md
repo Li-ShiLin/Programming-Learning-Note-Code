@@ -41,6 +41,9 @@
   - [6.5 Snake类](#65-snake%E7%B1%BB)
   - [6.6 GameControl类](#66-gamecontrol%E7%B1%BB)
   - [6.7 游戏初始化](#67-%E6%B8%B8%E6%88%8F%E5%88%9D%E5%A7%8B%E5%8C%96)
+- [7.包管理工具](#7%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7)
+  - [7.1 包管理工具简介](#71-%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E7%AE%80%E4%BB%8B)
+  - [7.2 npm](#72-npm)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -2945,6 +2948,198 @@ const gameControl = new GameControl();
 ```
 
 
+
+## 7.包管理工具
+
+### 7.1 包管理工具简介
+
+**包**：包(package)代表了一组特定功能的源码集合
+
+**包管理工具**：管理包(package)的应用软件，可以对包(package)进行下载安装，更新， 删除，上传 等操作。借助包管理工具，可以快速开发项目，提升开发效率。包管理工具是一个通用的概念，很多编程语言都有包管理工具
+
+**常用的包管理工具**：npm、cnpm、yarn
+
+### 7.2 npm
+
+**npm简介**：npm全称`Node Package Manager`，中文意思是"Node 的包管理工具"。npm是node.js官方内置的包管理工具
+
+**npm的安装**：nodejs 在安装时会自动安装npm，所以如果已经安装了node.js，可以直接使用 npm。可以通过 `npm -v`查看版本号测试，如果显示版本号说明安装成功，反之安装失败
+
+**nodejs安装**：所有nodejs历史版本镜像下载地址 `https://registry.npmmirror.com/binary.html?path=node`。下载到后缀为`msi`的文件后一直点击下一步即可安装成功
+
+**npm 初始化包**：
+
+```
+1.创建一个空目录，然后以此目录作为工作目录启动命令行工具，执行npm init
+2.npm init 命令的作用是将文件夹初始化为一个包】，交互式创建package.json文件
+3.package.json是包的配置文件，每个包都必须要有package.json
+4.初始化的过程中还有一些注意事项
+     1.package name(包名)不能使用中文、大写，默认值是文件夹的名称，所以文件夹名称也不能使用中文和大写
+     2.version(版本号 )要求 x.x.x的形式定义，x必须是数字，默认值是 1.0.0
+     3.package.json 可以手动创建与修改
+     4.使用 npm init -y或者npm init --yes 极速创建package.json
+```
+
+**npm搜索包**：搜索包的方式有两种
+
+```
+1.命令行： [npm s/search 关键字]
+2.网站搜索： 网址是 https://www.npmjs.com/
+```
+
+**`npm install`命令**：
+
+在项目协作中有一个常用的命令就是`npm i`，通过该命令可以依据`package.json`和`package-lock.json`的依赖声明安装项目依赖
+
+```sh
+npm i
+npm install
+# node_modules 文件夹大多数情况都不会存入版本库
+```
+
+`npm install`命令的作用：
+
+- 安装依赖包：`npm install` 命令会读取项目根目录下的 `package.json` 文件，安装其中列出的所有依赖包
+- 创建 node_modules目录：安装的依赖包会被放置在项目的 node_modules目录中
+- 生成或更新 package-lock.json：此文件记录了当前安装的具体版本的依赖包，有助于确保在不同环境中安装相同的包版本
+
+**下载安装包**：
+
+```
+1.通过npm install命令 和 npm i命令 安装包
+2.语法:
+        npm install <包名>
+        npm i <包名>
+2.示例:
+        npm install uniq
+        npm i uniq
+3.运行之后文件夹下会增加两个资源
+        node_modules 文件夹存放下载的包
+        package-lock.json包的锁文件，用来锁定包的版本
+4.说明:
+        安装uniq之后,uniq就是当前这个包的一个依赖包，有时会简称为依赖
+        比如创建一个包名字为A，A中安装了包名字是B，就说B是A的一个依赖包，也会说A依赖B
+
+5.依赖包的导入和使用(在index.js中编写如下代码，通过node .\index.js命令运行):      
+            //1.导入 uniq 包
+            const uniq = require('uniq');
+            //2.使用函数
+            let arr =[1,2,3,4,5,2,1];
+            const result = uniq(arr);
+            console.log(result);
+```
+
+**require导入npm 包的基本流程**：
+
+```
+1.在当前文件夹下node_modules中寻找同名的文件夹
+2.在上级目录中下的node_modules中寻找同名的文件夹，直至找到磁盘根目录
+```
+
+**开发依赖与生产依赖**：
+
+1.生产环境与开发环境
+
+- 开发环境是程序员专门用来写代码的环境，一般是指程序员的电脑，开发环境的项目一般只能程序员自己访问
+- 生产环境是项目代码正式运行的环境，一般是指正式的服务器电脑，生产环境的项目一般每个客户都可以访问
+
+2.生产依赖与开发依赖：可以在安装时设置选项来区分依赖的类型，目前分为两类:
+
+| 类型     | 命令                               | 说明                                                         |
+| -------- | ---------------------------------- | ------------------------------------------------------------ |
+| 生产依赖 | npm i -S uniq或npm i -save uniq    | S等效于--save，-S 是默认选项。包信息保存在package.json中的dependencies 属性 |
+| 开发依赖 | npm i -D less或npm i-save-dev less | D等效于 -save-dev。包信息保存在 package.json中 devDependencies 属性 |
+
+ 3.举个例子方便理解
+
+> 比如说做蛋炒饭需要 大米 ， 油 ，葱，鸡蛋 ， 锅 ， 煤气，铲子等
+>
+> 其中 锅 ， 煤气 ， 铲子 属于开发依赖，只在制作阶段使用
+>
+> 而 大米，油，葱，鸡蛋 属于生产依赖，在制作与最终食用都会用到
+>
+> 所以 开发依赖 是只在开发阶段使用的依赖包，而 生产依赖 是开发阶段和最终上线运行阶段都用到的依赖包
+
+**npm 全局安装**：
+
+可以执行安装选项-g进行全局安装
+
+```shell
+# 全局安装完成之后就可以在命令行的任何位置运行nodemon命令
+npm i -g nodemon
+# npm i -g nodemon命令的作用是自动重启node应用程序
+```
+
+> 说明：
+>
+> 全局安装的命令不受工作目录位置影响。可以通过 npm root -g 可以查看全局安装包的位置。不是所有的包都适合全局安装，只有全局类的工具才适合，可以通过査看包的官方文档来确定安装方式
+
+补充：`npm i -g nodemon` 是一个用于全局安装 `nodemon` 的命令。`nodemon` 是一个用于开发 Node.js 应用程序的实用工具，它会在检测到文件变更时自动重启应用程序，从而提高开发效率。全局安装 `nodemon` 后，可以在命令行中使用 `nodemon` 命令来启动 Node.js 应用程序。例如：
+
+```bash
+nodemon app.js
+```
+
+这会启动 `app.js` 文件，并在检测到文件更改时自动重启应用程序。这样就不需要手动停止和重新启动服务器，使用示例：
+
+```bash
+# 安装 nodemon
+npm i -g nodemon
+# 使用nodemon启动应用
+nodemon app.js
+```
+
+`nodemon`额外配置：还可以创建一个 `nodemon.json` 配置文件来自定义 `nodemon` 的行为。例如：
+
+```json
+// 配置说明：nodemon只监视 src目录中的 .js 和 .json文件，并忽略 node_modules目录
+{
+  "watch": ["src"],
+  "ext": "js,json",
+  "ignore": ["node_modules"]
+}
+```
+
+**npm安装指定版本的包**：项目中可能会遇到版本不匹配的情况，有时就需要安装指定版本的包，可以使用下面的命令的
+
+```sh
+## 语法
+npm i<包名@版本号>
+## 示例
+npm i jquery@1.11.2
+```
+
+**npm删除依赖**：项目中可能需要删除某些不需要的包，可以使用下面的命令
+
+```sh
+## 局部删除
+npm remove uniq
+npm r uniq
+## 全局删除
+npm remove -g nodemon
+```
+
+**npm 配置命令别名**：通过配置命令别名可以更简单的执行命令。配置 `package.json` 中的 `scripts` 属性
+
+```json
+{
+        "scripts": {
+        "server": "node server.js",
+        "start": "node index.js",
+        }
+}
+```
+
+配置完成之后，可以使用别名执行命令
+
+```sh
+npm run server
+npm run start
+# 不过 start 别名比较特别，使用时可以省略 run
+npm start
+```
+
+> 补充说明： npm start 是项目中常用的一个命令，一般用来启动项目 npm run 有自动向上级目录查找的特性，跟 require 函数也一样。对于陌生的项目可以通过查看 scripts 属性来参考项目的一些操作
 
 
 

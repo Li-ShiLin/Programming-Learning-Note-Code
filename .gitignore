@@ -11,3 +11,32 @@
 /spring6/spring-first/target/
 /spring6/spring-jdbc-tx/target/
 /.idea/inspectionProfiles/Project_Default.xml
+
+# 添加通用的 target 目录忽略规则
+**/target/
+**/target
+**/*/target/
+**/*/target
+
+# 忽略所有编译后的文件
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# 忽略 IDE 相关文件
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+.settings/
+.classpath
+.project
+
+# 忽略日志文件
+*.log
+logs/

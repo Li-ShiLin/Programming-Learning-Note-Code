@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	  http://www.springframework.org/schema/beans/spring-beans.xsd
+	  http://www.springframework.org/schema/context
+	  http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <bean id="userService" class="com.itheima.service.impl.UserServiceImpl">
+        <property name="userDao" ref="userDao"></property>
+    </bean>
+
+    <bean id="userDao" class="com.itheima.dao.impl.UserDaoImpl"></bean>
+
+</beans>
+
+        <!--<?xml version="1.0" encoding="UTF-8"?>-->
+        <!--<beans>-->
+
+        <!--    <bean id="userDao" class="com.itheima.dao.impl.UserDaoImpl">-->
+        <!--        <property name="username" value="zhangsan"></property>-->
+        <!--        <property name="password" value="123456"></property>-->
+        <!--    </bean>-->
+
+        <!--    <bean id="userService" class="com.itheima.service.impl.UserServiceImpl">-->
+        <!--        <property name="userDao" ref="userDao"></property>-->
+        <!--    </bean>-->
+
+        <!--</beans>-->
+
+
+
+
+

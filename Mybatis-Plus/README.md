@@ -61,6 +61,12 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+---
+
+笔记整理自尚硅谷B站MyBatis-Plus课程[>>MyBatis-Plus课程](https://www.bilibili.com/video/BV12R4y157Be)
+
+---
+
 ##   主要内容 & 代码目录
 
 ![image-20231005020517859](https://cdn.jsdelivr.net/gh/Li-ShiLin/images/gulimall/202310070119928.png)

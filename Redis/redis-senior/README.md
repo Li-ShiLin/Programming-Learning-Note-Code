@@ -185,6 +185,12 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+---
+
+笔记整理自尚硅谷B站Redis课程[>>Redis课程](https://www.bilibili.com/video/BV13R4y1v7sP)
+
+---
+
 ##  1.springboot整合redis
 
 ###  1.1 集成Jedis

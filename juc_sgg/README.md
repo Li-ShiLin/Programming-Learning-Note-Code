@@ -148,6 +148,12 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+---
+
+笔记整理自尚硅谷B站JUC课程[>>JUC课程](https://www.bilibili.com/video/BV1ar4y1x727)
+
+---
+
 `JUC`并发编程与源码分析
 
 ##  1. 线程基础知识

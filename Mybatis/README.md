@@ -95,6 +95,12 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+---
+
+笔记整理自尚硅谷B站Mybatis课程[>>Mybatis课程](https://www.bilibili.com/video/BV1VP4y1c7j7)
+
+---
+
 代码模块和笔记章节的对应关系：
 
 - 1节对应`mybatis_demo1`

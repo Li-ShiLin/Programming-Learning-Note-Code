@@ -160,6 +160,12 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+---
+
+笔记整理自尚硅谷B站Linux课程[>>尚硅谷B站Linux课程](https://www.bilibili.com/video/BV1WY4y1H7d3)
+
+---
+
 ##  1. Linux 文件与目录结构
 
 ###  1.1 Linux文件

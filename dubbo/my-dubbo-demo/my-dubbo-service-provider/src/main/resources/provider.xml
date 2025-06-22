@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd        http://dubbo.apache.org/schema/dubbo        http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+
+    <!--定义服务的名称-->
+    <!--服务名称-->
+    <dubbo:application name="site-service-provider"/>
+    <!--指明注册中心的地址-->
+    <!--注册中⼼的信息：服务要注册到这个注册中⼼上-->
+    <dubbo:registry address="zookeeper://47.113.110.210:2181" />
+    <!--指明使用的协议-->
+    <!--配置当前这个服务在dubbo容器中的端⼝号，每个dubbo容器内部的服务的端⼝号必须是不⼀样的-->
+    <dubbo:protocol name="dubbo" port="20881" />
+    <!--指明要暴露的服务-->
+    <!--暴露出SiteService服务，指明该服务具体的实现bean是siteService-->
+    <dubbo:service interface="com.qf.api.SiteService" ref="siteService" />
+    <!--服务具体的实现bean-->
+    <!--将服务提供者的bean注⼊到ioc容器中-->
+    <bean id="siteService" class="com.qf.service.impl.SiteServiceImpl" />
+</beans>

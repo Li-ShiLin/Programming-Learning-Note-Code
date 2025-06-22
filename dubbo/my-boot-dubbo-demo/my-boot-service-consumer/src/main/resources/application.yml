@@ -1,0 +1,8 @@
+server:
+  port: 8001
+dubbo:
+  application:
+    name: site-service-boot-consumer
+  registry:
+    address: zookeeper://47.113.110.210:2181
+

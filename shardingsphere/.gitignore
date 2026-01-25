@@ -1,0 +1,90 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### IntelliJ IDEA ###
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
+*.iws
+*.iml
+*.ipr
+
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
+.DS_Store
+
+### Windows ###
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+### Spring Boot ###
+HELP.md
+*.log
+*.log.*
+logs/
+*.pid
+*.swp
+*.swo
+*~
+
+### Maven ###
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.properties
+
+### Compiled class files ###
+*.class
+
+### Package Files ###
+*.jar
+!SS-06-Sharding-Proxy-Table-Sharding/apache-shardingsphere-incubating-4.0.1-sharding-proxy-bin/lib/*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+### ShardingSphere Proxy ###
+**/apache-shardingsphere-*/bin/logs/
+**/apache-shardingsphere-*/bin/*.log
+**/apache-shardingsphere-*/bin/*.lck
+
+### Application Properties (if contains sensitive data) ###
+# Uncomment if needed
+# application-local.properties
+# application-dev.properties
+# application-prod.properties
+
+### Temporary files ###
+*.tmp
+*.temp
+*.bak
+*.backup
+*.cache

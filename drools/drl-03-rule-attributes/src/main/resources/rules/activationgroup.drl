@@ -1,0 +1,17 @@
+package testactivationgroup
+/*
+ 此规则文件用于测试 activation-group 属性：同组只能有一个规则被触发
+*/
+rule "rule_activationgroup_1"
+    activation-group "mygroup"
+    when
+    then
+        System.out.println("规则rule_activationgroup_1触发");
+end
+
+rule "rule_activationgroup_2"
+    activation-group "mygroup"
+    when
+    then
+        System.out.println("规则rule_activationgroup_2触发");
+end

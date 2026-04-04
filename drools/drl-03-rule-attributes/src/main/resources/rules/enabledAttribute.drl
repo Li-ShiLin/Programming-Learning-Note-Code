@@ -1,0 +1,13 @@
+package testenabled
+import com.action.drools.entity.ComparisonOperatorEntity
+/*
+ 此规则文件用于测试 enabled 属性
+*/
+rule "rule_enabled_notMemberOf"
+    //指定当前规则不可用，当前规则无论是否匹配成功都不会执行
+    enabled false
+    when
+        ComparisonOperatorEntity(names not memberOf list)
+    then
+        System.out.println("规则rule_enabled_notMemberOf触发");
+end

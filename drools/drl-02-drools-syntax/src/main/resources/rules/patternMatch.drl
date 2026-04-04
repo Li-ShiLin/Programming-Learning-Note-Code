@@ -1,0 +1,35 @@
+//Pattern模式匹配演示：类型约束、属性约束、绑定变量、多 pattern 与 and
+package patternMatch
+import com.action.drools.entity.Order
+import com.action.drools.entity.Customer
+
+//演示：类型约束 + 属性约束，绑定对象变量 $order
+rule "rule_pattern_basic"
+    when
+        //Order为类型约束，originalPrice为属性约束
+        $order:Order(originalPrice < 200 && originalPrice >= 100)
+    then
+        $order.setRealPrice($order.getOriginalPrice() - 20);
+        System.out.println("规则rule_pattern_basic：所购图书总价在100到200元的优惠20元");
+end
+
+//演示：绑定变量用在对象属性上，RHS 中可使用 $op
+rule "rule_pattern_binding"
+    when
+        $order:Order($op:originalPrice < 200 && originalPrice >= 100)
+    then
+        System.out.println("$op=" + $op);
+        $order.setRealPrice($order.getOriginalPrice() - 20);
+        System.out.println("规则rule_pattern_binding：所购图书总价在100到200元的优惠20元");
+end
+
+//演示：多个 pattern 使用 and 连接
+rule "rule_pattern_multi"
+    when
+        $order:Order($op:originalPrice < 200 && originalPrice >= 100) and
+        $customer:Customer(age > 20 && gender=='male')
+    then
+        System.out.println("$op=" + $op + ", 客户年龄=" + $customer.getAge());
+        $order.setRealPrice($order.getOriginalPrice() - 20);
+        System.out.println("规则rule_pattern_multi：订单100-200元且客户男>20岁，优惠20元");
+end

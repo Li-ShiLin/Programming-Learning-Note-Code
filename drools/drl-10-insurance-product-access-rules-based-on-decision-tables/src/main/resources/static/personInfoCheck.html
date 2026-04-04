@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>人员规则校验</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { border-collapse: collapse; margin: 20px auto; width: 50%; }
+        td { padding: 8px; border: 1px solid #ddd; }
+        h3 { text-align: center; }
+        .result { margin-top: 16px; text-align: center; }
+        .error-list { width: 50%; margin: 12px auto 0; color: #c00; }
+    </style>
+</head>
+<body>
+<div id="app">
+    <h3>人员规则校验（testRule.xls）</h3>
+    <table>
+        <tr>
+            <td>性别</td>
+            <td>
+                <select v-model="person.sex">
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>年龄</td>
+            <td><input type="number" v-model.number="person.age" placeholder="22-25"></td>
+        </tr>
+        <tr>
+            <td>月薪</td>
+            <td><input type="number" v-model.number="person.salary" placeholder=">=10000"></td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align:center;">
+                <input type="button" value="开始校验" @click="personInfoCheck()">
+            </td>
+        </tr>
+    </table>
+
+    <div class="result">{{ resultMessage }}</div>
+    <ul class="error-list" v-if="detailList.length > 0">
+        <li v-for="(item, idx) in detailList" :key="idx">{{ item }}</li>
+    </ul>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios@0.21.4/dist/axios.min.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            person: {
+                sex: '男',
+                age: 23,
+                salary: 12000
+            },
+            resultMessage: '',
+            detailList: []
+        },
+        methods: {
+            personInfoCheck: function () {
+                axios.post('/rule/personInfoCheck', this.person).then((res) => {
+                    if (res.data.checkResult) {
+                        this.resultMessage = '校验通过';
+                        this.detailList = [];
+                    } else {
+                        this.resultMessage = res.data.msg || '校验失败';
+                        this.detailList = res.data.detail || [];
+                    }
+                }).catch(() => {
+                    this.resultMessage = '调用失败，请检查后端服务或规则文件';
+                    this.detailList = [];
+                });
+            }
+        }
+    });
+</script>
+</body>
+</html>

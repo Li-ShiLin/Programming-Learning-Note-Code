@@ -1,0 +1,13 @@
+package testnoloop
+import com.action.drools.entity.Student
+/*
+ 此规则文件用于测试 no-loop 属性
+*/
+rule "rule_noloop"
+    no-loop true
+    when
+        $student:Student(age == 25)
+    then
+        update($student);//注意此处执行update会导致当前规则重新被激活，no-loop true 防止死循环
+        System.out.println("规则rule_noloop触发");
+end

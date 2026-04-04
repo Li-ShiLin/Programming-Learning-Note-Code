@@ -1,0 +1,10 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: insuranceInfoCheck
+drools:
+  insurance:
+    xls-path: classpath:rules/insuranceInfoCheck.xls
+  person:
+    xls-path: classpath:rules/testRule.xls

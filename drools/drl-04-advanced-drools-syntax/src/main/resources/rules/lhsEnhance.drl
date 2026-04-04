@@ -1,0 +1,58 @@
+package testlhsenhance
+import com.action.drools.entity.Student
+/*
+    此规则文件用于测试 LHS 加强：in/not in、not、exists、规则继承
+*/
+
+// 6.4.1 in/not in
+rule "rule_lhs_in"
+    when
+        $s:Student(name in ("张三","李四","王五"))
+    then
+        System.out.println("规则：rule_lhs_in触发 name=" + $s.getName());
+end
+
+rule "rule_lhs_notIn"
+    when
+        $s:Student(name not in ("张三","李四","王五"))
+    then
+        System.out.println("规则：rule_lhs_notIn触发 name=" + $s.getName());
+end
+
+// 6.4.3 not：不存在某 Fact 时为 true
+rule "rule_lhs_not"
+    when
+        not Student(age < 10)
+    then
+        System.out.println("规则：rule_lhs_not触发（工作内存中不存在 age<10 的 Student）");
+end
+
+// 6.4.4 exists：存在则执行一次；不用 exists 则每个匹配 Fact 执行一次
+rule "rule_lhs_exists"
+    when
+        exists Student()
+    then
+        System.out.println("规则：使用exists的规则触发");
+end
+
+rule "rule_lhs_noExists"
+    when
+        Student()
+    then
+        System.out.println("规则：没有使用exists的规则触发");
+end
+
+// 6.4.5 规则继承
+rule "rule_lhs_1"
+    when
+        Student(age > 10)
+    then
+        System.out.println("规则：rule_lhs_1触发");
+end
+
+rule "rule_lhs_2" extends "rule_lhs_1"
+    when
+        Student(age < 20)
+    then
+        System.out.println("规则：rule_lhs_2触发");
+end

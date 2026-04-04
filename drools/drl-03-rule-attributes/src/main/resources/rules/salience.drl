@@ -1,0 +1,27 @@
+package testsalience
+/*
+ 此规则文件用于测试 salience 属性：数值越大越优先执行
+*/
+rule "rule_salience_1"
+    salience 9
+    when
+        eval(true)
+    then
+        System.out.println("规则rule_salience_1触发");
+end
+
+rule "rule_salience_2"
+    salience 10
+    when
+        eval(true)
+    then
+        System.out.println("规则rule_salience_2触发");
+end
+
+rule "rule_salience_3"
+    salience 8
+    when
+        eval(true)
+    then
+        System.out.println("规则rule_salience_3触发");
+end

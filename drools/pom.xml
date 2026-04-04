@@ -1,0 +1,37 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.action.drools</groupId>
+    <artifactId>drools</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>drools</name>
+    <url>http://maven.apache.org</url>
+    <modules>
+        <module>drl-01-quickstart</module>
+        <module>drl-02-drools-syntax</module>
+        <module>drl-03-rule-attributes</module>
+        <module>drl-04-advanced-drools-syntax</module>
+        <module>drl-05-spring-integration-drools</module>
+        <module>drl-06-springboot-integration-drools</module>
+        <module>drl-07-drools-workbench</module>
+        <module>drl-08-personal-income-tax-calculator</module>
+        <module>drl-09-credit-card-approval</module>
+        <module>drl-10-insurance-product-access-rules-based-on-decision-tables</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

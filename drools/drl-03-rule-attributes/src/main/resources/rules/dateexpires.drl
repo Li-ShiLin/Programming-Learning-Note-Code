@@ -1,0 +1,10 @@
+package testdateexpires
+/*
+ 此规则文件用于测试 date-expires 属性：只有当前系统时间小于设置的时间规则才有可能触发
+*/
+rule "rule_dateexpires_1"
+    date-expires "01-Oct-2030"
+    when
+    then
+        System.out.println("规则rule_dateexpires_1触发");
+end

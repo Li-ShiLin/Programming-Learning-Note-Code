@@ -1,0 +1,15 @@
+package testdrools
+/*
+    此规则文件用于测试 RHS 中 drools.getWorkingMemory()、drools.getRule()
+*/
+rule "rule_getWorkingMemory"
+    when
+    then
+        System.out.println(drools.getWorkingMemory());
+end
+
+rule "rule_getRule"
+    when
+    then
+        System.out.println(drools.getRule());
+end

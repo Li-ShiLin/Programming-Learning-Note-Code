@@ -1,0 +1,19 @@
+//规则文件注释示例：单行注释与多行注释
+package comment
+
+//规则rule1的注释，这是一个单行注释
+rule "rule1"
+    when
+    then
+        System.out.println("rule1触发");
+end
+
+/*
+规则rule2的注释，
+这是一个多行注释
+*/
+rule "rule2"
+    when
+    then
+        System.out.println("rule2触发");
+end

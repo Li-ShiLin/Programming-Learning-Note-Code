@@ -1,0 +1,17 @@
+package testhalt
+/*
+    此规则文件用于测试 RHS 中 drools.halt()
+*/
+rule "rule_halt_1"
+    salience 10
+    when
+    then
+        System.out.println("规则：rule_halt_1触发");
+        drools.halt();//立即终止后面所有规则执行
+end
+
+rule "rule_halt_2"
+    when
+    then
+        System.out.println("规则：rule_halt_2触发");
+end

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>保险产品准入校验</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { border-collapse: collapse; margin: 0 auto; width: 70%; }
+        td { padding: 8px; border: 1px solid #ddd; }
+        h3 { text-align: center; }
+        .result { margin-top: 16px; text-align: center; }
+        .error-list { width: 70%; margin: 12px auto 0; color: #c00; }
+    </style>
+</head>
+<body>
+<div id="app">
+    <h3>保险产品准入校验</h3>
+    <table>
+        <tr>
+            <td>保险公司Code（param1）</td>
+            <td><input type="text" v-model="insuranceInfo.param1" placeholder="例如 picc"></td>
+            <td>销售区域（param4）</td>
+            <td>
+                <select v-model="insuranceInfo.param4">
+                    <option value="北京">北京</option>
+                    <option value="天津">天津</option>
+                    <option value="上海">上海（可用于测试不通过）</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>投保年龄（param5）</td>
+            <td><input type="text" v-model="insuranceInfo.param5" placeholder="0-17"></td>
+            <td>保险期间（param6）</td>
+            <td>
+                <select v-model="insuranceInfo.param6">
+                    <option value="20">20</option>
+                    <option value="25">25</option>
+                    <option value="30">30</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>交费期间（param7）</td>
+            <td><input type="text" v-model="insuranceInfo.param7" placeholder="1/3/5/10/15/20"></td>
+            <td>交费方式（param8）</td>
+            <td>
+                <select v-model="insuranceInfo.param8">
+                    <option value="1">1（趸交）</option>
+                    <option value="2">2（年交）</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>保险金额（万元，param13）</td>
+            <td><input type="text" v-model="insuranceInfo.param13" placeholder="例如 10"></td>
+            <td colspan="2" style="text-align:center;">
+                <input type="button" value="开始校验" @click="insuranceInfoCheck()">
+            </td>
+        </tr>
+    </table>
+
+    <div class="result">{{ resultMessage }}</div>
+    <ul class="error-list" v-if="detailList.length > 0">
+        <li v-for="(item, idx) in detailList" :key="idx">{{ item }}</li>
+    </ul>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios@0.21.4/dist/axios.min.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            insuranceInfo: {
+                param1: 'picc',
+                param4: '北京',
+                param5: '10',
+                param6: '20',
+                param7: '10',
+                param8: '2',
+                param13: '10'
+            },
+            resultMessage: '',
+            detailList: []
+        },
+        methods: {
+            insuranceInfoCheck: function () {
+                axios.post('/rule/insuranceInfoCheck', this.insuranceInfo).then((res) => {
+                    if (res.data.checkResult) {
+                        this.resultMessage = '准入成功';
+                        this.detailList = [];
+                    } else {
+                        this.resultMessage = res.data.msg || '准入失败';
+                        this.detailList = res.data.detail || [];
+                    }
+                }).catch(() => {
+                    this.resultMessage = '调用失败，请检查后端服务是否启动';
+                    this.detailList = [];
+                });
+            }
+        }
+    });
+</script>
+</body>
+</html>
